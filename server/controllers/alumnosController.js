@@ -1,18 +1,17 @@
 "use strict";
 import db from '../config/db.js';
+import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
 import { getAlumnosService } from '../services/alumnos.services.js';
 
 export const getAlumnos = async (req, res) => {
     try {
         const [alumnos, errorAlumnos] = await getAlumnosService();
-        if(errorAlumnos) res.status(400).json({ status: "Client error", errorAlumnos });
+        if(errorAlumnos) handleErrorClient(res, 404, errorAlumnos.message)
         alumnos.length === 0 
-            ? res.status(204).json({ status: "Success" })
-            : res.status(200).json({ status: "Success", message: "Alumnos Encontrados", alumnos });
-        // const [result] = await db.query("SELECT * FROM alumnos");
-        // res.json(result);
+            ? handleSuccess(res, 204)
+            : handleSuccess(res, 200, "Alumnos encontrados", alumnos);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        handleErrorServer(res, 500, error.message);
     }
 };
 
