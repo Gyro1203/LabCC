@@ -28,11 +28,11 @@ export default function RegistActividades() {
     const fetchActividad = async () => {
       if (params.id) {
         try {
-          const actividad = await getActividadByIdRequest(params.id);
-          //console.log('Actividad encontrada:', actividad);
+          const dataActividad = await getActividadByIdRequest(params.id);
+          //console.log('Actividad encontrada:', dataActividad);
           //const { nombre: _nombre, rut: _rut, ...filtered } = actividad; // nombre y rut is assigned but not used. Solucion
           //console.log('Actividad filtrada:', filtered);
-          setActividad(actividad);
+          setActividad(dataActividad.data);
         } catch (error) {
           console.error("Error al obtener la actividad:", error);
         }
@@ -58,9 +58,8 @@ export default function RegistActividades() {
               await updateActividadesRequest(params.id, values);
               console.log("Actividad actualizada:", values);
             } else {
-              console.log("Valores a enviar:", values);
               const response = await createActividadesRequest(values);
-              console.log("Actividad creada:", response);
+              console.log("Actividad creada:", response.data);
             }
             setActividad({
               nombre: "",

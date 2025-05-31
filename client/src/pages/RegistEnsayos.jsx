@@ -19,9 +19,9 @@ export default function RegistEnsayos() {
     const fetchEnsayo = async () => {
       if (params.id) {
         try {
-          const ensayo = await getEnsayoByIdRequest(params.id);
-          console.log('Ensayo encontrado:', ensayo);
-          setEnsayo(ensayo);
+          const dataEnsayo = await getEnsayoByIdRequest(params.id);
+          console.log('Ensayo encontrado:', dataEnsayo);
+          setEnsayo(dataEnsayo.data);
         } catch (error) {
           console.error('Error al obtener el ensayo:', error);
         }
@@ -44,7 +44,7 @@ export default function RegistEnsayos() {
                         console.log('Ensayo actualizado:', values);
                     }else{
                         const response = await createEnsayosRequest(values);
-                        console.log('Ensayo creado:', response);
+                        console.log('Ensayo creado:', response.data);
                     }
                     setEnsayo({
                         nombre: '',

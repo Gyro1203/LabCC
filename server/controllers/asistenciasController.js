@@ -1,4 +1,5 @@
 import db from "../config/db.js";
+import { handleErrorClient, handleErrorServer, handleSuccess } from "../handlers/responseHandlers.js";
 
 export const getAsistencias = async (req, res) => {
   try {
@@ -14,9 +15,11 @@ export const getAsistencias = async (req, res) => {
             JOIN alumnos al ON asis.asistencia_alumno = al.id_alumno
             JOIN actividades ac ON asis.asistencia_actividad = ac.id_actividad;
         `);
-    res.json(result);
+    if(!result || result.length === 0) handleErrorClient(res, 404, "No se encontraron ingresos");
+    handleSuccess(res, 200, "Registro de asistencias encontrado", result);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error al obtener las asistencias", error);
+    handleErrorServer(res, 500, error.message);
   }
 };
 
@@ -41,11 +44,11 @@ export const getAsistencia = async (req, res) => {
         `,
       [req.params.id]
     );
-    if (result.length <= 0)
-      return res.status(404).json({ message: "Asistencias no registrada" });
-    res.json(result[0]);
+    if (result.length <= 0) return handleErrorClient(res, 404, "No se encontró la asistencia");
+    handleSuccess(res, 200, "Asistencia encontrada", result[0]);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error al obtener la asistencia", error);
+    handleErrorServer(res, 500, error.message);
   }
 };
 
@@ -71,26 +74,30 @@ export const createAsistencia = async (req, res) => {
       }
     }
     if (!existeAlumno) {
-      return res.status(404).json({ message: "El alumno no existe" });
+      return handleErrorClient(res, 404, "No se encontró al alumno");
     } else if (!existeActividad) {
-      return res.status(404).json({ message: "La actividad no existe" });
+      return handleErrorClient(res, 404, "No se encontró la actividad");
     } else {
       const [result] = await db.query(
         "INSERT INTO asistencias (jornada, asistencia_alumno, asistencia_actividad) VALUES (?, ?, ?)",
         [jornada, asistencia_alumno, asistencia_actividad]
       );
       console.log(result);
-      res
-        .status(201)
-        .json({
+      handleSuccess(
+        res,
+        201,
+        "Asistencia creada exitosamente",
+        {
           id: result.insertId,
           jornada,
           asistencia_alumno,
           asistencia_actividad,
-        });
+        }
+      );
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error al crear la asistencia", error);
+    handleErrorServer(res, 500, error.message);
   }
 };
 
@@ -115,39 +122,38 @@ export const updateAsistencia = async (req, res) => {
       }
     }
     if (!existeAlumno) {
-      return res.status(404).json({ message: "El alumno no existe" });
+      return handleErrorClient(res, 404, "No se encontró al alumno");
     } else if (!existeActividad) {
-      return res.status(404).json({ message: "La actividad no existe" });
+      return handleErrorClient(res, 404, "No se encontró la actividad");
     } else {
       const [result] = await db.query(
         "UPDATE asistencias SET ? WHERE id_asistencia = ?",
         [req.body, req.params.id]
       );
       console.log(result);
-      if (result.affectedRows === 0)
-        return res.status(404).json({ message: "Asistencias no encontrada" });
+      if (result.affectedRows === 0) return handleErrorClient(res, 404, "Asistencia no encontrada");
 
-      res.json(result);
+      handleSuccess(res, 200, "Asistencia actualizada", result);
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error al actualizar la asistencia", error);
+    handleErrorServer(res, 500, error.message);
   }
 };
 
 export const marcarSalida = async (req, res) => {
+  //Probar PATCH en lugar de PUT
   try {
     const [result] = await db.query(
       "UPDATE asistencias SET salida = CURRENT_TIMESTAMP WHERE id_asistencia = ?",
       [req.params.id]
     );
     console.log(result);
-    if (result.affectedRows === 0)
-      return res.status(404).json({ message: "Asistencias no encontrada" });
-
-    console.log("Salida Marcada");
-    res.json(result);
+    if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontró la asistencia");
+    handleSuccess(res, 200, "Salida marcada", result);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error al marcar salida", error);
+    handleErrorServer(res, 500, error.message);
   }
 };
 
@@ -157,10 +163,10 @@ export const deleteAsistencia = async (req, res) => {
       "DELETE FROM asistencias WHERE id_asistencia = ?",
       [req.params.id]
     );
-    if (result.affectedRows === 0)
-      return res.status(404).json({ message: "Asistencias no encontrado" });
-    res.sendStatus(204);
+    if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontró la asistencia");
+    handleSuccess(res, 200, "Asistencia eliminada");
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error al eliminar la asistencia", error);
+    handleErrorServer(res, 500, error.message);
   }
 };

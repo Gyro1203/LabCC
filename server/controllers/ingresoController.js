@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import { handleErrorServer, handleSuccess } from '../handlers/responseHandlers.js';
 
 export const getIngresos = async (req, res) => {
     try {
@@ -15,9 +16,11 @@ export const getIngresos = async (req, res) => {
             FROM ingresos i 
             JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
         `);
-        res.json(result);
+        if(!result || result.length === 0) handleErrorClient(res, 404, "No se encontraron ingresos");
+        handleSuccess(res, 200, "Registro de ingresos encontrado", result);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al obtener los ingresos", error);
+        handleErrorServer(res, 500, error.message);
     }
 };
 
@@ -38,10 +41,11 @@ export const getIngreso = async (req, res) => {
             JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
             WHERE i.id_ingreso = ?
         `, [req.params.id]);
-        if (result.length <= 0) return res.status(404).json({ message: "Ingreso solicitado no encontrado" });
-        res.json(result[0]);
+        if (result.length <= 0) return handleErrorClient(res, 404, "No se encontró el ingreso solicitado");
+        handleSuccess(res, 200, "Ingreso encontrado", result[0]);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al obtener el ingreso", error);
+        handleErrorServer(res, 500, error.message);
     }
 };
 
@@ -62,10 +66,11 @@ export const getIngresoActividades = async (req, res) => {
             JOIN actividades ac ON i.id_ingreso = ac.actividad_ingreso
             WHERE i.id_ingreso = ?
         `, [req.params.id]);
-        if (result.length <= 0) return res.status(404).json({ message: "Ingreso solicitado no encontrado" });
-        res.json(result);
+        if (result.length <= 0) return handleErrorClient(res, 404, "Ingreso solicitado no encontrado");
+        handleSuccess(res, 200, "Actividades del ingreso encontradas", result);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al obtener las actividades del ingreso", error);
+        handleErrorServer(res, 500, error.message);
     }
 };
 
@@ -84,12 +89,18 @@ export const createIngreso = async (req, res) => {
         if(existe){
             const [result] = await db.query("INSERT INTO ingresos (motivo, titulo, profesor_guia, profesor_asignatura, semestre, ingreso_alumno) VALUES (?, ?, ?, ?, ?, ?)", [motivo, titulo, profesor_guia, profesor_asignatura, semestre, ingreso_alumno]);
             console.log(result);
-            res.status(201).json({ id: result.insertId, motivo, titulo, profesor_guia, profesor_asignatura, semestre, ingreso_alumno });
+            return handleSuccess(
+                res,
+                201,
+                "Ingreso registrado exitosamente",
+                { id: result.insertId, motivo, titulo, profesor_guia, profesor_asignatura, semestre, ingreso_alumno }
+            );
         }else{
-            return res.status(404).json({ message: "El alumno no existe" });
+            return handleErrorClient(res, 404, "No se encontró al alumno");
         }
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al crear un ingreso", error);
+        handleErrorServer(res, 500, error.message);
     }
 };
 
@@ -106,22 +117,24 @@ export const updateIngreso = async (req, res) => {
         if(existe){
             const [result] = await db.query("UPDATE ingresos SET ? WHERE id_ingreso = ?", [req.body, req.params.id]);
             console.log(result);
-            if (result.affectedRows === 0) return res.status(404).json({ message: "Ingreso solicitado no encontrado" });
-            res.json(result);
+            if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontró el ingreso solicitado");
+            handleSuccess(res, 200, "Ingreso modificado exitosamente", result);
         }else{
-            return res.status(404).json({ message: "El alumno no existe" });
+            return handleErrorClient(res, 404, "No se encontró al alumno");
         }
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al modificar el ingreso", error);
+        handleErrorServer(res, 500, error.message);
     }
 };
 
 export const deleteIngreso = async (req,res) => {
     try {
         const [result] = await db.query("DELETE FROM ingresos WHERE id_ingreso = ?", [req.params.id]);
-        if (result.affectedRows === 0) return res.status(404).json({ message: "Ingreso solicitado no encontrado" });
-        res.sendStatus(204);
+        if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontró el ingreso solicitado");
+        handleSuccess(res, 200, "Ingreso eliminado exitosamente");
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al eliminar el ingreso", error);
+        handleErrorServer(res, 500, error.message);
     }
 };

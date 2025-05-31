@@ -21,9 +21,9 @@ export default function RegistAlumnos() {
     const fetchAlumno = async () => {
       if (params.id) {
         try {
-          const alumno = await getAlumnoByIdRequest(params.id);
-          console.log('Alumno encontrado:', alumno);
-          setAlumno(alumno);
+          const dataAlumno = await getAlumnoByIdRequest(params.id);
+          console.log('Alumno encontrado:', dataAlumno);
+          setAlumno(dataAlumno.data);
         } catch (error) {
           console.error('Error al obtener el alumno:', error);
         }
@@ -47,7 +47,7 @@ export default function RegistAlumnos() {
                         console.log('Alumno actualizado:', values);
                     }else{
                         const response = await createAlumnosRequest(values);
-                        console.log('Alumno creado:', response);
+                        console.log('Alumno creado:', response.data);
                     }
                     setAlumno({
                         nombre: '',
