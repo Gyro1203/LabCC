@@ -11,8 +11,8 @@ function Alumnos() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await getAlumnosRequest();
-      setAlumnos(data.alumnos);
+      const dataAlumnos = await getAlumnosRequest();
+      setAlumnos(dataAlumnos.data);
     };
     fetchData();
   }, [])
@@ -20,7 +20,7 @@ function Alumnos() {
   const handleDelete = async (id) => {
     try {
       const response = await deleteAlumnosRequest(id);
-      console.log("Alumno eliminado exitosamente:", response);
+      console.log("Alumno eliminado exitosamente:", response.data);
       setAlumnos(alumnos.filter(a => a.id_alumno !== id));
     } catch (error) {
       console.error("Error al eliminar alumno:", error);

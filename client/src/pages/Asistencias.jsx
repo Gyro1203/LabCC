@@ -14,12 +14,12 @@ function Asistencias() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await getAsistenciasRequest();
+      const dataAsistencias = await getAsistenciasRequest();
       /*Si mas adelante falla, comparar con Alumnos
         en alumnos es data.alumnos debido a como esta definido en el services
         ya que aqui no se usa service, no es necesario, pero si mas adelante cambia
       va a aleterar esta parte, por lo que se debe cambiar aqui tambien*/
-      setAsistencias(data);
+      setAsistencias(dataAsistencias.data);
     }
     fetchData();
   }, []);
@@ -27,7 +27,7 @@ function Asistencias() {
   const handleDelete = async (id) => {
     try {
       const response = await deleteAsistenciasRequest(id);
-      console.log("Asistencia eliminada exitosamente:", response);
+      console.log("Asistencia eliminada exitosamente:", response.data);
       setAsistencias(asistencias.filter((e) => e.id_asistencia !== id));
     } catch (error) {
       console.error("Error al eliminar asistencia:", error);
@@ -37,10 +37,7 @@ function Asistencias() {
   const marcarSalida = async (id) => {
     try {
       const response = await marcarSalidaRequest(id);
-      console.log("Set Asistencias:", asistencias)
-      const asis = asistencias;
-      setAsistencias(asis);
-      console.log("Se marco salida:", response);
+      console.log("Se marco salida:", response.data);
     } catch (error) {
       console.error("Error al marcar salida:", error);
     }

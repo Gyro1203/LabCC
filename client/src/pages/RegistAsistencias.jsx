@@ -22,9 +22,9 @@ export default function RegistAsistencias() {
     const fetchAsistencia = async () => {
       if (params.id) {
         try {
-          const asistencia = await getAsistenciaByIdRequest(params.id);
-          console.log('Asistencia encontrada:', asistencia);
-          const { alumno: _alumno, actividad: _actividad, entrada: _entrada, salida: _salida, ...filtered } = asistencia; // nombre y rut is assigned but not used. Solucion
+          const dataAsistencia = await getAsistenciaByIdRequest(params.id);
+          console.log('Asistencia encontrada:', dataAsistencia);
+          const { alumno: _alumno, actividad: _actividad, entrada: _entrada, salida: _salida, ...filtered } = dataAsistencia.data; // nombre y rut is assigned but not used. Solucion
           console.log('Asistencia filtrada:', filtered);
           setAsistencia(filtered);
         } catch (error) {
@@ -51,7 +51,7 @@ export default function RegistAsistencias() {
               console.log("Asistencia actualizada:", values);
             } else {
               const response = await createAsistenciasRequest(values);
-              console.log("Asistencia creada:", response);
+              console.log("Asistencia creada:", response.data);
             }
             setAsistencia({
                 jornada: "",

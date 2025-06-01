@@ -13,12 +13,12 @@ function Ensayos() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await getEnsayosRequest();
+      const dataEnsayos = await getEnsayosRequest();
       /*Si mas adelante falla, comparar con Alumnos
         en alumnos es data.alumnos debido a como esta definido en el services
         ya que aqui no se usa service, no es necesario, pero si mas adelante cambia
         va a aleterar esta parte, por lo que se debe cambiar aqui tambien*/
-      setEnsayos(data);
+      setEnsayos(dataEnsayos.data);
     }
     fetchData();
   }, []);
@@ -26,7 +26,7 @@ function Ensayos() {
   const handleDelete = async (id) => {
     try {
       const response = await deleteEnsayosRequest(id);
-      console.log("Ensayo eliminado exitosamente:", response);
+      console.log("Ensayo eliminado exitosamente:", response.data);
       setEnsayos(ensayos.filter((e) => e.id_ensayo !== id));
     } catch (error) {
       console.error("Error al eliminar ensayo:", error);

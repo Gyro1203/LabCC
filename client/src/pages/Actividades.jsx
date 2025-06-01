@@ -13,12 +13,12 @@ function Actividades() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await getActividadesRequest();
+      const dataActividades = await getActividadesRequest();
       /*Si mas adelante falla, comparar con Alumnos
         en alumnos es data.alumnos debido a como esta definido en el services
         ya que aqui no se usa service, no es necesario, pero si mas adelante cambia
       va a aleterar esta parte, por lo que se debe cambiar aqui tambien*/
-      setActividades(data);
+      setActividades(dataActividades.data);
     }
     fetchData();
   }, []);
@@ -26,7 +26,7 @@ function Actividades() {
   const handleDelete = async (id) => {
     try {
       const response = await deleteActividadesRequest(id);
-      console.log("Actividad eliminada exitosamente:", response);
+      console.log("Actividad eliminada exitosamente:", response.data);
       setActividades(actividades.filter((e) => e.id_actividad !== id));
     } catch (error) {
       console.error("Error al eliminar actividad:", error);

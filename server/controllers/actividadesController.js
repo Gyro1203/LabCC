@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import { handleErrorClient, handleErrorServer, handleSuccess } from '../handlers/responseHandlers.js';
 
 export const getActividades = async (req, res) => {
     try {
@@ -15,9 +16,11 @@ export const getActividades = async (req, res) => {
         //     FROM ingresos i 
         //     JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
         // `);
-        res.json(result);
+        if(!result || result.length === 0) handleErrorClient(res, 404, "No se encontraron actividades registradas");
+        handleSuccess(res, 200, "Registro de actividades encontrado", result);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al obtener las actividades", error);
+        handleErrorServer(res, 500, error.message);
     }
 };
 
@@ -37,10 +40,10 @@ export const getActividad = async (req, res) => {
         //     JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
         //     WHERE i.id_ingreso = ?
         // `, [req.params.id]);
-        if (result.length <= 0) return res.status(404).json({ message: "Actividad no encontrado" });
-        res.json(result[0]);
+        if (result.length <= 0) return handleErrorClient(res, 404, "No se encontró la actividad solicitada");
+        handleSuccess(res, 200, "Actividad encontrada", result[0]);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return handleErrorServer(res, 500, error.message);
     }
 };
 
@@ -76,11 +79,11 @@ export const createActividad = async (req, res) => {
             }
         }
         if(!existeAlumno){
-            return res.status(404).json({ message: "El alumno no existe" });
+            return handleErrorClient(res, 404, "No se encontró el alumno");
         }else if(!existeIngreso){
-            return res.status(404).json({ message: "El ingreso no existe" });
+            return handleErrorClient(res, 404, "No se encontró el ingreso");
         }else if(!existeEnsayo){
-            return res.status(404).json({ message:  "La actividad no se encuentra registrara entre los ensayos" });
+            return handleErrorClient(res, 404, "La actividad no se encuentra registrara entre los ensayos");
         }else{
             const [result] = await db.query(`
             INSERT INTO actividades (
@@ -98,10 +101,11 @@ export const createActividad = async (req, res) => {
             )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
             ,[nombre, unidad, cantidad, precio_uf, precio_peso, (precio_uf * cantidad), (precio_peso * cantidad), observaciones, actividad_alumno, actividad_ensayo, actividad_ingreso]);
             console.log(result);
-            res.status(201).json({ id: result.insertId, nombre, unidad, cantidad, precio_uf, precio_peso, "total_uf": (precio_uf * cantidad), "total_peso": (precio_peso * cantidad), observaciones, actividad_alumno, actividad_ensayo, actividad_ingreso });
+            return handleSuccess(res, 201, "Actividad creada exitosamente", { id: result.insertId, nombre, unidad, cantidad, precio_uf, precio_peso, "total_uf": (precio_uf * cantidad), "total_peso": (precio_peso * cantidad), observaciones, actividad_alumno, actividad_ensayo, actividad_ingreso });
         }
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al crear la actividad", error);
+        handleErrorServer(res, 500, error.message);
     }
 };
 
@@ -135,28 +139,30 @@ export const updateActividad = async (req, res) => {
             }
         }
         if(!existeAlumno){
-            return res.status(404).json({ message: "El alumno no existe" });
+            return handleErrorClient(res, 404, "No se encontró el alumno");
         }else if(!existeIngreso){
-            return res.status(404).json({ message: "El ingreso no existe" });
+            return handleErrorClient(res, 404, "No se encontró el ingreso");
         }else if(!existeEnsayo){
-            return res.status(404).json({ message:  "La actividad no se encuentra registrara entre los ensayos" });
+            return handleErrorClient(res, 404, "La actividad no se encuentra registrara entre los ensayos");
         }else{
             const [result] = await db.query("UPDATE actividades SET ? WHERE id_actividad = ?", [req.body, req.params.id]);
             console.log(result);
-            if (result.affectedRows === 0) return res.status(404).json({ message: "Actividad no encontrado" });
-            res.json(result);
+            if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontró la actividad solicitada");
+            handleSuccess(res, 200, "Actividad actualizada exitosamente", result);
         }
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al modificar la actividad", error);
+        handleErrorServer(res, 500, error.message);
     }
 };
 
 export const deleteActividad = async (req,res) => {
     try {
         const [result] = await db.query("DELETE FROM actividades WHERE id_actividad = ?", [req.params.id]);
-        if (result.affectedRows === 0) return res.status(404).json({ message: "Actividad no encontrado" });
-        res.sendStatus(204);
+        if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontró la actividad solicitada");
+        handleSuccess(res, 200, "Actividad eliminada exitosamente");
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error("Error al eliminar la actividad", error);
+        return handleErrorServer(res, 500, error.message);
     }
 };

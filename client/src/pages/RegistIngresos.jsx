@@ -25,9 +25,9 @@ export default function RegistIngresos() {
     const fetchIngreso = async () => {
       if (params.id) {
         try {
-          const ingreso = await getIngresoByIdRequest(params.id);
-          //console.log('Ingreso encontrado:', ingreso);
-          const { nombre: _nombre, rut: _rut, ...filtered } = ingreso; // nombre y rut is assigned but not used. Solucion
+          const dataIngreso = await getIngresoByIdRequest(params.id);
+          //console.log('Ingreso encontrado:', dataIngreso);
+          const { nombre: _nombre, rut: _rut, ...filtered } = dataIngreso.data; // nombre y rut is assigned but not used. Solucion
           //console.log('Ingreso filtrado:', filtered);
           setIngreso(filtered);
         } catch (error) {
@@ -54,7 +54,7 @@ export default function RegistIngresos() {
               console.log("Ingreso actualizado:", values);
             } else {
               const response = await createIngresosRequest(values);
-              console.log("Ingreso creado:", response);
+              console.log("Ingreso creado:", response.data);
             }
             setIngreso({
               motivo: "",
