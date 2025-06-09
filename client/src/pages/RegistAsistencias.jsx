@@ -12,7 +12,7 @@ export default function RegistAsistencias() {
 
   const [asistencia, setAsistencia] = useState({
     jornada: "",
-    asistencia_alumno: 0,
+    asistencia_ingreso: 0,
     asistencia_actividad: 0,
   }); // Estado para almacenar la asistencia si es necesario, aunque no se usa en este ejemplo
 
@@ -55,7 +55,7 @@ export default function RegistAsistencias() {
             }
             setAsistencia({
                 jornada: "",
-                asistencia_alumno: 0,
+                asistencia_ingreso: 0,
                 asistencia_actividad: 0,
             });
             navigate("/attendance"); // Redirigir a la lista de asistencias después de crear o actualizar
@@ -74,12 +74,12 @@ export default function RegistAsistencias() {
               value={values.jornada}
             />
 
-            <label htmlFor="asistencia_alumno">ID Alumno</label>
+            <label htmlFor="asistencia_ingreso">ID Ingreso</label>
             <input
               type="number"
-              name="asistencia_alumno"
+              name="asistencia_ingreso"
               onChange={handleChange}
-              value={values.asistencia_alumno}
+              value={values.asistencia_ingreso}
             />
 
             <label htmlFor="asistencia_actividad">ID Actividad</label>

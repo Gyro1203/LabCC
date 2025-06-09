@@ -1,24 +1,29 @@
-import db from '../config/db.js';
-import { handleErrorClient, handleErrorServer, handleSuccess } from '../handlers/responseHandlers.js';
+"use strict";
+import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
+import {
+    createEnsayoService,
+    deleteEnsayoService,
+    getEnsayoService,
+    getEnsayosService,
+    updateEnsayoService
+} from '../services/ensayos.services.js';
 
 export const getEnsayos = async (req, res) => {
     try {
-        const [result] = await db.query("SELECT * FROM ensayos");
-        if(!result || result.length === 0) handleErrorClient(res, 404, "No se encontraron ensayos registrados");
-        handleSuccess(res, 200, "Registro de ensayo encontrado", result);
+        const [ensayos, errorEsayos] = await getEnsayosService();
+        if(errorEsayos) handleErrorClient(res, 404, errorEsayos);
+        handleSuccess(res, 200, "Registro de ensayo encontrado", ensayos);
     } catch (error) {
-        console.error("Error al obtener Ensayos", error);
         handleErrorServer(res, 500, error.message);
     }
 };
 
 export const getEnsayo = async (req, res) => {
     try {
-        const [result] = await db.query("SELECT * FROM ensayos WHERE id_ensayo = ?", [req.params.id]);
-        if (result.length <= 0) return handleErrorClient(res, 404, "No se encontró el ensayo");
-        handleSuccess(res, 200, "Ensayo encontrado", result[0]);
+        const [ensayo, errorEsayo] = await getEnsayoService(req.params.id);
+        if (errorEsayo) return handleErrorClient(res, 404, errorEsayo);
+        handleSuccess(res, 200, "Ensayo encontrado", ensayo);
     } catch (error) {
-        console.error("Error al obtener el ensayo", error);
         handleErrorServer(res, 500, error.message);
     }
 };
@@ -26,42 +31,31 @@ export const getEnsayo = async (req, res) => {
 
 export const createEnsayo = async (req, res) => {
     try {
-        let UF = 39174;
-        const { nombre, tipo, precio_uf } = req.body;
-        const [result] = await db.query("INSERT INTO ensayos (nombre, tipo, precio_uf, precio_peso) VALUES (?, ?, ?, ?)", [nombre, tipo, precio_uf, precio_uf * UF]);
-        console.log(result);
-        handleSuccess(
-            res, 
-            201, 
-            "Ensayo creado exitosamente", 
-            { id: result.insertId, nombre, tipo, precio_uf, precio_peso: precio_uf * UF }
-        );
+        const { actividad, tipo, unidad, norma, precio_uf } = req.body;
+        const [ensayo, errorEnsayo] = await createEnsayoService({ actividad, tipo, unidad, norma, precio_uf });
+        if(errorEnsayo) return handleErrorClient(res, 400, errorEnsayo);
+        handleSuccess(res, 201, "Ensayo creado exitosamente", ensayo);
     } catch (error) {
-        console.error("Error al crear un ensayo", error);
         handleErrorServer(res, 500, error.message);
     }
 };
 
 export const updateEnsayo = async (req, res) => {
     try {
-        let UF = 39174;
-        const [result] = await db.query("UPDATE ensayos SET ?, precio_peso = ? WHERE id_ensayo = ?", [req.body, req.body.precio_uf * UF, req.params.id]);
-        console.log(result);
-        if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontró el ensayo"); 
-        handleSuccess(res, 200, "Ensayo actualizado exitosamente", result);
+        const [ensayo, errorEnsayo] = await updateEnsayoService(req.body, req.params.id);
+        if (errorEnsayo) return handleErrorClient(res, 400, errorEnsayo);
+        handleSuccess(res, 200, "Información del ensayo actualizada", ensayo);
     } catch (error) {
-        console.error("Error al modificar el ensayo", error);
         handleErrorServer(res, 500, error.message);
     }
 };
 
 export const deleteEnsayo = async (req,res) => {
     try {
-        const [result] = await db.query("DELETE FROM ensayos WHERE id_ensayo = ?", [req.params.id]);
-        if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontraron ensayos");
-        handleSuccess(res, 200, "Se elimino el ensayo correctamente");
+        const [ensayo, errorEnsayo] = await deleteEnsayoService(req.params.id);
+        if (errorEnsayo) return handleErrorClient(res, 404, errorEnsayo);
+        handleSuccess(res, 200, "Se elimino el ensayo correctamente", ensayo);
     } catch (error) {
-        console.error("Error al eliminar el ensayo", error);
         handleErrorServer(res, 500, error.message);
     }
 };
