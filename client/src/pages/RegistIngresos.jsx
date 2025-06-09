@@ -16,6 +16,7 @@ export default function RegistIngresos() {
     profesor_guia: "",
     profesor_asignatura: "",
     semestre: "",
+    vigente: "",
     ingreso_alumno: "",
   }); // Estado para almacenar el ingreso si es necesario, aunque no se usa en este ejemplo
 
@@ -62,6 +63,7 @@ export default function RegistIngresos() {
               profesor_guia: "",
               profesor_asignatura: "",
               semestre: "",
+              vigente: "",
               ingreso_alumno: "",
             });
             navigate("/entry"); // Redirigir a la lista de ingresos después de crear o actualizar

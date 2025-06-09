@@ -36,7 +36,7 @@ export const createAlumnoService = async ( body ) => {
         const [created] = await db.query("SELECT * FROM alumnos WHERE rut = ?", rut);
         if(!created) return [null, "Alumno no encontrado despues de ser creado"];
 
-        return [created, null];
+        return [created[0], null];
     } catch (error) {
         console.error("Error al crear un alumno", error);
         return [null, "Error interno del servidor"];

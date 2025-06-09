@@ -10,6 +10,7 @@ function IngresosCard({ ingreso }) {
         <p className="card-text">Profesor Guia: {ingreso.profesor_guia}</p>
         <p className="card-text">Profesor Asignatura: {ingreso.profesor_asignatura}</p>
         <p className="card-text">Semestre: {ingreso.semestre}</p>
+        <p className="card-text">Vigente: {ingreso.vigente = (ingreso.vigente) ? "✅" : "❌"}</p>
       </div>
     </div>
   );

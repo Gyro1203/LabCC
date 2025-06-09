@@ -1,50 +1,29 @@
-import db from '../config/db.js';
-import { handleErrorServer, handleSuccess } from '../handlers/responseHandlers.js';
+"use strict";
+import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
+import {
+    getIngresosService, 
+    getIngresoService, 
+    createIngresoService, 
+    updateIngresoService, 
+    deleteIngresoService 
+} from '../services/ingresos.services.js';
 
 export const getIngresos = async (req, res) => {
     try {
-        const [result] = await db.query(`
-            SELECT 
-                i.id_ingreso,
-                a.nombre, 
-                a.rut, 
-                i.motivo, 
-                i.titulo, 
-                i.profesor_guia, 
-                i.profesor_asignatura, 
-                i.semestre 
-            FROM ingresos i 
-            JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
-        `);
-        if(!result || result.length === 0) handleErrorClient(res, 404, "No se encontraron ingresos");
-        handleSuccess(res, 200, "Registro de ingresos encontrado", result);
+        const [ingresos, errorIngresos] = await getIngresosService();
+        if(errorIngresos) handleErrorClient(res, 404, errorIngresos);
+        handleSuccess(res, 200, "Registro de ingresos encontrado", ingresos);
     } catch (error) {
-        console.error("Error al obtener los ingresos", error);
         handleErrorServer(res, 500, error.message);
     }
 };
 
 export const getIngreso = async (req, res) => {
     try {
-        const [result] = await db.query(`
-            SELECT
-                i.id_ingreso,
-                i.ingreso_alumno,
-                a.nombre, 
-                a.rut, 
-                i.motivo, 
-                i.titulo, 
-                i.profesor_guia, 
-                i.profesor_asignatura, 
-                i.semestre
-            FROM ingresos i 
-            JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
-            WHERE i.id_ingreso = ?
-        `, [req.params.id]);
-        if (result.length <= 0) return handleErrorClient(res, 404, "No se encontró el ingreso solicitado");
-        handleSuccess(res, 200, "Ingreso encontrado", result[0]);
+        const [ingreso, errorIngreso] = await getIngresoService(req.params.id);
+        if (errorIngreso) return handleErrorClient(res, 404, errorIngreso);
+        handleSuccess(res, 200, "Ingreso encontrado", ingreso);
     } catch (error) {
-        console.error("Error al obtener el ingreso", error);
         handleErrorServer(res, 500, error.message);
     }
 };
@@ -77,64 +56,31 @@ export const getIngresoActividades = async (req, res) => {
 
 export const createIngreso = async (req, res) => {
     try {
-        let existe = false;
-        const { motivo, titulo, profesor_guia, profesor_asignatura, semestre, ingreso_alumno } = req.body;
-        const [estudiantes] = await db.query("SELECT id_alumno FROM alumnos");
-        for(let estudiante of estudiantes){
-            if(estudiante.id_alumno == ingreso_alumno){
-                existe = true;
-                break;
-            }
-        }
-        if(existe){
-            const [result] = await db.query("INSERT INTO ingresos (motivo, titulo, profesor_guia, profesor_asignatura, semestre, ingreso_alumno) VALUES (?, ?, ?, ?, ?, ?)", [motivo, titulo, profesor_guia, profesor_asignatura, semestre, ingreso_alumno]);
-            console.log(result);
-            return handleSuccess(
-                res,
-                201,
-                "Ingreso registrado exitosamente",
-                { id: result.insertId, motivo, titulo, profesor_guia, profesor_asignatura, semestre, ingreso_alumno }
-            );
-        }else{
-            return handleErrorClient(res, 404, "No se encontró al alumno");
-        }
+        const { motivo, titulo, profesor_guia, profesor_asignatura, semestre, vigente, ingreso_alumno } = req.body;
+        const [ingreso, errorIngreso] = await createIngresoService({ motivo, titulo, profesor_guia, profesor_asignatura, semestre, vigente, ingreso_alumno });
+        if(errorIngreso) return handleErrorClient(res, 400, errorIngreso);   
+        return handleSuccess(res, 201, "Ingreso registrado exitosamente", ingreso);
     } catch (error) {
-        console.error("Error al crear un ingreso", error);
         handleErrorServer(res, 500, error.message);
     }
 };
 
 export const updateIngreso = async (req, res) => {
     try {
-        let existe = false;
-        const [estudiantes] = await db.query("SELECT id_alumno FROM alumnos");
-        for(let estudiante of estudiantes){
-            if(estudiante.id_alumno == req.body.ingreso_alumno){
-                existe = true;
-                break;
-            }
-        }
-        if(existe){
-            const [result] = await db.query("UPDATE ingresos SET ? WHERE id_ingreso = ?", [req.body, req.params.id]);
-            console.log(result);
-            if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontró el ingreso solicitado");
-            handleSuccess(res, 200, "Ingreso modificado exitosamente", result);
-        }else{
-            return handleErrorClient(res, 404, "No se encontró al alumno");
-        }
+        const [ingreso, errorIngreso] = await updateIngresoService(req.body, req.params.id);
+        if(errorIngreso) return handleErrorClient(res, 400, errorIngreso);
+        handleSuccess(res, 200, "Ingreso modificado exitosamente", ingreso);
     } catch (error) {
-        console.error("Error al modificar el ingreso", error);
         handleErrorServer(res, 500, error.message);
     }
 };
 
 export const deleteIngreso = async (req,res) => {
     try {
-        const [result] = await db.query("DELETE FROM ingresos WHERE id_ingreso = ?", [req.params.id]);
-        if (result.affectedRows === 0) return handleErrorClient(res, 404, "No se encontró el ingreso solicitado");
-        handleSuccess(res, 200, "Ingreso eliminado exitosamente");
+        const [ingreso, errorIngreso] = await deleteIngresoService(req.params.id);
+        if (errorIngreso) return handleErrorClient(res, 404, errorIngreso);
+        handleSuccess(res, 200, "Ingreso eliminado exitosamente", ingreso);
     } catch (error) {
-        console.error("Error al eliminar el ingreso", error);
         handleErrorServer(res, 500, error.message);
     }
 };

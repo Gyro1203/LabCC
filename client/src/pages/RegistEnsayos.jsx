@@ -5,13 +5,15 @@ import { useEffect, useState } from 'react';
 
 export default function RegistEnsayos() {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [ensayo, setEnsayo] = useState({
-        nombre: '',
-        tipo: '',
-        precio_uf: ''
-    }); // Estado para almacenar el ensayo si es necesario, aunque no se usa en este ejemplo
+  const [ensayo, setEnsayo] = useState({
+    actividad: '',
+    tipo: '',
+    norma: '',
+    unidad: '',
+    precio_uf: ''
+  });
 
   const params = useParams();
 
@@ -47,8 +49,10 @@ export default function RegistEnsayos() {
                         console.log('Ensayo creado:', response.data);
                     }
                     setEnsayo({
-                        nombre: '',
+                        actividad: '',
                         tipo: '',
+                        norma: '',
+                        unidad: '',
                         precio_uf: ''
                     });
                     navigate('/essay'); // Redirigir a la lista de ensayos después de crear o actualizar
@@ -59,16 +63,28 @@ export default function RegistEnsayos() {
         >
         {({handleChange, handleSubmit, values, isSubmitting})=>(
             <Form onSubmit={handleSubmit}>
-                <label htmlFor="nombre">Nombre</label>
-                <input type="text" name="nombre"
+                <label htmlFor="actividad">Actividad</label>
+                <input type="text" name="actividad"
                 onChange={handleChange}
-                value={values.nombre}
+                value={values.actividad}
                 />
 
                 <label htmlFor="tipo">Tipo</label>
                 <input type="text" name="tipo"
                 onChange={handleChange}
                 value={values.tipo}
+                />
+
+                <label htmlFor="norma">Norma</label>
+                <input type="text" name="norma"
+                onChange={handleChange}
+                value={values.norma}
+                />
+
+                <label htmlFor="unidad">Unidad</label>
+                <input type="text" name="unidad"
+                onChange={handleChange}
+                value={values.unidad}
                 />
 
                 <label htmlFor="precio_uf">Precio UF</label>

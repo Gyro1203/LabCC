@@ -1,7 +1,12 @@
 "use strict";
-import db from '../config/db.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
-import { getAlumnoService, getAlumnosService, createAlumnoService, updateAlumnoService, deleteAlumnoService } from '../services/alumnos.services.js';
+import { 
+    getAlumnosService, 
+    getAlumnoService, 
+    createAlumnoService, 
+    updateAlumnoService, 
+    deleteAlumnoService 
+} from '../services/alumnos.services.js';
 
 export const getAlumnos = async (req, res) => {
     try {
@@ -31,13 +36,7 @@ export const createAlumno = async (req, res) => {
         const { nombre, rut, carrera, facultad, departamento } = req.body;
         const [alumno, errorAlumno] = await createAlumnoService({ nombre, rut, carrera, facultad, departamento });
         if(errorAlumno) return handleErrorClient(res, 400, "Error al crear alumno", errorAlumno);
-        console.log(alumno);
-        handleSuccess(
-            res,
-            201,
-            "Alumno creado exitosamente",
-            alumno
-        );
+        handleSuccess(res, 201, "Alumno creado exitosamente", alumno);
         //res.status(201).json({ id: result.insertId, nombre, rut, carrera, facultad, departamento });
     } catch (error) {
         console.error("Error al crear un alumno", error);

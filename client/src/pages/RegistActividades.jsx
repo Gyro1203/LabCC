@@ -11,13 +11,8 @@ export default function RegistActividades() {
   const navigate = useNavigate();
 
   const [actividad, setActividad] = useState({
-    nombre: "",
-    unidad: "",
     cantidad: 0,
-    precio_uf: 0,
-    precio_peso: 0,
     observaciones: "",
-    actividad_alumno: 0,
     actividad_ensayo: 0,
     actividad_ingreso: 0,
   }); // Estado para almacenar la actividad si es necesario, aunque no se usa en este ejemplo
@@ -62,13 +57,8 @@ export default function RegistActividades() {
               console.log("Actividad creada:", response.data);
             }
             setActividad({
-              nombre: "",
-              unidad: "",
               cantidad: 0,
-              precio_uf: 0,
-              precio_peso: 0,
               observaciones: "",
-              actividad_alumno: 0,
               actividad_ensayo: 0,
               actividad_ingreso: 0,
             });
@@ -80,21 +70,6 @@ export default function RegistActividades() {
       >
         {({ handleChange, handleSubmit, values, isSubmitting }) => (
           <Form onSubmit={handleSubmit}>
-            <label htmlFor="nombre">Nombre</label>
-            <input
-              type="text"
-              name="nombre"
-              onChange={handleChange}
-              value={values.nombre}
-            />
-
-            <label htmlFor="unidad">Unidad</label>
-            <input
-              type="text"
-              name="unidad"
-              onChange={handleChange}
-              value={values.unidad}
-            />
 
             <label htmlFor="cantidad">Cantidad</label>
             <input
@@ -104,35 +79,11 @@ export default function RegistActividades() {
               value={values.cantidad}
             />
 
-            <label htmlFor="precio_uf">Precio UF</label>
-            <input
-              type="number"
-              name="precio_uf"
-              onChange={handleChange}
-              value={values.precio_uf}
-            />
-
-            <label htmlFor="precio_peso">Precio Peso</label>
-            <input
-              type="number"
-              name="precio_peso"
-              onChange={handleChange}
-              value={values.precio_peso}
-            />
-
             <label htmlFor="observaciones">Observaciones</label>
             <textarea
               name="observaciones"
               onChange={handleChange}
               value={values.observaciones}
-            />
-
-            <label htmlFor="actividad_alumno">Actividad Alumno</label>
-            <input
-              type="number"
-              name="actividad_alumno"
-              onChange={handleChange}
-              value={values.actividad_alumno}
             />
 
             <label htmlFor="actividad_ensayo">Actividad Ensayo</label>

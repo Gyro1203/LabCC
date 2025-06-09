@@ -14,10 +14,6 @@ function Ingresos() {
   useEffect(() => {
     async function fetchData() {
       const dataIngresos = await getIngresosRequest();
-      /*Si mas adelante falla, comparar con Alumnos
-        en alumnos es data.alumnos debido a como esta definido en el services
-        ya que aqui no se usa service, no es necesario, pero si mas adelante cambia
-      va a aleterar esta parte, por lo que se debe cambiar aqui tambien*/
       setIngresos(dataIngresos.data);
     }
     fetchData();
