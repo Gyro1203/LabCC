@@ -16,6 +16,7 @@ export const createIngresosRequest = async (ingreso) => {
 };
 
 export const updateIngresosRequest = async (id, ingreso) => {
+    console.log("Ingreso recibido: ", ingreso)
     return await axios.put(`http://localhost:3000/entry/${id}`, ingreso);
 }
 

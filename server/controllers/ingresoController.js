@@ -56,8 +56,8 @@ export const getIngresoActividades = async (req, res) => {
 
 export const createIngreso = async (req, res) => {
     try {
-        const { motivo, titulo, profesor_guia, profesor_asignatura, semestre, vigente, ingreso_alumno } = req.body;
-        const [ingreso, errorIngreso] = await createIngresoService({ motivo, titulo, profesor_guia, profesor_asignatura, semestre, vigente, ingreso_alumno });
+        const { rut, motivo, titulo, profesor_guia, profesor_asignatura, semestre } = req.body;
+        const [ingreso, errorIngreso] = await createIngresoService({ rut, motivo, titulo, profesor_guia, profesor_asignatura, semestre });
         if(errorIngreso) return handleErrorClient(res, 400, errorIngreso);   
         return handleSuccess(res, 201, "Ingreso registrado exitosamente", ingreso);
     } catch (error) {
