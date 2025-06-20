@@ -15,7 +15,6 @@ export const getAsistencias = async (req, res) => {
 export const getAsistencia = async (req, res) => {
   try {
     const [asistencia, errorAsistencia] = await getAsistenciaService(req.params.id);
-    // const [result] = await db.query("SELECT * from asistencias WHERE id_asistencia = ?", [req.params.id]) ;
     if (errorAsistencia) return handleErrorClient(res, 404, errorAsistencia);
     handleSuccess(res, 200, "Asistencia encontrada", asistencia);
   } catch (error) {
@@ -25,8 +24,8 @@ export const getAsistencia = async (req, res) => {
 
 export const createAsistencia = async (req, res) => {
   try {
-    const { jornada, asistencia_ingreso, asistencia_actividad } = req.body;
-    const [asistencia, errorAsistencia] = await createAsistenciaService( { jornada, asistencia_ingreso, asistencia_actividad } );
+    const { rut, jornada, actividad } = req.body;
+    const [asistencia, errorAsistencia] = await createAsistenciaService( { rut, jornada, actividad } );
     if (errorAsistencia) return handleErrorClient(res, 400, errorAsistencia);
     handleSuccess(res, 201,"Asistencia creada exitosamente", asistencia);
   } catch (error) {

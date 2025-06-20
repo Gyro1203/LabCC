@@ -43,9 +43,6 @@ function Actividades() {
 
     return (
       <div className="container mt-4">
-        <button onClick={() => navigate(`/activity/register`)}>
-          Registar en Actividades
-        </button>
         <div className="row">
           {actividades.map((actividad) => (
             <div key={actividad.id_actividad} className="col-sm-12 col-md-6 col-lg-4 mb-4">

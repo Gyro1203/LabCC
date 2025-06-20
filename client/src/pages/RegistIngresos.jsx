@@ -11,13 +11,13 @@ export default function RegistIngresos() {
   const navigate = useNavigate();
 
   const [ingreso, setIngreso] = useState({
+    rut:"",
     motivo: "",
     titulo: "",
     profesor_guia: "",
     profesor_asignatura: "",
     semestre: "",
-    vigente: "",
-    ingreso_alumno: "",
+    ingreso_alumno: "1",
   }); // Estado para almacenar el ingreso si es necesario, aunque no se usa en este ejemplo
 
   const params = useParams();
@@ -28,7 +28,7 @@ export default function RegistIngresos() {
         try {
           const dataIngreso = await getIngresoByIdRequest(params.id);
           //console.log('Ingreso encontrado:', dataIngreso);
-          const { nombre: _nombre, rut: _rut, ...filtered } = dataIngreso.data; // nombre y rut is assigned but not used. Solucion
+          const { nombre: _nombre, ingreso_alumno: _ingreso_alumno, ...filtered } = dataIngreso.data; // nombre y rut is assigned but not used. Solucion
           //console.log('Ingreso filtrado:', filtered);
           setIngreso(filtered);
         } catch (error) {
@@ -40,94 +40,148 @@ export default function RegistIngresos() {
   }, [params.id]);
 
   return (
-    <div>
-      <h1>
-        {params.id ? "Editar datos del ingreso" : "Registrar nuevo ingreso"}
-      </h1>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <h1 className="mb-4 text-center">
+            {params.id ? "Editar datos del ingreso" : "Registrar nuevo ingreso"}
+          </h1>
 
-      <Formik
-        initialValues={ingreso}
-        enableReinitialize={true} // Permite que los valores iniciales se actualicen cuando cambie el estado
-        onSubmit={async (values) => {
-          try {
-            if (params.id) {
-              await updateIngresosRequest(params.id, values);
-              console.log("Ingreso actualizado:", values);
-            } else {
-              const response = await createIngresosRequest(values);
-              console.log("Ingreso creado:", response.data);
-            }
-            setIngreso({
-              motivo: "",
-              titulo: "",
-              profesor_guia: "",
-              profesor_asignatura: "",
-              semestre: "",
-              vigente: "",
-              ingreso_alumno: "",
-            });
-            navigate("/entry"); // Redirigir a la lista de ingresos después de crear o actualizar
-          } catch (error) {
-            console.error("Error al crear ingreso:", error);
-          }
-        }}
-      >
-        {({ handleChange, handleSubmit, values, isSubmitting }) => (
-          <Form onSubmit={handleSubmit}>
-            <label htmlFor="motivo">Motivo</label>
-            <input
-              type="text"
-              name="motivo"
-              onChange={handleChange}
-              value={values.motivo}
-            />
+          <Formik
+            initialValues={ingreso}
+            enableReinitialize={true} // Permite que los valores iniciales se actualicen cuando cambie el estado
+            onSubmit={async (values) => {
+              try {
+                if (params.id) {
+                  await updateIngresosRequest(params.id, values);
+                  console.log("Ingreso actualizado:", values);
+                } else {
+                  const response = await createIngresosRequest(values);
+                  console.log("Ingreso creado:", response.data);
+                }
+                setIngreso({
+                  rut:"",
+                  motivo: "",
+                  titulo: "",
+                  profesor_guia: "",
+                  profesor_asignatura: "",
+                  semestre: "",
+                  ingreso_alumno: "1",
+                });
+                navigate("/entry"); // Redirigir a la lista de ingresos después de crear o actualizar
+              } catch (error) {
+                console.error("Error al crear ingreso:", error);
+              }
+            }}
+          >
+            {({ handleChange, handleSubmit, values, isSubmitting }) => (
+              <Form onSubmit={handleSubmit}>
+                <div className="form-group mb-3">
+                  <label htmlFor="rut" className="form-label">
+                    Rut del alumno
+                  </label>
+                  <input
+                    type="text"
+                    name="rut"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.rut}
+                  />
+                </div>
 
-            <label htmlFor="titulo">Título</label>
-            <input
-              type="text"
-              name="titulo"
-              onChange={handleChange}
-              value={values.titulo}
-            />
+                <div className="form-group mb-3">
+                  <label htmlFor="motivo" className="form-label">
+                    Motivo de ingreso
+                  </label>
+                  <select
+                    name="motivo"
+                    className="form-select"
+                    onChange={handleChange}
+                    value={values.motivo}
+                  >
+                    <option value="" disabled hidden>Selecciona una opción</option>
+                    <option value="Seminario Aplicado" >Seminario Aplicado</option>
+                    <option value="Tesis o Proyecto de Titulo">Tesis o Proyecto de Titulo</option>
+                    <option value="Proyecto de Investigación">Proyecto de Investigación</option>
+                    <option value="Practica I">Practica I</option>
+                    <option value="Practica II">Practica II</option>
+                    <option value="Practica III">Practica III</option>
+                    <option value="Otros">Otros</option>
+                  </select>
+                </div>
 
-            <label htmlFor="profesor_guia">Profesor Guía</label>
-            <input
-              type="text"
-              name="profesor_guia"
-              onChange={handleChange}
-              value={values.profesor_guia}
-            />
+                <div className="form-group mb-3">
+                  <label htmlFor="titulo" className="form-label">
+                    Título del proyecto
+                  </label>
+                  <input
+                    type="text"
+                    name="titulo"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.titulo}
+                  />
+                  <small className="form-text text-muted">
+                    Si no tiene, dejar este campo en blanco
+                  </small>
+                </div>
 
-            <label htmlFor="profesor_asignatura">Profesor Asignatura</label>
-            <input
-              type="text"
-              name="profesor_asignatura"
-              onChange={handleChange}
-              value={values.profesor_asignatura}
-            />
+                <div className="form-group mb-3">
+                  <label htmlFor="profesor_guia" className="form-label">
+                    Profesor Guía
+                  </label>
+                  <input
+                    type="text"
+                    name="profesor_guia"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.profesor_guia}
+                  />
+                  <small className="form-text text-muted">
+                    Si no tiene, dejar este campo en blanco
+                  </small>
+                </div>
 
-            <label htmlFor="semestre">Semestre</label>
-            <input
-              type="text"
-              name="semestre"
-              onChange={handleChange}
-              value={values.semestre}
-            />
+                <div className="form-group mb-3">
+                  <label htmlFor="profesor_asignatura" className="form-label">
+                    Profesor Asignatura
+                  </label>
+                  <input
+                    type="text"
+                    name="profesor_asignatura"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.profesor_asignatura}
+                  />
+                </div>
 
-            <label htmlFor="ingreso_alumno">ID Alumno</label>
-            <input
-              type="number"
-              name="ingreso_alumno"
-              onChange={handleChange}
-              value={values.ingreso_alumno}
-            />
+                <div className="form-group mb-3">
+                  <label htmlFor="semestre" className="form-label">
+                    Semestre
+                  </label>
+                  <input
+                    type="text"
+                    name="semestre"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.semestre}
+                  />
+                </div>
 
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Registrando..." : "Registrar"}
-            </button>
-          </Form>
-        )}
-      </Formik>
+                <div className="d-flex flex-row-reverse">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="btn btn-primary p-2"
+                  >
+                    {isSubmitting ? "Registrando..." : "Registrar"}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </div>
     </div>
   );
 }

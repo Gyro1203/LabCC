@@ -53,12 +53,12 @@ export const getIngresoService = async ( id ) => {
 
 export const createIngresoService = async ( body ) => {
     try {
-        const { motivo, titulo, profesor_guia, profesor_asignatura, semestre, vigente, ingreso_alumno } = body;
+        const { rut, motivo, titulo, profesor_guia, profesor_asignatura, semestre } = body;
 
-        const [alumno] = await db.query("SELECT id_alumno FROM alumnos WHERE id_alumno = ?", ingreso_alumno);
+        const [alumno] = await db.query("SELECT id_alumno FROM alumnos WHERE rut = ?", rut);
         if(!alumno || alumno.length === 0) return [null, "No se encontró al alumno"];
 
-        const [existeIngreso] = await db.query("SELECT * FROM ingresos WHERE ingreso_alumno = ? AND vigente = 1", ingreso_alumno);
+        const [existeIngreso] = await db.query("SELECT * FROM ingresos WHERE ingreso_alumno = ? AND vigente = 1", alumno[0].id_alumno);
         if(existeIngreso.length > 0) return [null, "Un alumno no puede tener mas de un ingreso vigente"];
         
         const [existeTitulo] = await db.query("SELECT * FROM ingresos WHERE titulo = ?", titulo);
@@ -73,7 +73,7 @@ export const createIngresoService = async ( body ) => {
                 semestre,
                 ingreso_alumno
             )VALUES (?, ?, ?, ?, ?, ?)`
-            , [motivo, titulo, profesor_guia, profesor_asignatura, semestre, ingreso_alumno]
+            , [motivo, titulo, profesor_guia, profesor_asignatura, semestre, alumno[0].id_alumno]
         );
         if(result.affectedRows === 0) return [null, "Error en la creación del ingreso"];
 
@@ -92,12 +92,12 @@ export const updateIngresoService = async ( body, id ) => {
         const [actualizarIngreso] = await db.query("SELECT * FROM ingresos WHERE id_ingreso = ?", id);
         if(!actualizarIngreso || actualizarIngreso.length === 0) return [null, "Registro de ingreso no encontrado"];
         
-        const ingreso_alumno = (!body.ingreso_alumno) ? actualizarIngreso[0].ingreso_alumno : body.ingreso_alumno;
-        
-        const [alumno] = await db.query("SELECT id_alumno FROM alumnos WHERE id_alumno = ?", ingreso_alumno);
+        //const ingreso_alumno = (!body.ingreso_alumno) ? actualizarIngreso[0].ingreso_alumno : body.ingreso_alumno;
+
+        const [alumno] = await db.query("SELECT id_alumno FROM alumnos WHERE rut = ?", body.rut);
         if(!alumno || alumno.length === 0) return [null, "No se encontró al alumno"];
         
-        const [esVigente] = await db.query("SELECT * FROM ingresos WHERE ingreso_alumno = ? AND vigente = 1", ingreso_alumno);
+        const [esVigente] = await db.query("SELECT * FROM ingresos WHERE ingreso_alumno = ? AND vigente = 1", alumno[0].id_alumno);
         if(esVigente[0] && esVigente[0].id_ingreso !== actualizarIngreso[0].id_ingreso) return [null, "Un alumno no puede tener mas de un ingreso vigente"];
 
         const titulo  = (!body.titulo) ? actualizarIngreso[0].titulo : body.titulo;
@@ -105,7 +105,25 @@ export const updateIngresoService = async ( body, id ) => {
         if(existeTitulo[0] && existeTitulo[0].titulo !== actualizarIngreso[0].titulo)
             return [null, "Ya existe un proyecto con ese titulo"];
 
-        await db.query("UPDATE ingresos SET ? WHERE id_ingreso = ?", [body, id]);
+        await db.query(`
+            UPDATE ingresos SET
+                motivo = ?, 
+                titulo = ?, 
+                profesor_guia = ?, 
+                profesor_asignatura = ?, 
+                semestre = ?,
+                ingreso_alumno = ?
+            WHERE id_ingreso = ?`
+            , [
+                body.motivo,
+                body.titulo,
+                body.profesor_guia,
+                body.profesor_asignatura,
+                body.semestre,
+                alumno[0].id_alumno,
+                id
+            ]
+        );
 
         const [ingreso] = await db.query("SELECT * FROM ingresos WHERE id_ingreso = ?", id);
         if(!ingreso) return [null, "No se encontró el ingreso despues de actualizar"];

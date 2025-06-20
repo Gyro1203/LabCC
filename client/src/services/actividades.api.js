@@ -10,6 +10,11 @@ export const getActividadByIdRequest = async (id) => {
     return response.data;
 }
 
+export const getActividadByIngresoRequest = async (id) => {
+    const response = await axios.get(`http://localhost:3000/activity/entry/${id}`);
+    return response.data;
+}
+
 export const createActividadesRequest = async (actividad) => {
     console.log("Actividad a enviar:", actividad);
     const response = await axios.post('http://localhost:3000/activity', actividad);

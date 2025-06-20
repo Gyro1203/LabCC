@@ -1,31 +1,34 @@
-import { Form, Formik } from 'formik';
-import { createEnsayosRequest, getEnsayoByIdRequest, updateEnsayosRequest } from '../services/ensayos.api';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { Form, Formik } from "formik";
+import {
+  createEnsayosRequest,
+  getEnsayoByIdRequest,
+  updateEnsayosRequest,
+} from "../services/ensayos.api";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function RegistEnsayos() {
-
   const navigate = useNavigate();
 
   const [ensayo, setEnsayo] = useState({
-    actividad: '',
-    tipo: '',
-    norma: '',
-    unidad: '',
-    precio_uf: ''
+    actividad: "",
+    tipo: "",
+    norma: "",
+    unidad: "",
+    precio_uf: "1",
   });
 
   const params = useParams();
 
-  useEffect( () => {
+  useEffect(() => {
     const fetchEnsayo = async () => {
       if (params.id) {
         try {
           const dataEnsayo = await getEnsayoByIdRequest(params.id);
-          console.log('Ensayo encontrado:', dataEnsayo);
+          console.log("Ensayo encontrado:", dataEnsayo);
           setEnsayo(dataEnsayo.data);
         } catch (error) {
-          console.error('Error al obtener el ensayo:', error);
+          console.error("Error al obtener el ensayo:", error);
         }
       }
     };
@@ -33,72 +36,126 @@ export default function RegistEnsayos() {
   }, [params.id]);
 
   return (
-    <div>
-        <h1>{params.id ? 'Editar datos del ensayo' : 'Registrar nuevo ensayo'}</h1>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <h1 className="mb-4 text-center">
+            {params.id ? "Editar datos del ensayo" : "Registrar nuevo ensayo"}
+          </h1>
 
-        <Formik
+          <Formik
             initialValues={ensayo}
             enableReinitialize={true} // Permite que los valores iniciales se actualicen cuando cambie el estado
-            onSubmit={async (values)=>{    
-                try {
-                    if (params.id) {
-                        await updateEnsayosRequest(params.id, values);
-                        console.log('Ensayo actualizado:', values);
-                    }else{
-                        const response = await createEnsayosRequest(values);
-                        console.log('Ensayo creado:', response.data);
-                    }
-                    setEnsayo({
-                        actividad: '',
-                        tipo: '',
-                        norma: '',
-                        unidad: '',
-                        precio_uf: ''
-                    });
-                    navigate('/essay'); // Redirigir a la lista de ensayos después de crear o actualizar
-                } catch (error) {
-                    console.error('Error al crear ensayo:', error);
+            onSubmit={async (values) => {
+              try {
+                if (params.id) {
+                  await updateEnsayosRequest(params.id, values);
+                  console.log("Ensayo actualizado:", values);
+                } else {
+                  const response = await createEnsayosRequest(values);
+                  console.log("Ensayo creado:", response.data);
                 }
+                setEnsayo({
+                  actividad: "",
+                  tipo: "",
+                  norma: "",
+                  unidad: "",
+                  precio_uf: "1",
+                });
+                navigate("/essay"); // Redirigir a la lista de ensayos después de crear o actualizar
+              } catch (error) {
+                console.error("Error al crear ensayo:", error);
+              }
             }}
-        >
-        {({handleChange, handleSubmit, values, isSubmitting})=>(
-            <Form onSubmit={handleSubmit}>
-                <label htmlFor="actividad">Actividad</label>
-                <input type="text" name="actividad"
-                onChange={handleChange}
-                value={values.actividad}
-                />
+          >
+            {({ handleChange, handleSubmit, values, isSubmitting }) => (
+              <Form onSubmit={handleSubmit}>
+                <div className="form-group mb-3">
+                  <label htmlFor="actividad" className="form-label">Actividad</label>
+                  <input
+                    type="text"
+                    name="actividad"
+                    className="form-control"
+                    placeholder="Nombre de la actividad"
+                    onChange={handleChange}
+                    value={values.actividad}
+                  />
+                  <div className="valid-feedback"></div>
+                  <div className="invalid-feedback">Campo requerido</div>
+                </div>
 
-                <label htmlFor="tipo">Tipo</label>
-                <input type="text" name="tipo"
-                onChange={handleChange}
-                value={values.tipo}
-                />
+                <div className="form-group mb-3">
+                  <label htmlFor="tipo" className="form-label">Area</label>
+                  <select
+                    name="area"
+                    className="form-select"
+                    onChange={handleChange}
+                    value={values.tipo} //cambia nombre tipo -> area en la BD
+                  >
+                    <option value="" disabled hidden>Selecciona una opción</option>
+                    <option value="Mecanica de suelos">Mecanica de suelos</option>
+                    <option value="Asfaltos">Asfaltos</option>
+                    <option value="Hormigón">Hormigón</option>
+                    <option value="Elementos y Componentes">Elementos y Componentes</option>
+                  </select>
+                  <div className="invalid-feedback">
+                    Por favor, selecciona una opción válida.
+                  </div>
+                </div>
 
-                <label htmlFor="norma">Norma</label>
-                <input type="text" name="norma"
-                onChange={handleChange}
-                value={values.norma}
-                />
+                <div className="form-group mb-3">
+                  <label htmlFor="norma" className="form-label">Norma</label>
+                  <input
+                    type="text"
+                    name="norma"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.norma}
+                  />
+                </div>
 
-                <label htmlFor="unidad">Unidad</label>
-                <input type="text" name="unidad"
-                onChange={handleChange}
-                value={values.unidad}
-                />
+                <div className="form-group mb-3">
+                  <label htmlFor="unidad" className="form-label">Unidad</label>
+                  <input
+                    type="text"
+                    name="unidad"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.unidad}
+                  />
+                </div>
 
-                <label htmlFor="precio_uf">Precio UF</label>
-                <input type="number" name="precio_uf"
-                onChange={handleChange}
-                value={values.precio_uf}
-                />
+                <div className="form-group mb-3">
+                  <label htmlFor="precio_uf" className="form-label">Costo</label>
+                  <div className="input-group mb-3">
+                    <input
+                      type="number"
+                      name="precio_uf"
+                      className="form-control"
+                      onChange={handleChange}
+                      value={values.precio_uf}
+                    />
+                    <span className="input-group-text">UF</span>
+                  </div>
+                  <small className="form-text text-muted">
+                    El monto sera ingresado en UF
+                  </small>
+                </div>
 
-                <button type="submit" disabled={isSubmitting}>
+                <div className="d-flex flex-row-reverse">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="btn btn-primary p-2"
+                  >
                     {isSubmitting ? "Registrando..." : "Registrar"}
-                </button>
-            </Form>
-        )}
-        </Formik>
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </div>
     </div>
-  )
+  );
 }

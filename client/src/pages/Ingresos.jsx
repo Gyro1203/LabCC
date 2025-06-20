@@ -48,7 +48,10 @@ function Ingresos() {
         </button>
         <div className="row">
           {ingresos.map((ingreso) => (
-            <div key={ingreso.id_ingreso} className="col-sm-12 col-md-6 col-lg-4 mb-4">
+            <div
+              key={ingreso.id_ingreso}
+              className="col-sm-12 col-md-6 col-lg-4 mb-4"
+            >
               <IngresosCard ingreso={ingreso} />
               <button onClick={() => handleDelete(ingreso.id_ingreso)}>
                 Eliminar
@@ -57,6 +60,12 @@ function Ingresos() {
                 onClick={() => navigate(`/entry/edit/${ingreso.id_ingreso}`)}
               >
                 Editar
+              </button>
+              <button onClick={() =>{
+                if(!ingreso.vigente) alert("Este ingreso no se encuentra vigente");
+                else navigate(`/activity/register`, { state: ingreso.id_ingreso });
+              }}>
+                Registar activida
               </button>
             </div>
           ))}
