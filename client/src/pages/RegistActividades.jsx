@@ -125,7 +125,7 @@ export default function RegistActividades() {
                   />
                 </div>
 
-                <div className="form-group mb-3">
+                <div className="form-group mb-3" hidden>
                   <label htmlFor="actividad_ingreso" className="form-label">
                     Actividad Ingreso
                   </label>
