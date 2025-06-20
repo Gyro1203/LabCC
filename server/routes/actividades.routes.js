@@ -7,7 +7,7 @@ router.get("/activity", getActividades);
 
 router.get("/activity/:id", getActividad);
 
-router.get("/activity/ingreso/:id", getActividadByIngreso);
+router.get("/activity/entry/:id", getActividadByIngreso);
 
 router.post("/activity", createActividad);
 

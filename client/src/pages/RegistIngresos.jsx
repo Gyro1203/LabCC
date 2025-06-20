@@ -93,13 +93,21 @@ export default function RegistIngresos() {
                   <label htmlFor="motivo" className="form-label">
                     Motivo de ingreso
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="motivo"
-                    className="form-control"
+                    className="form-select"
                     onChange={handleChange}
                     value={values.motivo}
-                  />
+                  >
+                    <option value="" disabled hidden>Selecciona una opción</option>
+                    <option value="Seminario Aplicado" >Seminario Aplicado</option>
+                    <option value="Tesis o Proyecto de Titulo">Tesis o Proyecto de Titulo</option>
+                    <option value="Proyecto de Investigación">Proyecto de Investigación</option>
+                    <option value="Practica I">Practica I</option>
+                    <option value="Practica II">Practica II</option>
+                    <option value="Practica III">Practica III</option>
+                    <option value="Otros">Otros</option>
+                  </select>
                 </div>
 
                 <div className="form-group mb-3">

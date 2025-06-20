@@ -34,8 +34,8 @@ export const getActividadByIngreso = async (req, res) => {
 
 export const createActividad = async (req, res) => {
     try {
-        const { cantidad, observaciones, actividad_ensayo, actividad_ingreso } = req.body;
-        const [actividad, errorActividad] = await createActividadService({ cantidad, observaciones, actividad_ensayo, actividad_ingreso });
+        const { nombre, cantidad, observaciones, actividad_ingreso } = req.body;
+        const [actividad, errorActividad] = await createActividadService({ nombre, cantidad, observaciones, actividad_ingreso });
         if (errorActividad) return handleErrorClient(res, 400, errorActividad);
         handleSuccess(res, 201, "Actividad creada exitosamente", actividad);
     } catch (error) {

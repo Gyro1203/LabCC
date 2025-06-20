@@ -85,12 +85,12 @@ export default function RegistEnsayos() {
                 </div>
 
                 <div className="form-group mb-3">
-                  <label htmlFor="tipo" className="form-label">Tipo</label>
+                  <label htmlFor="tipo" className="form-label">Area</label>
                   <select
-                    name="tipo"
+                    name="area"
                     className="form-select"
                     onChange={handleChange}
-                    value={values.tipo}
+                    value={values.tipo} //cambia nombre tipo -> area en la BD
                   >
                     <option value="" disabled hidden>Selecciona una opción</option>
                     <option value="Mecanica de suelos">Mecanica de suelos</option>
@@ -119,7 +119,7 @@ export default function RegistEnsayos() {
                   <input
                     type="text"
                     name="unidad"
-                    className="form-control is-valid m-2"
+                    className="form-control"
                     onChange={handleChange}
                     value={values.unidad}
                   />

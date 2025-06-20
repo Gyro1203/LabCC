@@ -29,7 +29,8 @@ export const getAsistenciaService = async ( id ) => {
         const [result] = await db.query(`
             SELECT 
                 asis.id_asistencia,
-                al.nombre AS alumno, 
+                al.nombre AS alumno,
+                al.rut,
                 asis.jornada, 
                 asis.entrada, 
                 ac.nombre AS actividad,
@@ -52,20 +53,39 @@ export const getAsistenciaService = async ( id ) => {
 
 export const createAsistenciaService = async ( body ) => {
     try {
-        const { jornada, asistencia_ingreso, asistencia_actividad } = body;
+        const { rut, jornada, actividad } = body;
+        if(!rut) return [null, "El rut del alumno es requerido"];
+
+        let ingreso_vigente;
         
-        const [ingreso] = await db.query("SELECT ingreso_alumno, vigente FROM ingresos WHERE id_ingreso = ?", asistencia_ingreso);
-        if(!ingreso || ingreso.length === 0) return [null, "No se encontró el ingreso"];
-        if(!ingreso[0].vigente) return [null, "El ingreso no se encuentra vigente"];
+        //Busca los ingresos asociados al rut del alumno
+        const [ingresos] = await db.query(`
+            SELECT 
+                i.id_ingreso,
+                a.nombre,
+                i.vigente
+            FROM alumnos a 
+            JOIN ingresos i ON i.ingreso_alumno = a.id_alumno
+            WHERE a.rut = ?
+        `,[rut]);
+        console.log("Ingresos encontrados: ", ingresos);
+        if(!ingresos || ingresos.length === 0) return [null, "El alumno no tiene ingresos registrados"];
 
-        const [actividad] = await db.query("SELECT nombre, actividad_ingreso FROM actividades WHERE id_actividad = ?", asistencia_actividad);
-        if(!actividad || actividad.length === 0) return [null, "No se encontró la actividad"];
-        if(actividad[0].actividad_ingreso !== asistencia_ingreso) return [null, "El registro de ingreso no contiene esta actividad"];
+        //Si existen ingresos, busca si alguno se encuentra vigente
+        for (let ingreso of ingresos) {
+            if(ingreso.vigente) ingreso_vigente = ingreso;
+        }
+        console.log("Ingreso vigente: ", ingreso_vigente);
+        if(!ingreso_vigente) return [null, "El alumno no cuenta con un ingreso vigente"];
 
-        const [alumno] = await db.query("SELECT nombre FROM alumnos WHERE id_alumno = ?", ingreso[0].ingreso_alumno);
+        const [actividad_encontrada] = await db.query("SELECT id_actividad, nombre, actividad_ingreso FROM actividades WHERE nombre = ?", actividad);
+        if(!actividad_encontrada || actividad_encontrada.length === 0) return [null, "No se encontró la actividad"];
+        if(actividad_encontrada[0].actividad_ingreso !== ingreso_vigente.id_ingreso) return [null, "El registro de ingreso no contiene esta actividad"];
 
-        const nombre_alumno = alumno[0].nombre;
-        const nombre_actividad = actividad[0].nombre;
+        //const [alumno] = await db.query("SELECT nombre FROM alumnos WHERE id_alumno = ?", ingreso_vigente.ingreso_alumno);
+
+        const { id_ingreso, nombre: nombre_ingreso } = ingreso_vigente;
+        const { id_actividad, nombre: nombre_actividad} = actividad_encontrada[0];
 
         const [result] = await db.query(`
             INSERT INTO asistencias(
@@ -75,7 +95,7 @@ export const createAsistenciaService = async ( body ) => {
                 asistencia_ingreso,
                 asistencia_actividad
             ) VALUES (?, ?, ?, ?, ?)
-        `, [nombre_alumno, jornada, nombre_actividad, asistencia_ingreso, asistencia_actividad]);
+        `, [nombre_ingreso, jornada, nombre_actividad, id_ingreso , id_actividad]);
         if(result.affectedRows === 0) return [null, "Error al registrar la asistencia"];
 
         const [created] = await db.query("SELECT * FROM asistencias WHERE id_asistencia = ?", result.insertId);
@@ -93,18 +113,32 @@ export const updateAsistenciaService = async ( body, id ) => {
         const [actualizarAsistencia] = await db.query("SELECT * FROM asistencias WHERE id_asistencia = ?", id);
         if(!actualizarAsistencia || actualizarAsistencia.length === 0) return [null, "Registro de asistencia no encontrado"];
     
-        const [ingreso] = await db.query("SELECT ingreso_alumno, vigente FROM ingresos WHERE id_ingreso = ?", body.asistencia_ingreso);
-        if(!ingreso || ingreso.length === 0) return [null, "No se encontró el ingreso"];
-        if(!ingreso[0].vigente) return [null, "El ingreso no se encuentra vigente"];
+        let ingreso_vigente;
+        const [ingresos] = await db.query(`
+            SELECT 
+                i.id_ingreso,
+                a.nombre,
+                i.vigente
+            FROM alumnos a 
+            JOIN ingresos i ON i.ingreso_alumno = a.id_alumno
+            WHERE a.rut = ?
+        `,[body.rut]);
+        console.log("Ingresos encontrados: ", ingresos);
+        if(!ingresos || ingresos.length === 0) return [null, "El alumno no tiene ingresos registrados"];
 
-        const [actividad] = await db.query("SELECT nombre, actividad_ingreso FROM actividades WHERE id_actividad = ?", body.asistencia_actividad);
-        if(!actividad || actividad.length === 0) return [null, "No se encontró la actividad"];
-        if(actividad[0].actividad_ingreso !== body.asistencia_ingreso) return [null, "El registro de ingreso no contiene esta actividad"];
+        for (let ingreso of ingresos) {
+            if(ingreso.vigente) ingreso_vigente = ingreso;
+        }
+        console.log("Ingreso vigente: ", ingreso_vigente);
+        if(!ingreso_vigente) return [null, "El alumno no cuenta con un ingreso vigente"];;
 
-        const [alumno] = await db.query("SELECT nombre FROM alumnos WHERE id_alumno = ?", ingreso[0].ingreso_alumno);
+        const [actividad_encontrada] = await db.query("SELECT id_actividad, nombre, actividad_ingreso FROM actividades WHERE nombre = ?", body.actividad);
+        if(!actividad_encontrada || actividad_encontrada.length === 0) return [null, "No se encontró la actividad"];
+        if(actividad_encontrada[0].actividad_ingreso !== ingreso_vigente.id_ingreso) return [null, "El registro de ingreso no contiene esta actividad"];
+        //const [alumno] = await db.query("SELECT nombre FROM alumnos WHERE id_alumno = ?", ingreso[0].ingreso_alumno);
 
-        const nombre_alumno = alumno[0].nombre;
-        const nombre_actividad = actividad[0].nombre;
+        const { id_ingreso, nombre: nombre_ingreso } = ingreso_vigente;
+        const { id_actividad, nombre: nombre_actividad} = actividad_encontrada[0];
 
         const result = await db.query(`
             UPDATE asistencias SET 
@@ -115,11 +149,11 @@ export const updateAsistenciaService = async ( body, id ) => {
                 asistencia_actividad = ?
             WHERE id_asistencia = ?`
             , [
-                nombre_alumno, 
+                nombre_ingreso, 
                 body.jornada, 
                 nombre_actividad, 
-                body.asistencia_ingreso, 
-                body.asistencia_actividad,
+                id_ingreso, 
+                id_actividad,
                 id
             ]
         );

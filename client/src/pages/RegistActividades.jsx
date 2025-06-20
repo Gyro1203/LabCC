@@ -4,23 +4,31 @@ import {
   getActividadByIdRequest,
   updateActividadesRequest,
 } from "../services/actividades.api";
-import { useNavigate, useParams } from "react-router-dom";
+import { getEnsayosRequest } from "../services/ensayos.api";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function RegistActividades() {
+
   const navigate = useNavigate();
+  const { state } = useLocation();
 
   const [actividad, setActividad] = useState({
-    cantidad: 0,
+    nombre: "",
+    cantidad: 1,
     observaciones: "",
-    actividad_ensayo: 1,
-    actividad_ingreso: 1,
+    actividad_ingreso: (state || 1),
   }); // Estado para almacenar la actividad si es necesario, aunque no se usa en este ejemplo
+
+  const [ensayos, setEnsayos] = useState([]);
 
   const params = useParams();
 
   useEffect(() => {
     const fetchActividad = async () => {
+      const dataEnsayos = await getEnsayosRequest();
+      console.log(dataEnsayos.data);
+      setEnsayos(dataEnsayos.data);
       if (params.id) {
         try {
           const dataActividad = await getActividadByIdRequest(params.id);
@@ -52,6 +60,7 @@ export default function RegistActividades() {
             onSubmit={async (values) => {
               try {
                 if (params.id) {
+                  console.log("values", values);
                   await updateActividadesRequest(params.id, values);
                   console.log("Actividad actualizada:", values);
                 } else {
@@ -59,10 +68,10 @@ export default function RegistActividades() {
                   console.log("Actividad creada:", response.data);
                 }
                 setActividad({
-                  cantidad: 0,
+                  nombre: "",
+                  cantidad: 1,
                   observaciones: "",
-                  actividad_ensayo: 1,
-                  actividad_ingreso: 1,
+                  actividad_ingreso: (state || 1),
                 });
                 navigate("/activity"); // Redirigir a la lista de actividades después de crear o actualizar
               } catch (error) {
@@ -72,6 +81,25 @@ export default function RegistActividades() {
           >
             {({ handleChange, handleSubmit, values, isSubmitting }) => (
               <Form onSubmit={handleSubmit}>
+                <div className="form-group mb-3">
+                  <label htmlFor="nombre" className="form-label">
+                    Actividad
+                  </label>  
+                  <select
+                    name="nombre"
+                    className="form-select"
+                    onChange={handleChange}
+                    value={values.nombre}
+                  >
+                    <option value="" disabled hidden>Selecciona una opción</option>
+                    {ensayos.map((ensayo) => (
+                      <option key={ensayo.id_ensayo} value={ensayo.actividad}>
+                        {ensayo.actividad}
+                      </option> 
+                    ))}
+                  </select>
+                </div>
+
                 <div className="form-group mb-3">
                   <label htmlFor="cantidad" className="form-label">
                     Cantidad
@@ -94,19 +122,6 @@ export default function RegistActividades() {
                     onChange={handleChange}
                     className="form-control"
                     value={values.observaciones}
-                  />
-                </div>
-
-                <div className="form-group mb-3">
-                  <label htmlFor="actividad_ensayo" className="form-label">
-                    Actividad Ensayo
-                  </label>
-                  <input
-                    type="number"
-                    name="actividad_ensayo"
-                    className="form-control"
-                    onChange={handleChange}
-                    value={values.actividad_ensayo}
                   />
                 </div>
 

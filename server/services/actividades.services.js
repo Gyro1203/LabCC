@@ -30,6 +30,7 @@ export const getActividadByIngresoService = async ( id ) => {
 
         const [result] = await db.query(`
             SELECT 
+                ac.id_actividad,
                 al.nombre AS alumno, 
                 al.rut, 
                 i.motivo, 
@@ -59,20 +60,20 @@ export const getActividadByIngresoService = async ( id ) => {
 
 export const createActividadService = async ( body ) => {
     try {
-        const { cantidad, observaciones, actividad_ensayo, actividad_ingreso } = body;
+        const { nombre, cantidad, observaciones, actividad_ingreso } = body;
         if(cantidad <= 0) return [null, "La cantidad debe ser mayor a 0"];
         
         const [ingreso] = await db.query("SELECT vigente FROM ingresos WHERE id_ingreso = ?", actividad_ingreso);
         if(!ingreso || ingreso.length === 0) return [null, "No se encontró el ingreso"];
         if(!ingreso[0].vigente) return [null, "El ingreso no se encuentra vigente"];
 
-        const [ensayo] = await db.query("SELECT actividad, unidad, precio_uf, precio_peso FROM ensayos WHERE id_ensayo = ?", actividad_ensayo);
+        const [ensayo] = await db.query("SELECT id_ensayo, actividad, unidad, precio_uf, precio_peso FROM ensayos WHERE actividad = ?", nombre);
         if(!ensayo || ensayo.length === 0) return [null, "No se encontró el ensayo"];
         
-        const[existe] = await db.query("SELECT id_actividad FROM actividades WHERE actividad_ingreso = ? AND actividad_ensayo = ?", [actividad_ingreso, actividad_ensayo]);
+        const[existe] = await db.query("SELECT id_actividad FROM actividades WHERE actividad_ingreso = ? AND nombre = ?", [actividad_ingreso, nombre]);
         if(existe.length > 0) return [null, "No se puede repetir la actividad"];
 
-        const { actividad, unidad, precio_uf, precio_peso } = ensayo[0];
+        const { id_ensayo, actividad, unidad, precio_uf, precio_peso } = ensayo[0];
 
         const [result] = await db.query(`
             INSERT INTO actividades(
@@ -87,7 +88,19 @@ export const createActividadService = async ( body ) => {
                 actividad_ensayo,
                 actividad_ingreso
             )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? , ?)`
-            , [actividad, unidad, cantidad, precio_uf, precio_peso, (precio_uf * cantidad), (precio_peso * cantidad), observaciones, actividad_ensayo, actividad_ingreso]
+            ,
+            [
+                actividad, 
+                unidad, 
+                cantidad, 
+                precio_uf, 
+                precio_peso, 
+                (precio_uf * cantidad), 
+                (precio_peso * cantidad), 
+                observaciones, 
+                id_ensayo, 
+                actividad_ingreso
+            ]
         );
         if(result.affectedRows === 0) return [null, "Error al registrar la actividad"];
 
@@ -112,11 +125,13 @@ export const updateActividadService = async ( body, id ) => {
         if(!ingreso || ingreso.length === 0) return [null, "No se encontró el ingreso"];
         if(!ingreso[0].vigente) return [null, "El ingreso no se encuentra vigente"];
 
-        const [ensayo] = await db.query("SELECT actividad, unidad, precio_uf, precio_peso FROM ensayos WHERE id_ensayo = ?", body.actividad_ensayo);
+        const [ensayo] = await db.query("SELECT id_ensayo, actividad, unidad, precio_uf, precio_peso FROM ensayos WHERE actividad = ?", body.nombre);
         if(!ensayo || ensayo.length === 0) return [null, "No se encontró el ensayo"];
 
         const [existe] = await db.query("SELECT id_actividad FROM actividades WHERE actividad_ingreso = ? AND actividad_ensayo = ?", [body.actividad_ingreso, body.actividad_ensayo]);
         if(existe[0] && existe[0].id_actividad !== actualizarActividad[0].id_actividad) return [null, "No se puede repetir la actividad"];
+
+        const { id_ensayo, actividad, unidad, precio_uf, precio_peso } = ensayo[0];
 
         await db.query(`
             UPDATE actividades SET 
@@ -132,25 +147,25 @@ export const updateActividadService = async ( body, id ) => {
                 actividad_ingreso = ?
             WHERE id_actividad = ?`
             , [
-                ensayo[0].actividad, 
-                ensayo[0].unidad, 
+                actividad, 
+                unidad, 
                 body.cantidad, 
-                ensayo[0].precio_uf, 
-                ensayo[0].precio_peso, 
-                (ensayo[0].precio_uf * body.cantidad), 
-                (ensayo[0].precio_peso * body.cantidad), 
+                precio_uf, 
+                precio_peso, 
+                (precio_uf * body.cantidad), 
+                (precio_peso * body.cantidad), 
                 body.observaciones, 
-                body.actividad_ensayo, 
+                id_ensayo, 
                 body.actividad_ingreso,
                 id
             ]
         );
         //await db.query("UPDATE actividades SET ? WHERE id_actividad = ?", [body, id]);
         //Faltan validaciones por si falta un parametro en body
-        const [actividad] = await db.query("SELECT * FROM actividades WHERE id_actividad = ?", id);
-        if(!actividad) return [null, "No se encontró la actividad despues de actualizar"];
+        const [updated] = await db.query("SELECT * FROM actividades WHERE id_actividad = ?", id);
+        if(!updated) return [null, "No se encontró la actividad despues de actualizar"];
 
-        return [actividad[0], null];
+        return [updated[0], null];
     } catch (error) {
         console.error("Error al modificar la actividad", error);
         return [null, "Error interno del servidor"];
