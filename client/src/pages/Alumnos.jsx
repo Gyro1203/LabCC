@@ -17,6 +17,18 @@ function Alumnos() {
     fetchData();
   }, [])
 
+  useEffect(() => {
+    console.log(window.$.fn);
+    // Espera a que la tabla esté en el DOM y alumnos tenga datos
+    if (alumnos.length > 0 && window.$) {
+      // Destruye la instancia previa si existe
+      if (window.$.fn.DataTable.isDataTable('#tabla-alumnos')) {
+        window.$('#tabla-alumnos').DataTable().destroy();
+      }
+      window.$('#tabla-alumnos').DataTable();
+    }
+  }, [alumnos]);
+
   const handleDelete = async (id) => {
     try {
       const response = await deleteAlumnosRequest(id);
@@ -39,15 +51,29 @@ function Alumnos() {
     return(
       <div className="container mt-4">
         <button onClick={() => navigate(`/students/register`)}>Registar Alumno</button>
-        <div className="row" >
-          {alumnos.map(alumno => (
-            <div key={alumno.id_alumno} className="col-sm-12 col-md-6 col-lg-4 mb-4">
-              <AlumnosCard alumno={alumno} />
-              <button onClick={() => handleDelete(alumno.id_alumno)}>Eliminar</button>
-              <button onClick={() => navigate(`/students/edit/${alumno.id_alumno}`)}>Editar</button>
-            </div>
-          ))}
-        </div>
+        <table id="tabla-alumnos" className="display">
+          <thead>
+            <tr>
+              <th scope="col">Nombre</th>
+              <th scope="col">Rut</th>
+              <th scope="col">Carrera</th>
+              <th scope="col">Facultad</th>
+              <th scope="col">Departamento</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {alumnos.map(alumno => (
+              <AlumnosCard 
+                key={alumno.id_alumno} 
+                alumno={alumno}
+                eliminar={
+                  <button onClick={() => handleDelete(alumno.id_alumno)}>Eliminar</button>
+                }
+              />
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }

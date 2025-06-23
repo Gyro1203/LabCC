@@ -8,7 +8,7 @@ import Alumnos from "./pages/Alumnos.jsx";
 import Ensayos from "./pages/Ensayos.jsx";
 import Ingresos from "./pages/Ingresos.jsx";
 import Actividades from "./pages/Actividades.jsx";
-import Asistencias from "./pages/Asistencias.jsx";
+import Asistencias from "./pages/Asistenciastablas.jsx"; //Cambiar
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 

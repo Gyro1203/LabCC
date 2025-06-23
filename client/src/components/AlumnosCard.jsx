@@ -1,14 +1,13 @@
-function AlumnosCard({ alumno }) {
+function AlumnosCard({ alumno, eliminar }) {
   return (
-    <div className="card h-100">
-      <h2 className="card-header">{alumno.nombre}</h2>
-      <div className="card-body">
-        <p className="card-text">RUT: {alumno.rut}</p>
-        <p className="card-text">Carrera: {alumno.carrera}</p>
-        <p className="card-text">Facultad: {alumno.facultad}</p>
-        <p className="card-text">Departamento: {alumno.departamento}</p>
-      </div>
-    </div>
+    <tr>
+      <td>{alumno.nombre}</td>
+      <td>{alumno.rut}</td>
+      <td>{alumno.carrera}</td>
+      <td>{alumno.facultad}</td>
+      <td>{alumno.departamento}</td>
+      <td>{eliminar}</td>
+    </tr>
   );
 }
 
