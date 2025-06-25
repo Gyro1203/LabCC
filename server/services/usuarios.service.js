@@ -65,17 +65,20 @@ export const updateUsuariosService = async (body, id) => {
         const [actualizarUsuario] = await db.query("SELECT * FROM usuarios WHERE id_usuario = ?", id);
         if(!actualizarUsuario || actualizarUsuario.length === 0) return [null, "No se encontró el usuario"];
 
-        const [existeUsuarios] = await db.query("SELECT * FROM alumnos WHERE email = ?", body.email);
+        const [existeUsuarios] = await db.query("SELECT * FROM usuarios WHERE email = ?", body.email);
 
-        // Verifica si ya existe un email en la db
+
         if(existeUsuarios[0] && existeUsuarios[0].email !== actualizarUsuario[0].email) 
         return [null, "Ya existe un usuario con este email"];
 
-        // Verifica la contraseña antes de actualizar
         const passwordIgual = await comparePassword(body.password, actualizarUsuario[0].password);
         if(!passwordIgual) return [null, "La contraseña no coincide"];
 
-        await db.query("UPDATE usuarios SET ? WHERE id_usuario = ?", [body, id]);
+        const encryptedPassword = await encryptPassword(body.password);
+
+        const updatedBody = { ...body, password: encryptedPassword };
+
+        await db.query("UPDATE usuarios SET ? WHERE id_usuario = ?", [updatedBody, id]);
 
         const [usuario] = await db.query("SELECT * FROM usuarios WHERE id_usuario = ?", id);
         if(!usuario) return [null, "Usuario no encontrado despues de ser creado"];
@@ -91,9 +94,9 @@ export const updateUsuariosService = async (body, id) => {
 // borrar un usuario
 export const deleteUsuariosService = async (id) => {
     try{
-        const [result] = await db.query("SELECT * FROM usuario WHERE id_usuario = ?", id);
+        const [result] = await db.query("SELECT * FROM usuarios WHERE id_usuario = ?", id);
         if (!result || result.length === 0) return [null, "No se encontró al usuario"];
-        const [deleted] = await db.query("DELETE FROM usuario WHERE id_usuario = ?", id);
+        const [deleted] = await db.query("DELETE FROM usuarios WHERE id_usuario = ?", id);
         if(deleted.affectedRows === 0) return [null, "No se pudo borrar al usuario"];
         return [result[0], null];
     }catch (error){

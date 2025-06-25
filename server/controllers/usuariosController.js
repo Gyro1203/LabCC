@@ -57,7 +57,7 @@ export const updateUsuarios = async (req, res) => {
 
 export const deleteUsuarios = async (req, res) => {
     try {
-            const [usuario, errorUsuario] = await deleteUsuariosService(req.body, req.params.id);
+            const [usuario, errorUsuario] = await deleteUsuariosService([req.params.id]);
             if(errorUsuario) return handleErrorClient(res, 400, "Error al eliminar usuario", errorUsuario);
             handleSuccess(res, 200, "Usuario eliminado exitosamente", usuario);
         } catch (error) {
