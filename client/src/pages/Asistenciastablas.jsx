@@ -6,14 +6,17 @@ import {
 } from "../services/asistencias.api.js";
 import AsistenciasRows from "../components/AsistenciasRows.jsx";
 import { useNavigate } from "react-router-dom";
+import Filter from "../components/Filter.jsx";
 
 function Asistencias() {
   const navigate = useNavigate();
 
   const [asistencias, setAsistencias] = useState([]);
-  const [filter, setFilter] = useState("");
+  const [filterText, setFilterText] = useState("");
 
-  console.log(filter);
+  const camposFiltro = ["alumno", "actividad", "jornada"];
+  // Se envia el array de datos, el texto de filtro, y los campos por los que se puede filtrar
+  const asistenciasFiltradas = Filter(asistencias, filterText, camposFiltro);
 
   useEffect(() => {
     async function fetchData() {
@@ -22,19 +25,6 @@ function Asistencias() {
     }
     fetchData();
   }, []);
-
-  const asistenciasFiltradas = asistencias.filter((a) =>
-    a.alumno
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .includes(
-        filter
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase()
-      )
-  );
 
   const handleDelete = async (id) => {
     try {
@@ -73,42 +63,38 @@ function Asistencias() {
           Registar en Asistencia
         </button>
         <div className="row mt-4">
-          <div className="input-group ms-auto">
-            <input
-              id="input-search"
-              type="search"
-              onChange={(e) => {
-                setFilter(e.target.value);
-              }}
-              className="form-control"
-              placeholder="Filtrar por nombre"
-              style={{ maxWidth: "200px" }}
-            />
-            <button
-              type="button"
-              class="btn dropdown-toggle dropdown-toggle-split"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul className="dropdown-menu">
-              <li>
-                <a className="dropdown-item" href="#">
-                  Action
-                </a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="#">
-                  Another action
-                </a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="#">
-                  Something else here
-                </a>
-              </li>
-            </ul>
+          <div className="d-flex justify-content-end">
+            <div className="input-group" style={{ maxWidth: "300px" }}>
+              <input
+                id="input-search"
+                type="search"
+                onChange={(e) => {
+                  setFilterText(e.target.value);
+                }}
+                className="form-control"
+                placeholder="Buscar"
+                style={{ maxWidth: "400px" }}
+              />
+              <button
+                type="button"
+                className="btn dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span className="visually-hidden">Seleccionar Filtro</span>
+              </button>
+              <ul className="dropdown-menu">
+                <li>
+                  <a className="dropdown-item">Alumnos</a>
+                </li>
+                <li>
+                  <a className="dropdown-item">Jornada</a>
+                </li>
+                <li>
+                  <a className="dropdown-item">Actividad</a>
+                </li>
+              </ul>
+            </div>
           </div>
           <table className="table table-striped table-hover table-bordered mt-4">
             <thead>

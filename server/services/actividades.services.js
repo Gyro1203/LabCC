@@ -3,7 +3,22 @@ import db from '../config/db.js';
 
 export const getActividadesService = async () => {
     try {
-        const [result] = await db.query("SELECT * FROM actividades");
+        const [result] = await db.query(`
+            SELECT 
+                ac.id_actividad,
+                al.nombre AS alumno,
+                ac.nombre,
+                ac.unidad, 
+                ac.cantidad, 
+                ac.precio_uf, 
+                ac.precio_peso, 
+                ac.total_uf, 
+                ac.total_peso, 
+                ac.observaciones
+            FROM actividades ac
+            JOIN ingresos i ON ac.actividad_ingreso = i.id_ingreso
+            JOIN alumnos al ON al.id_alumno = i.ingreso_alumno
+        `);
         if(!result || result.length === 0) return [null, "No se encontraron actividades registradas"];
         return [result, null];
     } catch (error) {
