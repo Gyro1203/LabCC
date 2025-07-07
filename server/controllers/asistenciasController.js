@@ -1,6 +1,6 @@
 "use strict";
 import { handleErrorClient, handleErrorServer, handleSuccess } from "../handlers/responseHandlers.js";
-import { createAsistenciaService, deleteAsistenciaService, getAsistenciaService, getAsistenciasService, marcarSalidaService, updateAsistenciaService } from "../services/asistencias.services.js";
+import { createAsistenciaService, deleteAsistenciaService, getAsistenciasByIngresoService, getAsistenciaService, getAsistenciasService, marcarSalidaService, updateAsistenciaService } from "../services/asistencias.services.js";
 
 export const getAsistencias = async (req, res) => {
   try {
@@ -17,6 +17,16 @@ export const getAsistencia = async (req, res) => {
     const [asistencia, errorAsistencia] = await getAsistenciaService(req.params.id);
     if (errorAsistencia) return handleErrorClient(res, 404, errorAsistencia);
     handleSuccess(res, 200, "Asistencia encontrada", asistencia);
+  } catch (error) {
+    handleErrorServer(res, 500, error.message);
+  }
+};
+
+export const getAsistenciasByIngreso = async (req, res) => {
+  try {
+    const [asistencias, errorAsistencias] = await getAsistenciasByIngresoService(req.params.id);
+    if (errorAsistencias) return handleErrorClient(res, 404, errorAsistencias);
+    handleSuccess(res, 200, "Asistencias encontrada", asistencias);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
   }

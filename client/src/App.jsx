@@ -8,11 +8,13 @@ import Alumnos from "./pages/Alumnos.jsx";
 import Ensayos from "./pages/Ensayos.jsx";
 import Ingresos from "./pages/Ingresos.jsx";
 import Actividades from "./pages/Actividades.jsx";
-import Asistencias from "./pages/Asistencias.jsx";
+import Asistencias from "./pages/Asistenciastablas.jsx"; //Cambiar
 import Login from "./pages/Login.jsx";
 import Usuarios from "./pages/Usuarios.jsx";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
+import IngresoDetalles from "./pages/IngresoDetalles.jsx";
+import AlumnoDetalles from "./pages/AlumnoDetalles.jsx";
 
 export default function App() {
   return (
@@ -24,6 +26,7 @@ export default function App() {
         <Route path="/students" element={<Alumnos />} />
         <Route path="/students/register" element={<RegistAlumnos />} />
         <Route path="/students/edit/:id" element={<RegistAlumnos />} />
+        <Route path="/students/details/:id" element={<AlumnoDetalles />} />
 
         <Route path="/essay" element={<Ensayos />} />
         <Route path="/essay/register" element={<RegistEnsayos />} />
@@ -32,6 +35,7 @@ export default function App() {
         <Route path="/entry" element={<Ingresos />} />
         <Route path="/entry/register" element={<RegistIngresos />} />
         <Route path="/entry/edit/:id" element={<RegistIngresos />} />
+        <Route path="/entry/details/:id" element={<IngresoDetalles />} />
 
         <Route path="/activity" element={<Actividades />} />
         <Route path="/activity/register" element={<RegistActividades />} />

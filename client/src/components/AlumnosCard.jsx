@@ -1,14 +1,12 @@
 function AlumnosCard({ alumno }) {
   return (
-    <div className="card h-100">
-      <h2 className="card-header">{alumno.nombre}</h2>
-      <div className="card-body">
-        <p className="card-text">RUT: {alumno.rut}</p>
-        <p className="card-text">Carrera: {alumno.carrera}</p>
-        <p className="card-text">Facultad: {alumno.facultad}</p>
-        <p className="card-text">Departamento: {alumno.departamento}</p>
-      </div>
-    </div>
+    <>
+      <h2 className="list-group-item active text-center">{alumno.nombre}</h2>
+      <li className="list-group-item">RUT: {alumno.rut}</li>
+      <li className="list-group-item">Carrera: {alumno.carrera}</li>
+      <li className="list-group-item">Facultad: {alumno.facultad}</li>
+      <li className="list-group-item">Departamento: {alumno.departamento}</li>
+    </>
   );
 }
 

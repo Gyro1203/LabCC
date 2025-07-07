@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { getAsistencias, getAsistencia, createAsistencia, updateAsistencia, marcarSalida, deleteAsistencia } from "../controllers/asistenciasController.js";
+import { getAsistencias, getAsistencia, createAsistencia, updateAsistencia, marcarSalida, deleteAsistencia, getAsistenciasByIngreso } from "../controllers/asistenciasController.js";
 
 const router = Router();
 
 router.get("/attendance", getAsistencias);
 
 router.get("/attendance/:id", getAsistencia);
+
+router.get("/attendance/entry/:id", getAsistenciasByIngreso);
 
 router.post("/attendance", createAsistencia);
 
