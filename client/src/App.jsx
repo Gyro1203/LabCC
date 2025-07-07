@@ -10,6 +10,7 @@ import Ingresos from "./pages/Ingresos.jsx";
 import Actividades from "./pages/Actividades.jsx";
 import Asistencias from "./pages/Asistencias.jsx";
 import Login from "./pages/Login.jsx";
+import Usuarios from "./pages/Usuarios.jsx";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/attendance/edit/:id" element={<RegistAsistencias />} />
 
         <Route path="/login" element={<Login />} />
+        <Route path="/users" element={<Usuarios />} />
       </Routes>
     </>
   );
