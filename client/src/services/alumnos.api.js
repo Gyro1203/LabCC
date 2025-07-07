@@ -16,9 +16,11 @@ export const createAlumnosRequest = async (alumn) => {
 };
 
 export const updateAlumnosRequest = async (id, alumn) => {
-    return await axios.put(`http://localhost:3000/students/${id}`, alumn);
+    const response = await axios.put(`http://localhost:3000/students/${id}`, alumn);
+    return response.data;
 }
 
 export const deleteAlumnosRequest = async (id) => {
-    return await axios.delete(`http://localhost:3000/students/${id}`);
+    const response = await axios.delete(`http://localhost:3000/students/${id}`);
+    return response.data;
 };

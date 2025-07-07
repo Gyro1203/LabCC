@@ -1,16 +1,16 @@
 function IngresosCard({ ingreso }) {
   return (
-    <div className="card h-100">
-      <h2 className="card-header">{ingreso.nombre}</h2>
-      <div className="card-body">
-        <p className="card-text">Rut: {ingreso.rut}</p>
-        <p className="card-text">Motivo de uso: {ingreso.motivo}</p>
-        <p className="card-text">Titulo del proyecto: {ingreso.titulo}</p>
-        <p className="card-text">Profesor Guia: {ingreso.profesor_guia}</p>
-        <p className="card-text">Profesor Asignatura: {ingreso.profesor_asignatura}</p>
-        <p className="card-text">Semestre: {ingreso.semestre}</p>
-        <p className="card-text">Vigente: {ingreso.vigente ? "✅" : "❌"}</p>
-      </div>
+    <div className="card">
+      <h2 className="card-header text-center">{ingreso.nombre}</h2>
+      <ul className="list-group">
+        <li className="list-group-item">Rut: {ingreso.rut}</li>
+        <li className="list-group-item">Motivo de uso: {ingreso.motivo}</li>
+        <li className="list-group-item">Titulo del proyecto: {ingreso.titulo}</li>
+        <li className="list-group-item">Profesor Guia: {ingreso.profesor_guia}</li>
+        <li className="list-group-item">Profesor Asignatura: {ingreso.profesor_asignatura}</li>
+        <li className="list-group-item">Semestre: {ingreso.semestre}</li>
+        <li className="list-group-item">Vigente: {ingreso.vigente ? "✅" : "❌"}</li>
+      </ul>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function RegistAsistencias() {
 
   const params = useParams();
 
-  useEffect(() => {
+  useEffect(() => {   // Datos de Update
     const fetchAsistencia = async () => {
       const dataIngresos = await getIngresosRequest();
       console.log(dataIngresos.data);
@@ -51,7 +51,7 @@ export default function RegistAsistencias() {
     fetchAsistencia();
   }, [params.id]);
 
-  useEffect(() => {
+  useEffect(() => {   // Contenido del Select (Actividades)
     const fetchActividades = async () => {
       (!alumno) ? console.log("No") : console.log("SI");
       console.log("Alumno: ",alumno);

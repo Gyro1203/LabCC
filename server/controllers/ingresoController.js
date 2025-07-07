@@ -5,7 +5,8 @@ import {
     getIngresoService, 
     createIngresoService, 
     updateIngresoService, 
-    deleteIngresoService 
+    deleteIngresoService, 
+    getIngresoByAlumnoService
 } from '../services/ingresos.services.js';
 
 export const getIngresos = async (req, res) => {
@@ -28,31 +29,15 @@ export const getIngreso = async (req, res) => {
     }
 };
 
-export const getIngresoActividades = async (req, res) => {
+export const getIngresoByAlumno = async (req, res) => {
     try {
-        const [result] = await db.query(`
-            SELECT
-                a.nombre, 
-                a.rut, 
-                i.motivo, 
-                i.titulo, 
-                i.profesor_guia, 
-                i.profesor_asignatura, 
-                i.semestre,
-                ac.nombre
-            FROM ingresos i 
-            JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
-            JOIN actividades ac ON i.id_ingreso = ac.actividad_ingreso
-            WHERE i.id_ingreso = ?
-        `, [req.params.id]);
-        if (result.length <= 0) return handleErrorClient(res, 404, "Ingreso solicitado no encontrado");
-        handleSuccess(res, 200, "Actividades del ingreso encontradas", result);
+        const [ingreso, errorIngreso] = await getIngresoByAlumnoService(req.params.id);
+        if (errorIngreso) return handleErrorClient(res, 404, errorIngreso);
+        handleSuccess(res, 200, "Registro de ingresos encontrado", ingreso);
     } catch (error) {
-        console.error("Error al obtener las actividades del ingreso", error);
         handleErrorServer(res, 500, error.message);
     }
 };
-
 
 export const createIngreso = async (req, res) => {
     try {

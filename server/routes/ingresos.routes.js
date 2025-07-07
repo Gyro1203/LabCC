@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getIngresos, getIngreso, getIngresoActividades, createIngreso, updateIngreso, deleteIngreso } from "../controllers/ingresoController.js";
+import { getIngresos, getIngreso, createIngreso, updateIngreso, deleteIngreso, getIngresoByAlumno } from "../controllers/ingresoController.js";
 
 const router = Router();
 
@@ -7,7 +7,7 @@ router.get("/entry", getIngresos);
 
 router.get("/entry/:id", getIngreso);
 
-router.get("/entry/activity/:id", getIngresoActividades);
+router.get("/entry/student/:id", getIngresoByAlumno);
 
 router.post("/entry", createIngreso);
 
