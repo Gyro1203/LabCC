@@ -1,16 +1,16 @@
-function AsistenciasRows({ asistencia, index, eliminar, editar, salida }) {
+function AsistenciasRows({ asistencia, editar, eliminar, salida }) {
   const {fechaEntrada, horaEntrada, horaSalida} = SetDate(asistencia.entrada, asistencia.salida);
 
   return (
     <tr>
-      <th scope="row">{index + 1}</th>
-      <td>{asistencia.alumno}</td>
-      <td>{asistencia.jornada}</td>
+      {(asistencia.alumno) ? <td>{asistencia.alumno}</td> : null}
       <td>{fechaEntrada}</td>
+      <td>{asistencia.jornada}</td>
       <td>{horaEntrada}</td>
       <td>{asistencia.actividad}</td>
       <td>{horaSalida }</td>
-      <td>{editar} {eliminar} {salida}</td>
+      {(editar) ? <td>{editar} {eliminar} {salida}</td> : null}
+      
     </tr>
   );
 }

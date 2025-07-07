@@ -58,7 +58,7 @@ function Asistencias() {
     }
 
     return (
-      <div className="container text-center mt-4">
+      <div className="container text-center mt-4 mb-5">
         <button onClick={() => navigate(`/attendance/register`)}>
           Registar en Asistencia
         </button>
@@ -99,7 +99,6 @@ function Asistencias() {
           <table className="table table-striped table-hover table-bordered mt-4">
             <thead>
               <tr>
-                <th scope="col">#</th>
                 <th scope="col">Alumno</th>
                 <th scope="col">Jornada</th>
                 <th scope="col">Fecha</th>
@@ -110,11 +109,10 @@ function Asistencias() {
               </tr>
             </thead>
             <tbody id="body_table">
-              {asistenciasFiltradas.map((asistencia, index) => (
+              {asistenciasFiltradas.map((asistencia) => (
                 <AsistenciasRows
                   key={asistencia.id_asistencia}
                   asistencia={asistencia}
-                  index={index}
                   editar={
                     <button
                       className="btn btn-primary"

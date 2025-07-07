@@ -42,23 +42,13 @@ export const getActividadByIngresoService = async ( id ) => {
     try {
         const [ingreso] = await db.query("SELECT id_ingreso FROM ingresos WHERE id_ingreso = ?", id);
         if(!ingreso || ingreso.length === 0) return [null, "No se encontró el ingreso"];
-
+        //ac.nombre as actividad
         const [result] = await db.query(`
             SELECT 
                 ac.id_actividad,
-                al.nombre AS alumno, 
-                al.rut, 
-                i.motivo, 
-                i.titulo, 
-                i.semestre,
-                i.vigente,
-                ac.nombre as actividad,
+                ac.nombre,
                 ac.unidad, 
                 ac.cantidad, 
-                ac.precio_uf, 
-                ac.precio_peso, 
-                ac.total_uf, 
-                ac.total_peso, 
                 ac.observaciones
             FROM actividades ac
             JOIN ingresos i ON ac.actividad_ingreso = i.id_ingreso

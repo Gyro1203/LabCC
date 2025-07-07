@@ -10,6 +10,11 @@ export const getIngresoByIdRequest = async (id) => {
     return response.data;
 }
 
+export const getIngresoByAlumnoRequest = async (id) => {
+    const response = await axios.get(`http://localhost:3000/entry/student/${id}`);
+    return response.data;
+}
+
 export const createIngresosRequest = async (ingreso) => {
     const response = await axios.post('http://localhost:3000/entry', ingreso);
     return response.data;

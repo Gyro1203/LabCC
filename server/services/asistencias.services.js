@@ -51,6 +51,30 @@ export const getAsistenciaService = async ( id ) => {
     }
 }
 
+export const getAsistenciasByIngresoService = async ( id ) => {
+    try {
+        const [ingreso] = await db.query("SELECT id_ingreso FROM ingresos WHERE id_ingreso = ?", id);
+        if(!ingreso || ingreso.length === 0) return [null, "No se encontró el ingreso"];
+        const [result] = await db.query(`
+            SELECT 
+                asis.id_asistencia,
+                asis.jornada, 
+                asis.entrada, 
+                ac.nombre AS actividad,
+                asis.salida
+            FROM asistencias asis 
+            JOIN ingresos i ON asis.asistencia_ingreso = i.id_ingreso
+            JOIN actividades ac ON asis.asistencia_actividad = ac.id_actividad
+            WHERE asis.asistencia_ingreso = ?
+        `, [id]);
+        if (!result || result.length === 0) return [null, "No se encontraron registros de asistencias"];
+        return [result, null];
+    } catch (error) {
+        console.error("Error al obtener las actividades del ingreso", error);
+        return [null, "Error interno del servidor"];
+    }
+}
+
 export const createAsistenciaService = async ( body ) => {
     try {
         const { rut, jornada, actividad } = body;

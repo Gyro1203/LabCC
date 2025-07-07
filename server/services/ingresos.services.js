@@ -43,8 +43,29 @@ export const getIngresoService = async ( id ) => {
             JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
             WHERE i.id_ingreso = ?
         `, id);
-        if (!result || result.length === 0) return [null, "No se encontró el ensayo"];
+        if (!result || result.length === 0) return [null, "No se encontró el ingreso"];
         return [result[0], null];
+    } catch (error) {
+        console.error("Error al obtener el ingreso", error);
+        return [null, "Error interno del servidor"];
+    }
+}
+
+export const getIngresoByAlumnoService = async ( id ) => {
+    try {
+        const [result] = await db.query(`
+            SELECT
+                i.id_ingreso,
+                i.titulo, 
+                i.motivo, 
+                i.vigente,
+                i.semestre
+            FROM ingresos i 
+            JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
+            WHERE a.id_alumno= ?
+        `, id);
+        if (!result || result.length === 0) return [null, "No hay registros de ingresos al laboratorio"];
+        return [result, null];
     } catch (error) {
         console.error("Error al obtener el ingreso", error);
         return [null, "Error interno del servidor"];

@@ -1,9 +1,8 @@
-function ActividadesRows({ actividad, index, editar, eliminar }) {
+function ActividadesRows({ actividad  , editar, eliminar }) {
   return (
     <tr>
-      <td>{index + 1}</td>
       <td>{actividad.nombre}</td>
-      <td>{actividad.alumno}</td>
+      {(actividad.alumno) ? <td>{actividad.alumno}</td> : null}
       <td>{actividad.unidad}</td>
       <td>{actividad.cantidad}</td>
       <td>{actividad.precio_uf} UF</td>

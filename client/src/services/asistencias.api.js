@@ -10,6 +10,11 @@ export const getAsistenciaByIdRequest = async (id) => {
     return response.data;
 }
 
+export const getAsistenciaByIngresoRequest = async (id) => {
+    const response = await axios.get(`http://localhost:3000/attendance/entry/${id}`);
+    return response.data;
+}
+
 export const createAsistenciasRequest = async (asistencia) => {
     const response = await axios.post('http://localhost:3000/attendance', asistencia);
     return response.data;
