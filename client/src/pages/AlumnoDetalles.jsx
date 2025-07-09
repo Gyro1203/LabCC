@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-// import { getIngresoByIdRequest } from "../services/ingresos.api.js";
 import { useNavigate, useParams } from "react-router-dom";
-import IngresosCard from "../components/IngresosCard.jsx";
-// import { deleteActividadesRequest, getActividadByIngresoRequest } from "../services/actividades.api.js";
-import ActividadesRows from "../components/ActividadesRows.jsx";
 import { getAlumnoByIdRequest } from "../services/alumnos.api.js";
 import AlumnosCard from "../components/AlumnosCard.jsx";
 import { getIngresoByAlumnoRequest } from "../services/ingresos.api.js";
-import { getActividadByIngresoRequest } from "../services/actividades.api.js";
+import { getActividadesByIngresoRequest } from "../services/actividades.api.js";
 import { getAsistenciaByIngresoRequest } from "../services/asistencias.api.js";
 import AsistenciasRows from "../components/AsistenciasRows.jsx";
 
@@ -55,7 +51,7 @@ function AlumnoDetalles() {
   function GetActivities(id) {
     const fetchActivities = async () => {
       try {
-        const dataActividades = await getActividadByIngresoRequest(id);
+        const dataActividades = await getActividadesByIngresoRequest(id);
         setActividades((prevData) => ({
           ...prevData, //Carga los datos anteriores del objeto para mantenerlos
           [id]:
@@ -104,18 +100,19 @@ function AlumnoDetalles() {
     if (alumno.length === 0) {
       return (
         <>
-          <p>No hay ingresos registrados</p>
-          <button onClick={() => navigate(`/entry/register`)}>
-            Registar Ingreso
+          <p>No se encontró al alumno</p>
+          <button type="button" className="btn btn-secondary" onClick={() => navigate(`/students`)}>
+            Volver
           </button>
         </>
       );
     }
 
     return (
-      <div className="container mt-4 mb-5">
+      <div className="container mt-5 mb-5">
         <div className="d-flex justify-content-start">
           <button
+            type="button"
             className="btn btn-secondary mb-4"
             onClick={() => navigate(`/students`)}
           >

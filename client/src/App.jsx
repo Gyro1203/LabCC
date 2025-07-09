@@ -8,9 +8,9 @@ import Alumnos from "./pages/Alumnos.jsx";
 import Ensayos from "./pages/Ensayos.jsx";
 import Ingresos from "./pages/Ingresos.jsx";
 import Actividades from "./pages/Actividades.jsx";
-import Asistencias from "./pages/Asistenciastablas.jsx"; //Cambiar
 import Login from "./pages/Login.jsx";
 import Usuarios from "./pages/Usuarios.jsx";
+import Asistencias from "./pages/Asistencias.jsx";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import IngresoDetalles from "./pages/IngresoDetalles.jsx";

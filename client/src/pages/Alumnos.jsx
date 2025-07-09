@@ -7,6 +7,7 @@ import AlumnosRows from "../components/AlumnosRows.jsx";
 import { useNavigate } from "react-router-dom";
 import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
+import { deleteDataAlert, showErrorAlert, showSuccessAlert } from "../helpers/sweetAlert.js";
 
 function Alumnos() {
   const navigate = useNavigate();
@@ -38,13 +39,18 @@ function Alumnos() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteAlumnosRequest(id);
-      console.log("Alumno eliminado exitosamente:", response.data);
-      setAlumnos(alumnos.filter((a) => a.id_alumno !== id));
+      const confirmation = await deleteDataAlert();
+      if(confirmation.isConfirmed){
+        const response = await deleteAlumnosRequest(id);
+        console.log("Alumno eliminado exitosamente:", response.data);
+        showSuccessAlert("Alumno eliminado exitosamente");
+        setAlumnos(alumnos.filter((a) => a.id_alumno !== id));
+      }
     } catch (error) {
+      showErrorAlert("Error al eliminar alumno");
       console.error("Error al eliminar alumno:", error);
     }
-  };
+  }
 
   function handleHeaderClick(header) {
     setSort({
@@ -77,17 +83,23 @@ function Alumnos() {
   function renderAlumnos() {
     if (alumnos.length === 0) {
       return (
-        <>
-          <p>No hay alumnos registrados</p>
-          <button onClick={() => navigate(`/students/register`)}>Registrar Alumno</button>
-        </>
+        <div className="container d-flex align-items-center flex-column mt-5 mb-5">
+          <h1 className="p-2">No se encontraron alumnos registrados</h1>
+          <button type="button" className="btn btn-primary p-2" onClick={() => navigate(`/students/register`)}>
+            Registrar Alumno
+          </button>
+        </div>
       );
     }
 
     return (
-      <div className="container text-center mt-4 mb-5">
-        <button onClick={() => navigate(`/students/register`)}>Registrar Alumno</button>
-        <div className="d-flex justify-content-end mt-4">
+      <div className="container text-center mt-5 mb-5">
+        <div className="d-flex justify-content-between">
+          
+          <button type="button" className="btn btn-primary" onClick={() => navigate(`/students/register`)}>
+            Registrar Alumno
+          </button>
+
           <div className="input-group" style={{ maxWidth: "300px" }}>
             <input
               id="input-search"
@@ -95,7 +107,7 @@ function Alumnos() {
               onChange={(e) => setFilterText(e.target.value)}
               className="form-control"
               placeholder="Buscar"
-              style={{ maxWidth: "200px" }}
+              style={{ maxWidth: "300px" }} //Cambiar si se agregan mas elementos
             />
           </div>
         </div>
@@ -152,7 +164,9 @@ function Alumnos() {
                   <button
                     className="btn btn-primary"
                     title="Editar"
-                    onClick={() => navigate(`/students/edit/${alumno.id_alumno}`)}
+                    onClick={() =>
+                      navigate(`/students/edit/${alumno.id_alumno}`)
+                    }
                   >
                     <i className="fa-solid fa-pencil"></i>
                   </button>
@@ -165,12 +179,7 @@ function Alumnos() {
     );
   }
 
-  return (
-    <div>
-      <h1>Lista de Alumnos</h1>
-      {renderAlumnos()}
-    </div>
-  );
+  return <div>{renderAlumnos()}</div>;
 }
 
 export default Alumnos;

@@ -467,7 +467,7 @@ ul.conta_icon li a:hover {
 .navigation.navbar-dark .navbar-nav .nav-link:focus,
 .navigation.navbar-dark .navbar-nav .nav-link:hover {
      color: #ffffff;
-     background-color: #f2db18;
+     background-color: #F9B214;
 }
 
 .navigation.navbar-dark .navbar-nav .active>.nav-link,
@@ -475,7 +475,7 @@ ul.conta_icon li a:hover {
 .navigation.navbar-dark .navbar-nav .nav-link.show,
 .navigation.navbar-dark .navbar-nav .show>.nav-link {
      color: #ffffff;
-     background-color: #f2db18;
+     background-color: #F9B214;
 }
 
 .navbar-expand-md .navbar-nav {
@@ -499,7 +499,7 @@ ul.sign li a i {
 .sign_btn {
      float: right;
      max-width: 161px;
-     background: #f2db18;
+     background: #F9B214;
      font-size: 17px !important;
      width: 100%;
      text-align: center;
@@ -1417,6 +1417,7 @@ ul.img_icon li {
 
 /** end footer **/
 
+
 /** table cell **/
 
 .table-cell-hover {
@@ -1424,14 +1425,18 @@ ul.img_icon li {
 }
 
 .table-cell-hover:hover {
-  background-color: #04016de7; /* Color de fondo al hacer hover */
+  background-color: #014898; /* Color de fondo al hacer hover */
   color: #ffffff; /* Cambia el color del texto si quieres */
 }
 
 /** end table cell **/
 
+
 /** card **/
+
 /* Quita el border-radius de los botones de los tabs */
 .card .nav-tabs .nav-link {
   border-radius: 0 !important;
 }
+
+/** end card **/

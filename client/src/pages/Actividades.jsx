@@ -7,6 +7,11 @@ import ActividadesRows from "../components/ActividadesRows.jsx";
 import { useNavigate } from "react-router-dom";
 import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
+import {
+  deleteDataAlert,
+  showErrorAlert,
+  showSuccessAlert,
+} from "../helpers/sweetAlert.js";
 
 function Actividades() {
   const navigate = useNavigate();
@@ -17,7 +22,6 @@ function Actividades() {
   const [sort, setSort] = useState({ keyToSort: "nombre", direction: "asc" });
   const nonSortableKeys = ["opciones"];
 
-  // Ajusta los campos de filtro según los datos de actividades
   const camposFiltro = [
     "nombre",
     "alumno",
@@ -31,7 +35,6 @@ function Actividades() {
   ];
   const actividadesFiltradas = Filter(actividades, filterText, camposFiltro);
 
-  // Ajusta los headers según los datos de actividades
   const headers = [
     { id: 1, key: "nombre", label: "Nombre" },
     { id: 2, key: "alumno", label: "Alumno" },
@@ -56,10 +59,15 @@ function Actividades() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteActividadesRequest(id);
-      console.log("Actividad eliminada exitosamente:", response.data);
-      setActividades(actividades.filter((e) => e.id_actividad !== id));
+      const confirmation = await deleteDataAlert();
+      if (confirmation.isConfirmed) {
+        const response = await deleteActividadesRequest(id);
+        console.log("Actividad eliminada exitosamente:", response.data);
+        showSuccessAlert("Actividad eliminada exitosamente");
+        setActividades(actividades.filter((e) => e.id_actividad !== id));
+      }
     } catch (error) {
+      showErrorAlert("Error al eliminar actividad");
       console.error("Error al eliminar actividad:", error);
     }
   };
@@ -81,7 +89,7 @@ function Actividades() {
       return arrayToSort; // Si el key no es ordenable, retorna el array tal cual
     }
     return arrayToSort.slice().sort((a, b) => {
-      const aValue = a[sort.keyToSort] ?? ""; // Guarda el valor de "a", o "" si el anterior en null
+      const aValue = a[sort.keyToSort] ?? ""; // Guarda el valor de "a"; o "" si el anterior en null
       const bValue = b[sort.keyToSort] ?? "";
       if (aValue === bValue) return 0;
       if (sort.direction === "asc") {
@@ -96,18 +104,23 @@ function Actividades() {
   function renderActividades() {
     if (actividades.length === 0) {
       return (
-        <>
-          <p>No hay actividades registradas</p>
-          <button onClick={() => navigate(`/activity/register`)}>
-            Registrar Actividad
+        <div className="container d-flex align-items-center flex-column mt-5 mb-5">
+          <h1 className="p-2">No se encontraron actividades registradas</h1>
+          <button
+            type="button"
+            className="btn btn-primary p-2"
+            onClick={() => navigate(`/activity/register`)}
+          >
+            Registrar Ensayos
           </button>
-        </>
+        </div>
       );
     }
 
     return (
-      <div className="container text-center mt-4 mb-5">
-        <div className="d-flex justify-content-end mt-4">
+      <div className="container text-center mt-5 mb-5">
+        <div className="d-flex justify-content-end">
+
           <div className="input-group" style={{ maxWidth: "300px" }}>
             <input
               id="input-search"
@@ -117,36 +130,6 @@ function Actividades() {
               placeholder="Buscar"
               style={{ maxWidth: "300px" }}
             />
-            <button
-              type="button"
-              className="btn dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <span className="visually-hidden">Seleccionar Filtro</span>
-            </button>
-            <ul className="dropdown-menu">
-              <li>
-                <button className="dropdown-item" type="button">
-                  Nombre
-                </button>
-              </li>
-              <li>
-                <button className="dropdown-item" type="button">
-                  Alumno
-                </button>
-              </li>
-              <li>
-                <button className="dropdown-item" type="button">
-                  Unidad
-                </button>
-              </li>
-              <li>
-                <button className="dropdown-item" type="button">
-                  Observaciones
-                </button>
-              </li>
-            </ul>
           </div>
         </div>
         <table className="table table-striped table-hover table-bordered mt-4">
@@ -219,7 +202,6 @@ function Actividades() {
 
   return (
     <div>
-      <h1>Actividades</h1>
       {renderActividades()}
     </div>
   );

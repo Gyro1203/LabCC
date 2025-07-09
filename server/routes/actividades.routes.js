@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getActividades, getActividad, getActividadByIngreso, createActividad, updateActividad, deleteActividad } from "../controllers/actividadesController.js";
+import { getActividades, getActividad, getActividadesByIngreso, createActividad, updateActividad, deleteActividad } from "../controllers/actividadesController.js";
 
 const router = Router();
 
@@ -7,7 +7,7 @@ router.get("/activity", getActividades);
 
 router.get("/activity/:id", getActividad);
 
-router.get("/activity/entry/:id", getActividadByIngreso);
+router.get("/activity/entry/:id", getActividadesByIngreso);
 
 router.post("/activity", createActividad);
 

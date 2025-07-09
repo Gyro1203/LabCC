@@ -38,7 +38,7 @@ export const getActividadService = async ( id ) => {
     }
 }
 
-export const getActividadByIngresoService = async ( id ) => {
+export const getActividadesByIngresoService = async ( id ) => {
     try {
         const [ingreso] = await db.query("SELECT id_ingreso FROM ingresos WHERE id_ingreso = ?", id);
         if(!ingreso || ingreso.length === 0) return [null, "No se encontró el ingreso"];
@@ -48,7 +48,11 @@ export const getActividadByIngresoService = async ( id ) => {
                 ac.id_actividad,
                 ac.nombre,
                 ac.unidad, 
-                ac.cantidad, 
+                ac.cantidad,
+                ac.precio_uf, 
+                ac.precio_peso, 
+                ac.total_uf, 
+                ac.total_peso, 
                 ac.observaciones
             FROM actividades ac
             JOIN ingresos i ON ac.actividad_ingreso = i.id_ingreso
