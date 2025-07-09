@@ -7,6 +7,7 @@ import {
 import AsistenciasRows from "../components/AsistenciasRows.jsx";
 import { useNavigate } from "react-router-dom";
 import Filter from "../components/Filter.jsx";
+import { deleteDataAlert, showErrorAlert, showSuccessAlert } from "../helpers/sweetAlert.js";
 
 function Asistencias() {
   const navigate = useNavigate();
@@ -26,12 +27,17 @@ function Asistencias() {
     fetchData();
   }, []);
 
-  const handleDelete = async (id) => {
+    const handleDelete = async (id) => {
     try {
-      const response = await deleteAsistenciasRequest(id);
-      console.log("Asistencia eliminada exitosamente:", response.data);
-      setAsistencias(asistencias.filter((e) => e.id_asistencia !== id));
+      const confirmation = await deleteDataAlert();
+      if (confirmation.isConfirmed) {
+        const response = await deleteAsistenciasRequest(id);
+        console.log("Asistencia eliminada exitosamente:", response.data);
+        showSuccessAlert("Alumno eliminado exitosamente");
+        setAsistencias(asistencias.filter((e) => e.id_asistencia !== id));
+      }
     } catch (error) {
+      showErrorAlert("Error al eliminar alumno");
       console.error("Error al eliminar asistencia:", error);
     }
   };

@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function Navbar() {
+  const location = useLocation();
   return (
     <header>
       <div className="header">
@@ -53,28 +54,28 @@ function Navbar() {
                   </button>
                   <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav mr-auto">
-                      <li className="nav-item ">
+                      <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
                         <a className="nav-link" href="/">
                           {" "}
                           Home{" "}
                         </a>
                       </li>
-                      <li className="nav-item">
+                      <li className={`nav-item ${location.pathname === '/students' ? 'active' : ''}`}>
                         <a className="nav-link" href="/students">
                           Alumnos
                         </a>
                       </li>
-                      <li className="nav-item">
+                      <li className={`nav-item ${location.pathname === '/essay' ? 'active' : ''}`}>
                         <a className="nav-link" href="/essay">
                           Ensayos
                         </a>
                       </li>
-                      <li className="nav-item">
+                      <li className={`nav-item ${location.pathname === '/entry' ? 'active' : ''}`}>
                         <a className="nav-link" href="/entry">
                           Ingresos{" "}
                         </a>
                       </li>
-                      <li className="nav-item">
+                      <li className={`nav-item ${location.pathname === '/activity' ? 'active' : ''}`}>
                         <a className="nav-link" href="/activity">
                           Actividades
                         </a>

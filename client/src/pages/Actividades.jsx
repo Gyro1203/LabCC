@@ -7,6 +7,11 @@ import ActividadesRows from "../components/ActividadesRows.jsx";
 import { useNavigate } from "react-router-dom";
 import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
+import {
+  deleteDataAlert,
+  showErrorAlert,
+  showSuccessAlert,
+} from "../helpers/sweetAlert.js";
 
 function Actividades() {
   const navigate = useNavigate();
@@ -56,10 +61,15 @@ function Actividades() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteActividadesRequest(id);
-      console.log("Actividad eliminada exitosamente:", response.data);
-      setActividades(actividades.filter((e) => e.id_actividad !== id));
+      const confirmation = await deleteDataAlert();
+      if (confirmation.isConfirmed) {
+        const response = await deleteActividadesRequest(id);
+        console.log("Actividad eliminada exitosamente:", response.data);
+        showSuccessAlert("Actividad eliminada exitosamente");
+        setActividades(actividades.filter((e) => e.id_actividad !== id));
+      }
     } catch (error) {
+      showErrorAlert("Error al eliminar actividad");
       console.error("Error al eliminar actividad:", error);
     }
   };

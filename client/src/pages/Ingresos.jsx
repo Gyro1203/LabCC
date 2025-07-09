@@ -7,6 +7,11 @@ import IngresosRows from "../components/IngresosRows.jsx";
 import { useNavigate } from "react-router-dom";
 import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
+import {
+  deleteDataAlert,
+  showErrorAlert,
+  showSuccessAlert,
+} from "../helpers/sweetAlert.js";
 
 function Ingresos() {
   const navigate = useNavigate();
@@ -29,7 +34,7 @@ function Ingresos() {
     { id: 6, key: "profesor_asignatura", label: "Profesor Asignatura" },
     { id: 7, key: "semestre", label: "Semestre" },
     { id: 8, key: "vigente", label: "Vigente" },
-    { id: 9, key: "opciones", label: "Opciones" }
+    { id: 9, key: "opciones", label: "Opciones" },
   ];
 
   useEffect(() => {
@@ -42,10 +47,15 @@ function Ingresos() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteIngresosRequest(id);
-      console.log("Ingreso eliminado exitosamente:", response.data);
-      setIngresos(ingresos.filter((e) => e.id_ingreso !== id));
+      const confirmation = await deleteDataAlert();
+      if (confirmation.isConfirmed) {
+        const response = await deleteIngresosRequest(id);
+        console.log("Ingreso eliminado exitosamente:", response.data);
+        showSuccessAlert("Ingreso eliminado exitosamente");
+        setIngresos(ingresos.filter((e) => e.id_ingreso !== id));
+      }
     } catch (error) {
+      showErrorAlert("Error al eliminar ingreso");
       console.error("Error al eliminar ingreso:", error);
     }
   };

@@ -1,20 +1,38 @@
 import { useEffect, useState } from "react";
-import { getEnsayosRequest, deleteEnsayosRequest } from "../services/ensayos.api.js";
+import {
+  getEnsayosRequest,
+  deleteEnsayosRequest,
+} from "../services/ensayos.api.js";
 import EnsayosRows from "../components/EnsayosRows.jsx";
 import { useNavigate } from "react-router-dom";
 import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
+import {
+  deleteDataAlert,
+  showErrorAlert,
+  showSuccessAlert,
+} from "../helpers/sweetAlert.js";
 
 function Ensayos() {
   const navigate = useNavigate();
 
   const [ensayos, setEnsayos] = useState([]);
   const [filterText, setFilterText] = useState("");
-  const [sort, setSort] = useState({ keyToSort: "actividad", direction: "asc" });
+  const [sort, setSort] = useState({
+    keyToSort: "actividad",
+    direction: "asc",
+  });
   const nonSortableKeys = ["opciones"];
 
   // Ajusta los campos de filtro según tu modelo de ensayos
-  const camposFiltro = ["actividad", "tipo", "norma", "unidad", "precio_uf", "precio_pesos"];
+  const camposFiltro = [
+    "actividad",
+    "tipo",
+    "norma",
+    "unidad",
+    "precio_uf",
+    "precio_pesos",
+  ];
   const ensayosFiltrados = Filter(ensayos, filterText, camposFiltro);
 
   // Ajusta los headers según tu modelo de ensayos
@@ -38,10 +56,15 @@ function Ensayos() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteEnsayosRequest(id);
-      console.log("Ensayo eliminado exitosamente:", response.data);
-      setEnsayos(ensayos.filter((e) => e.id_ensayo !== id));
+      const confirmation = await deleteDataAlert();
+      if (confirmation.isConfirmed) {
+        const response = await deleteEnsayosRequest(id);
+        console.log("Ensayo eliminado exitosamente:", response.data);
+        showSuccessAlert("Ensayo eliminado exitosamente");
+        setEnsayos(ensayos.filter((e) => e.id_ensayo !== id));
+      }
     } catch (error) {
+      showErrorAlert("Error al eliminar ensayo");
       console.error("Error al eliminar ensayo:", error);
     }
   };
@@ -77,21 +100,30 @@ function Ensayos() {
   function renderEnsayos() {
     if (ensayos.length === 0) {
       return (
-        <>
-          <p>No hay ensayos ingresados</p>
-          <button onClick={() => navigate(`/essay/register`)}>
+        <div className="container d-flex align-items-center flex-column mt-5 mb-5">
+          <h2 className="p-2">No hay ensayos ingresados</h2>
+          <button
+            type="button"
+            className="btn btn-primary p-2"
+            onClick={() => navigate(`/essay/register`)}
+          >
             Registrar en Ensayos
           </button>
-        </>
+        </div>
       );
     }
 
     return (
-      <div className="container text-center mt-4">
-        <button onClick={() => navigate(`/essay/register`)}>
-          Registrar en Ensayos
-        </button>
-        <div className="d-flex justify-content-end mt-4">
+      <div className="container text-center mt-5 mb-5">
+        <div className="d-flex justify-content-between">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate(`/essay/register`)}
+          >
+            Registrar Ensayo
+          </button>
+
           <div className="input-group" style={{ maxWidth: "300px" }}>
             <input
               id="input-search"
@@ -169,12 +201,7 @@ function Ensayos() {
     );
   }
 
-  return (
-    <div>
-      <h1>Ensayos</h1>
-      {renderEnsayos()}
-    </div>
-  );
+  return <div>{renderEnsayos()}</div>;
 }
 
 export default Ensayos;
