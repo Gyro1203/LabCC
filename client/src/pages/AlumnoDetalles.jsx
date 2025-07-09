@@ -104,9 +104,9 @@ function AlumnoDetalles() {
     if (alumno.length === 0) {
       return (
         <>
-          <p>No hay ingresos registrados</p>
-          <button onClick={() => navigate(`/entry/register`)}>
-            Registar Ingreso
+          <p>No se encontró al alumno</p>
+          <button type="button" className="btn btn-secondary" onClick={() => navigate(`/students`)}>
+            Volver
           </button>
         </>
       );
@@ -116,6 +116,7 @@ function AlumnoDetalles() {
       <div className="container mt-4 mb-5">
         <div className="d-flex justify-content-start">
           <button
+            type="button"
             className="btn btn-secondary mb-4"
             onClick={() => navigate(`/students`)}
           >
