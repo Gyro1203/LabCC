@@ -24,7 +24,6 @@ function Ensayos() {
   });
   const nonSortableKeys = ["opciones"];
 
-  // Ajusta los campos de filtro según tu modelo de ensayos
   const camposFiltro = [
     "actividad",
     "tipo",
@@ -35,7 +34,6 @@ function Ensayos() {
   ];
   const ensayosFiltrados = Filter(ensayos, filterText, camposFiltro);
 
-  // Ajusta los headers según tu modelo de ensayos
   const headers = [
     { id: 1, key: "actividad", label: "Actividad" },
     { id: 2, key: "tipo", label: "Tipo" },
@@ -101,13 +99,13 @@ function Ensayos() {
     if (ensayos.length === 0) {
       return (
         <div className="container d-flex align-items-center flex-column mt-5 mb-5">
-          <h2 className="p-2">No hay ensayos ingresados</h2>
+          <h1 className="p-2">No se encontraron ensayos registrados</h1>
           <button
             type="button"
             className="btn btn-primary p-2"
             onClick={() => navigate(`/essay/register`)}
           >
-            Registrar en Ensayos
+            Registrar Ensayos
           </button>
         </div>
       );
@@ -116,6 +114,7 @@ function Ensayos() {
     return (
       <div className="container text-center mt-5 mb-5">
         <div className="d-flex justify-content-between">
+          
           <button
             type="button"
             className="btn btn-primary"
@@ -131,7 +130,7 @@ function Ensayos() {
               onChange={(e) => setFilterText(e.target.value)}
               className="form-control"
               placeholder="Buscar"
-              style={{ maxWidth: "200px" }}
+              style={{ maxWidth: "300px" }}
             />
           </div>
         </div>

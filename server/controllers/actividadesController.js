@@ -1,6 +1,6 @@
 "use strict";
 import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
-import { createActividadService, deleteActividadService, getActividadByIngresoService, getActividadesService, getActividadService, updateActividadService } from '../services/actividades.services.js';
+import { createActividadService, deleteActividadService, getActividadesByIngresoService, getActividadesService, getActividadService, updateActividadService } from '../services/actividades.services.js';
 
 export const getActividades = async (req, res) => {
     try {
@@ -22,11 +22,11 @@ export const getActividad = async (req, res) => {
     }
 };
 
-export const getActividadByIngreso = async (req, res) => {
+export const getActividadesByIngreso = async (req, res) => {
     try {
-        const [actividades, errorActividades] = await getActividadByIngresoService(req.params.id);
+        const [actividades, errorActividades] = await getActividadesByIngresoService(req.params.id);
         if (errorActividades) return handleErrorClient(res, 404, errorActividades);
-        handleSuccess(res, 200, "Actividad encontrada", actividades);
+        handleSuccess(res, 200, "Actividades encontradas", actividades);
     } catch (error) {
         return handleErrorServer(res, 500, error.message);
     }
