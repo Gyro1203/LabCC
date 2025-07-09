@@ -84,7 +84,7 @@ function Alumnos() {
     if (alumnos.length === 0) {
       return (
         <div className="container d-flex align-items-center flex-column mt-5 mb-5">
-          <h2 className="p-2">No se encontraron alumnos registrados</h2>
+          <h1 className="p-2">No se encontraron alumnos registrados</h1>
           <button type="button" className="btn btn-primary p-2" onClick={() => navigate(`/students/register`)}>
             Registrar Alumno
           </button>

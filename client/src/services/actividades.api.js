@@ -10,7 +10,7 @@ export const getActividadByIdRequest = async (id) => {
     return response.data;
 }
 
-export const getActividadByIngresoRequest = async (id) => {
+export const getActividadesByIngresoRequest = async (id) => {
     const response = await axios.get(`http://localhost:3000/activity/entry/${id}`);
     return response.data;
 }

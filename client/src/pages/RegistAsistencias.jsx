@@ -7,7 +7,7 @@ import {
 import { getIngresosRequest } from "../services/ingresos.api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getActividadByIngresoRequest } from "../services/actividades.api";
+import { getActividadesByIngresoRequest } from "../services/actividades.api";
 
 export default function RegistAsistencias() {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ export default function RegistAsistencias() {
       (!alumno) ? console.log("No") : console.log("SI");
       console.log("Alumno: ",alumno);
       if(alumno && alumno.id_ingreso){
-        const dataActvidades = await getActividadByIngresoRequest(alumno.id_ingreso);
+        const dataActvidades = await getActividadesByIngresoRequest(alumno.id_ingreso);
         console.log(dataActvidades.data); //*Estan llegando demaciados datos, revisar eso
         setActividades(dataActvidades.data);
       }else{

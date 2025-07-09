@@ -92,21 +92,29 @@ function Ingresos() {
   function renderIngresos() {
     if (ingresos.length === 0) {
       return (
-        <>
-          <p>No hay ingresos registrados</p>
-          <button onClick={() => navigate(`/entry/register`)}>
-            Registar Ingreso
+        <div className="container d-flex align-items-center flex-column mt-5 mb-5">
+          <h1 className="p-2">No se encontraron ingresos registrados</h1>
+          <button
+            type="button"
+            className="btn btn-primary p-2"
+            onClick={() => navigate(`/entry/register`)}
+          >
+            Registrar Ensayos
           </button>
-        </>
+        </div>
       );
     }
 
     return (
-      <div className="container text-center mt-4 mb-5">
-        <button onClick={() => navigate(`/entry/register`)}>
-          Registrar Ingreso
-        </button>
-        <div className="d-flex justify-content-end mt-4">
+      <div className="container text-center mt-5 mb-5">
+        <div className="d-flex justify-content-between">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate(`/entry/register`)}
+          >
+            Registrar Ingreso
+          </button>
           <div className="input-group" style={{ maxWidth: "300px" }}>
             <input
               id="input-search"
@@ -114,7 +122,7 @@ function Ingresos() {
               onChange={(e) => setFilterText(e.target.value)}
               className="form-control"
               placeholder="Buscar"
-              style={{ maxWidth: "200px" }}
+              style={{ maxWidth: "300px" }}
             />
           </div>
         </div>
@@ -202,12 +210,7 @@ function Ingresos() {
     );
   }
 
-  return (
-    <div>
-      <h1>Ingresos</h1>
-      {renderIngresos()}
-    </div>
-  );
+  return <div>{renderIngresos()}</div>;
 }
 
 export default Ingresos;

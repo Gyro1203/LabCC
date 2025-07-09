@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { getIngresoByIdRequest } from "../services/ingresos.api.js";
 import { useNavigate, useParams } from "react-router-dom";
 import IngresosCard from "../components/IngresosCard.jsx";
-import { deleteActividadesRequest, getActividadByIngresoRequest } from "../services/actividades.api.js";
+import {
+  deleteActividadesRequest,
+  getActividadesByIngresoRequest,
+} from "../services/actividades.api.js";
 import ActividadesRows from "../components/ActividadesRows.jsx";
 
 function IngresoDetalles() {
@@ -34,12 +37,11 @@ function IngresoDetalles() {
             dataIngreso.data;
           //console.log('Ingreso filtrado:', filtered);
           setIngreso(filteredIngreso);
-          const dataActividades = await getActividadByIngresoRequest(
+          const dataActividades = await getActividadesByIngresoRequest(
             filteredIngreso.id_ingreso
           );
-          const filteredActividad = dataActividades.data.map(({ alumno, ...rest }) => rest);
-          console.log(filteredActividad);
-          setActividades(filteredActividad);
+          console.log(dataActividades);
+          setActividades(dataActividades.data);
         } catch (error) {
           console.error("Error al obtener el ingreso:", error);
         }
@@ -48,15 +50,15 @@ function IngresoDetalles() {
     fetchIngreso();
   }, [params.id]);
 
-    const handleDelete = async (id) => {
-      try {
-        const response = await deleteActividadesRequest(id);
-        console.log("Ingreso eliminado exitosamente:", response.data);
-        setIngreso(ingreso.filter((e) => e.id_ingreso !== id));
-      } catch (error) {
-        console.error("Error al eliminar ingreso:", error);
-      }
-    };
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteActividadesRequest(id);
+      console.log("Ingreso eliminado exitosamente:", response.data);
+      setIngreso(ingreso.filter((e) => e.id_ingreso !== id));
+    } catch (error) {
+      console.error("Error al eliminar ingreso:", error);
+    }
+  };
 
   function renderIngresos() {
     if (ingreso.length === 0) {
@@ -72,61 +74,87 @@ function IngresoDetalles() {
 
     return (
       <div className="container mt-4">
-        <div className="d-flex justify-content-end">
-            <button className="btn btn-secondary mb-4" onClick={() => navigate(`/entry`)}>
-            Regresar
-            </button>
+        <div className="d-flex justify-content-start">
+          <button
+            className="btn btn-secondary mb-4"
+            onClick={() => navigate(`/entry`)}
+          >
+            Volver
+          </button>
         </div>
-        <IngresosCard ingreso={ingreso} />
-        <h2 className="card card-header text-center">Actividades</h2>
-        <table className="table table-striped table-hover table-bordered">
-          <thead>
-            <tr>
-              {headers.map((header) => (
-                <th key={header.id}>
-                  <span>{header.label}</span>
-                </th>
+
+        <div className="card">
+          <IngresosCard ingreso={ingreso} />
+          <h2
+            className="text-center p-1"
+            style={{
+              color: "#fff",
+              backgroundColor: "#014898",
+            }}
+          >
+            Actividades
+          </h2>
+          <div className="d-flex align-items-center flex-column mb-2">
+            <button
+            className="btn btn-warning"
+            title="Registrar Actividad"
+            onClick={() => {
+              if (!ingreso.vigente)
+                alert("Este ingreso no se encuentra vigente");
+              else
+                navigate(`/activity/register`, {
+                  state: ingreso.id_ingreso,
+                });
+            }}
+          >
+            <i className="fa-regular fa-calendar-plus"></i> Registrar Actividad
+          </button>
+          </div>
+          <table className="table table-striped table-hover table-bordered">
+            <thead>
+              <tr>
+                {headers.map((header) => (
+                  <th key={header.id}>
+                    <span>{header.label}</span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {actividades.map((actividad) => (
+                <ActividadesRows
+                  key={actividad.id_actividad}
+                  actividad={actividad}
+                  editar={
+                    <button
+                      className="btn btn-primary"
+                      title="Editar"
+                      onClick={() =>
+                        navigate(`/activity/edit/${actividad.id_actividad}`)
+                      }
+                    >
+                      <i className="fa-solid fa-pencil"></i>
+                    </button>
+                  }
+                  eliminar={
+                    <button
+                      className="btn btn-danger"
+                      title="Eliminar"
+                      onClick={() => handleDelete(actividad.id_actividad)}
+                    >
+                      <i className="fa-solid fa-trash-can"></i>
+                    </button>
+                  }
+                />
               ))}
-            </tr>
-          </thead>
-          <tbody>
-            {actividades.map((actividad) => (
-              <ActividadesRows
-                key={actividad.id_actividad}
-                actividad={actividad}
-                editar={
-                  <button
-                    className="btn btn-primary"
-                    title="Editar"
-                    onClick={() =>
-                      navigate(`/activity/edit/${actividad.id_actividad}`)
-                    }
-                  >
-                    <i className="fa-solid fa-pencil"></i>
-                  </button>
-                }
-                eliminar={
-                  <button
-                    className="btn btn-danger"
-                    title="Eliminar"
-                    onClick={() => handleDelete(actividad.id_actividad)}
-                  >
-                    <i className="fa-solid fa-trash-can"></i>
-                  </button>
-                }
-              />
-            ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div>
-      {renderIngresos()}
-    </div>
-  );
+  return <div>{renderIngresos()}</div>;
 }
 
 export default IngresoDetalles;
