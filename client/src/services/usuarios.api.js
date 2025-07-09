@@ -10,13 +10,13 @@ export const getUsuarioByIdRequest = async (id) => {
     return response.data;
 }
 
-export const createUsuariosRequest = async (alumn) => {
-    const response = await axios.post('http://localhost:3000/users', alumn);
+export const createUsuariosRequest = async (user) => {
+    const response = await axios.post('http://localhost:3000/users', user);
     return response.data;
 };
 
-export const updateUsuariosRequest = async (id, alumn) => {
-    return await axios.put(`http://localhost:3000/users/${id}`, alumn);
+export const updateUsuariosRequest = async (id, user) => {
+    return await axios.put(`http://localhost:3000/users/${id}`, user);
 }
 
 export const deleteUsuariosRequest = async (id) => {
