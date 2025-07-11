@@ -13,6 +13,8 @@ import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
 import { deleteDataAlert, showSuccessAlert, showErrorAlert } from "../helpers/sweetAlert.js";
 import Popup from "../components/usuarios/PopupUsuarios.jsx";
+import PopupCreate from "../components/usuarios/PopupCreateUsuarios.jsx";
+import useCreate from "../hooks/usuarios/useCreate.jsx";
 
 function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
@@ -33,11 +35,7 @@ function Usuarios() {
     { id: 4, key: "opciones", label: "Opciones" },
   ];
 
-  const {isPopupOpen,
-    setIsPopupOpen,
-    dataUser,
-    handleClickUpdate,
-    handleUpdate,} = useEdit(setUsuarios);
+
 
   // hooks
   useEffect(() => {
@@ -47,6 +45,23 @@ function Usuarios() {
     }
     loadUsuarios();
   }, []);
+
+ // llama al hook de editar
+    const {isPopupOpen,
+    setIsPopupOpen,
+    dataUser,
+    handleClickUpdate,
+    handleUpdate,} = useEdit(setUsuarios);
+  // llama al hook de crear
+
+    const {
+       isCreatePopupOpen,
+        setIsCreatePopupOpen,
+        dataCreateUser,
+        handleClickCreate,
+        handleCreate,
+    } = useCreate(setUsuarios);
+
   
   // handlers
   const handleDelete = async (id) => {
@@ -106,7 +121,7 @@ function Usuarios() {
 
  return (
    <div className="container text-center mt-4 mb-5">
-     {/* <button onClick={() => navigate(`/students/register`)}>Registrar Alumno</button> */}
+     <button onClick={handleClickCreate}>Registrar Alumno</button>
      <div className="d-flex justify-content-end mt-4">
        <div className="input-group" style={{ maxWidth: "300px" }}>
          <input
@@ -185,6 +200,12 @@ function Usuarios() {
        data={dataUser}
        action={handleUpdate}
      />
+     <PopupCreate
+       show={isCreatePopupOpen}
+       setShow={setIsCreatePopupOpen}
+       data={dataCreateUser}
+       action={handleCreate}
+      />
    </div>
  );
 };
