@@ -32,6 +32,8 @@ const Form = ({
     onSubmit(data);
   };
 
+
+  // Renderiza el formulario con los campos definidos en el array fields, es bastante flexible pero a la vez cuadrado asi que cuidado con su uso
   return (
     <form
       className="form"

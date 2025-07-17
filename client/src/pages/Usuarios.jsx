@@ -1,15 +1,11 @@
 import {
   getUsuariosRequest,
-  //   getUsuarioByIdRequest,
-  //   createUsuariosRequest,
-  //   updateUsuariosRequest,
-  deleteUsuariosRequest,
+  deleteUsuariosRequest
 } from "../services/usuarios.api.js";
 import useEdit from "../hooks/usuarios/useEdit.jsx";
 import { useEffect, useState } from "react";
 import UsuariosRows from "../components/usuarios/UsuariosRows.jsx";
 import Filter from "../components/Filter.jsx";
-// import { useNavigate } from "react-router-dom";
 import Caret from "../components/Caret.jsx";
 import { deleteDataAlert, showSuccessAlert, showErrorAlert } from "../helpers/sweetAlert.js";
 import Popup from "../components/usuarios/PopupUsuarios.jsx";
@@ -113,7 +109,6 @@ function Usuarios() {
       return (
         <>
           <p>No hay usuarios registrados</p>
-          {/* <button onClick={() => navigate(`/students/register`)}>Registrar Alumno</button> */}
         </>
       );
     }
