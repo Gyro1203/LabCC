@@ -1,15 +1,8 @@
-// import { useNavigate } from "react-router-dom";
-
 function UsuariosRows({ usuario, editar, eliminar }) {
-//   const navigate = useNavigate();
+
   return (
     <tr>
-      <td
-        // className="table-cell-hover"
-        // onClick={() => {
-        //   navigate(`/users/details/${usuario.id_usuario}`);
-        // }}
-      >
+      <td >
         {usuario.nombre_usuario}
       </td>
       <td>{usuario.rol}</td>

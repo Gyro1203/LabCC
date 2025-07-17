@@ -14,7 +14,7 @@ export default function PopupCreate({ show, setShow, data, action }) {
   if (!show) {
     return null;
   }
-
+// Renderiza el formulario de creación de usuario en un portal para que se muestre sobre el resto del contenido de la página, no hacer mas preguntas
   return createPortal(
     <div>
       {show && (
@@ -68,7 +68,7 @@ export default function PopupCreate({ show, setShow, data, action }) {
                       <span className="tooltip-icon">
                         <img src={QuestionIcon} alt="info" />
                         <span className="tooltip-text">
-                          Este campo es opcional
+                          La contraseña debe contener entre 8 y 26 caracteres
                         </span>
                       </span>
                     </span>

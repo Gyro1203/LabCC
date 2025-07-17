@@ -21,12 +21,13 @@ const useEdit = (setUsers) => {
           dataUser.id_usuario,
           formData
         );
+        const usuarioActualizado = updatedUser.data.data;
         showSuccessAlert("Usuario actualizado exitosamente");
         setIsPopupOpen(false);
 
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
-            user.id_usuario === updatedUser.id_usuario ? updatedUser : user
+            user.id_usuario === usuarioActualizado.id_usuario ? usuarioActualizado : user
           )
         );
         setDataUser([]);
