@@ -18,7 +18,7 @@ const useCreate = (setUsers) => {
             showSuccessAlert("Usuario creado exitosamente");
             setIsCreatePopupOpen(false);
     
-            setUsers((prevUsers) => [...prevUsers, newUser]);
+            setUsers((prevUsers) => [...prevUsers, newUser.data]);
             setCreateDataUser({});
         } catch (error) {
             showErrorAlert("Error al crear el usuario");
