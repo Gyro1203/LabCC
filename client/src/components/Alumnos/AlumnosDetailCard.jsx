@@ -1,11 +1,11 @@
 import { useState } from "react";
-import AlumnosCardContent from "./Alumnos/AlumnosCardContent.jsx";
+import AlumnosCardContent from "./AlumnosCardContent.jsx";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Accordion from "react-bootstrap/Accordion";
-import AsistenciasRows from "./AsistenciasRows.jsx";
-import { getActividadesByIngresoRequest } from "../services/actividades.api.js";
-import { getAsistenciaByIngresoRequest } from "../services/asistencias.api.js";
+import AsistenciasRows from "../AsistenciasRows.jsx";
+import { getActividadesByIngresoRequest } from "../../services/actividades.api.js";
+import { getAsistenciaByIngresoRequest } from "../../services/asistencias.api.js";
 
 function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
 
