@@ -13,7 +13,7 @@ export function SessionProvider({ children }) {
   
   useEffect(() => {
      if(!isAuthenticated) {
-    navigate("/login");
+    navigate("/home");
     }
 }, [isAuthenticated, navigate]);
 
