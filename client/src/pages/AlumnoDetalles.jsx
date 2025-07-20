@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAlumnoByIdRequest } from "../services/alumnos.api.js";
-import AlumnosCard from "../components/AlumnosCard.jsx";
+import AlumnosCardContent from "../components/Alumnos/AlumnosCardContent.jsx";
 import { getIngresoByAlumnoRequest } from "../services/ingresos.api.js";
 import { getActividadesByIngresoRequest } from "../services/actividades.api.js";
 import { getAsistenciaByIngresoRequest } from "../services/asistencias.api.js";
@@ -122,7 +122,7 @@ function AlumnoDetalles() {
 
         <div className="card">
           <div className="list-group">
-            <AlumnosCard alumno={alumno} />
+            <AlumnosCardContent alumno={alumno} />
 
             {/* BOTONES TABS */}
             <ul className="nav nav-tabs" id="myTab" role="tablist">

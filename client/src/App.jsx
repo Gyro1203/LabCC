@@ -4,8 +4,9 @@ import RegistEnsayos from "./pages/RegistEnsayos.jsx";
 import RegistIngresos from "./pages/RegistIngresos.jsx";
 import RegistActividades from "./pages/RegistActividades.jsx";
 import RegistAsistencias from "./pages/RegistAsistencias.jsx";
-import Alumnos from "./pages/Alumnos.jsx";
+import Alumnos from "./pages/AlumnosResumen.jsx";
 import Ensayos from "./pages/Ensayos.jsx";
+import ProtectedRoute from "@components/usuarios/ProtectedRoute.jsx";
 import Ingresos from "./pages/Ingresos.jsx";
 import Actividades from "./pages/Actividades.jsx";
 import Login from "./pages/Login.jsx";
@@ -15,11 +16,13 @@ import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import IngresoDetalles from "./pages/IngresoDetalles.jsx";
 import AlumnoDetalles from "./pages/AlumnoDetalles.jsx";
+import { SessionProvider } from "@context/SessionContext.jsx"; 
 
 export default function App() {
   return (
     <>
       <Navbar />
+      <SessionProvider>
       <Routes>
         <Route path="/" element={<Home />} />
 
@@ -46,8 +49,17 @@ export default function App() {
         <Route path="/attendance/edit/:id" element={<RegistAsistencias />} />
 
         <Route path="/login" element={<Login />} />
-        <Route path="/users" element={<Usuarios />} />
+
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute allowedRoles={["Admin", "Encargado Lab"]}>
+              <Usuarios />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
+      </SessionProvider>
     </>
   );
 }

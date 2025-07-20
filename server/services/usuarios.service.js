@@ -8,7 +8,7 @@ export const getUsuariosService = async () => {
 
     try{
         const [result] = await db.query("SELECT * FROM usuarios");
-        if(!result || result.length === 0) return [null, "No hay alumnos registrados"];
+        if(!result || result.length === 0) return [null, "No hay usuarios registrados"];
         return[result, null];
     }catch (error){
         console.error("Error al obtener todos los usuarios: ", error);
@@ -71,12 +71,15 @@ export const updateUsuariosService = async (body, id) => {
         if(existeUsuarios[0] && existeUsuarios[0].email !== actualizarUsuario[0].email) 
         return [null, "Ya existe un usuario con este email"];
 
-        const passwordIgual = await comparePassword(body.password, actualizarUsuario[0].password);
-        if(!passwordIgual) return [null, "La contraseña no coincide"];
-
+        // comprobar si viene una contraseña nueva
+        // si viene una contraseña nueva, encriptarla y actualizar el body
+        let updatedBody;
+        if(body.password !== null && body.password !== undefined && body.password !== ""){
         const encryptedPassword = await encryptPassword(body.password);
-
-        const updatedBody = { ...body, password: encryptedPassword };
+        updatedBody = { ...body, password: encryptedPassword };
+        }else{
+        updatedBody = { ...body };
+        }
 
         await db.query("UPDATE usuarios SET ? WHERE id_usuario = ?", [updatedBody, id]);
 
