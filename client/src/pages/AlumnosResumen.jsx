@@ -9,7 +9,7 @@ import {
   deleteAlumnosRequest,
   getAlumnosRequest,
 } from "../services/alumnos.api";
-import AlumnosDetailCard from "../components/AlumnosDetailCard.jsx";
+import AlumnosDetailCard from "../components/Alumnos/AlumnosDetailCard.jsx";
 import { getIngresoByAlumnoRequest } from "../services/ingresos.api";
 import {
   deleteDataAlert,
@@ -26,7 +26,6 @@ function AlumnosResumen() {
   useEffect(() => {
     async function fetchData() {
       const dataAlumnos = await getAlumnosRequest();
-      console.log("Alumnos Encontrados", dataAlumnos.data);
       setAlumnos(dataAlumnos.data);
     }
     fetchData();
