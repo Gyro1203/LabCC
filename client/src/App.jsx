@@ -4,7 +4,7 @@ import RegistEnsayos from "./pages/RegistEnsayos.jsx";
 import RegistIngresos from "./pages/RegistIngresos.jsx";
 import RegistActividades from "./pages/RegistActividades.jsx";
 import RegistAsistencias from "./pages/RegistAsistencias.jsx";
-import Alumnos from "./pages/Alumnos.jsx";
+import Alumnos from "./pages/AlumnosResumen.jsx";
 import Ensayos from "./pages/Ensayos.jsx";
 import Ingresos from "./pages/Ingresos.jsx";
 import Actividades from "./pages/Actividades.jsx";
