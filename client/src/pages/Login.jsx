@@ -83,27 +83,26 @@ function Login() {
                           >
                             ¡Inicio de sesión exitoso!
                           </div>
-                        )} 
+                        )}
                         {error && (
                           <div
                             className="alert alert-warning text-center"
                             role="alert"
                           >
-                            Error al iniciar sesión. Por favor, verifica tus credenciales.
+                            Error al iniciar sesión. Por favor, verifica tus
+                            credenciales.
                           </div>
                         )}
                         <form onSubmit={handleLogin}>
-                          <div className="d-flex align-items-center mb-3 pb-1">
-                            <i
-                              className="fas fa-cubes fa-2x me-3"
-                              style={{ color: "#f9b214" }}
-                            ></i>
-                            <span className="h1 fw-bold mb-0">Logo</span>
+                          <div className="col-md-8 mx-auto mb-4">
+                            <a className="logo" href="#">
+                              <img src="images/LogoLabcon.png" alt="#"/>
+                            </a>
                           </div>
-
+                  
                           <h5
                             className="fw-normal mb-3 pb-3"
-                            style={{ letterSpacing: "1px" }}
+                            style={{ letterSpacing: "0.5px" }}
                           >
                             Ingrese sus datos para iniciar sesión
                           </h5>
