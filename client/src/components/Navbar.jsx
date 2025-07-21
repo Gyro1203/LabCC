@@ -2,6 +2,9 @@ import { useLocation } from "react-router-dom";
 
 function Navbar() {
   const location = useLocation();
+  const user = JSON.parse(sessionStorage.getItem("usuario"));
+  const userRol = user ? user.rol : null;
+
   return (
     <header>
       <div className="header">
@@ -54,51 +57,98 @@ function Navbar() {
                   </button>
                   <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav mr-auto">
-                      <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+                      <li
+                        className={`nav-item ${
+                          location.pathname === "/" ? "active" : ""
+                        }`}
+                      >
                         <a className="nav-link" href="/">
                           {" "}
                           Home{" "}
                         </a>
                       </li>
-                      <li className={`nav-item ${location.pathname === '/students' ? 'active' : ''}`}>
-                        <a className="nav-link" href="/students">
-                          Alumnos
-                        </a>
-                      </li>
-                      <li className={`nav-item ${location.pathname === '/essay' ? 'active' : ''}`}>
+                      {userRol === "Admin" && (
+                        <>
+                          <li
+                            className={`nav-item ${
+                              location.pathname === "/students" ? "active" : ""
+                            }`}
+                          >
+                            <a className="nav-link" href="/students">
+                              Alumnos
+                            </a>
+                          </li>
+                          {/* <li className={`nav-item ${location.pathname === '/essay' ? 'active' : ''}`}>
                         <a className="nav-link" href="/essay">
-                          Ensayos
+                          Ensayosn
                         </a>
-                      </li>
-                      <li className={`nav-item ${location.pathname === '/entry' ? 'active' : ''}`}>
-                        <a className="nav-link" href="/entry">
-                          Ingresos{" "}
-                        </a>
-                      </li>
-                      <li className={`nav-item ${location.pathname === '/activity' ? 'active' : ''}`}>
+                      </li> */}
+                          <li
+                            className={`nav-item ${
+                              location.pathname === "/entry" ? "active" : ""
+                            }`}
+                          >
+                            <a className="nav-link" href="/entry">
+                              Ingresos{" "}
+                            </a>
+                          </li>
+                          {/* <li className={`nav-item ${location.pathname === '/activity' ? 'active' : ''}`}>
                         <a className="nav-link" href="/activity">
                           Actividades
                         </a>
-                      </li>
-                      <li className="nav-item">
-                        <a className="nav-link" href="/attendance">
-                          {" "}
-                          Asistencias{" "}
-                        </a>
-                      </li>
+                      </li> */}
+                          <li className="nav-item">
+                            <a className="nav-link" href="/attendance">
+                              {" "}
+                              Asistencias{" "}
+                            </a>
+                          </li>
+                        </>
+                      )}
                     </ul>
                   </div>
                 </nav>
               </div>
               <div className="col-md-3 col-sm-5 d_none">
                 <ul className="sign">
-                  <li>
-                    <a href="#">
-                      <i className="fa fa-search" aria-hidden="true"></i>
-                    </a>
+                  <li className="nav-item dropdown">
+                    <button
+                      id="dropdownMenuButton"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="true"
+                      className="btn dropdown-toggle"
+                    >
+                      {" "}
+                      <i className="fa-solid fa-gear" aria-hidden="true"></i>
+                    </button>
+                    <ul
+                      className="dropdown-menu "
+                      aria-labelledby="dropdownMenuButton"
+                      data-bs-theme="dark"
+                    >
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Ensayos
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Actividades
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Usuarios
+                        </a>
+                      </li>
+                    </ul>
                   </li>
-                  <li>
-                    <a className="sign_btn" href="#">
+                  <li
+                    className={`nav-item ${
+                      location.pathname === "/login" ? "active" : ""
+                    }`}
+                  >
+                    <a className="sign_btn" href="/login">
                       Login
                     </a>
                   </li>
