@@ -17,6 +17,7 @@ import Navbar from "./components/Navbar.jsx";
 import IngresoDetalles from "./pages/IngresoDetalles.jsx";
 import AlumnoDetalles from "./pages/AlumnoDetalles.jsx";
 import { SessionProvider } from "@context/SessionContext.jsx"; 
+import PDF from "./components/PDFCreator.jsx"; 
 
 export default function App() {
   return (
@@ -47,6 +48,8 @@ export default function App() {
         <Route path="/attendance" element={<Asistencias />} />
         <Route path="/attendance/register" element={<RegistAsistencias />} />
         <Route path="/attendance/edit/:id" element={<RegistAsistencias />} />
+
+        <Route path="/pdf" element={<PDF />} />
 
         <Route path="/login" element={<Login />} />
 

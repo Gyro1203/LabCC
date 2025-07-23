@@ -6,9 +6,9 @@ import Accordion from "react-bootstrap/Accordion";
 import AsistenciasRows from "../AsistenciasRows.jsx";
 import { getActividadesByIngresoRequest } from "../../services/actividades.api.js";
 import { getAsistenciaByIngresoRequest } from "../../services/asistencias.api.js";
+import PDFCreator from "../PDFCreator.jsx";
 
 function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
-
   const [actividades, setActividades] = useState({});
   const [asistencias, setAsistencias] = useState([]);
 
@@ -53,7 +53,7 @@ function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
 
   return (
     <div className="list-group text-center">
-      <AlumnosCardContent alumno={alumno} eliminar={eliminar} editar={editar}/>
+      <AlumnosCardContent alumno={alumno} eliminar={eliminar} editar={editar} />
 
       {/* BOTONES TABS */}
       <Tabs defaultActiveKey="Actividades" id="TabCard" className="">
@@ -66,28 +66,28 @@ function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
           <Accordion>
             {ingresos[alumno.id_alumno]?.length > 0 ? (
               <div className="bg-light">
-                {ingresos[alumno.id_alumno].map((i) => (
+                {ingresos[alumno.id_alumno].map((ing) => (
                   <Accordion.Item
-                    key={`activitiesItem-${i.id_ingreso}`}
-                    eventKey={i.id_ingreso}
+                    key={`activitiesItem-${ing.id_ingreso}`}
+                    eventKey={ing.id_ingreso}
                   >
                     <Accordion.Header
                       className="p-0"
-                      onClick={() => GetActivities(i.id_ingreso)}
+                      onClick={() => GetActivities(ing.id_ingreso)}
                     >
-                      {i.vigente} | {i.motivo} | {i.titulo} | {i.semestre}
+                      {ing.vigente} | {ing.motivo} | {ing.titulo} | {ing.semestre}
                     </Accordion.Header>
                     <Accordion.Body className="p-0">
                       <ul
                         className="list-group mx-auto"
                         style={{ maxWidth: "95%" }}
                       >
-                        {actividades[i.id_ingreso]?.length > 0 ? (
+                        {actividades[ing.id_ingreso]?.length > 0 ? (
                           <div className="mt-3 mb-3">
                             <li className="list-group-item list-group-item-info text-center">
                               ACTIVIDADES
                             </li>
-                            {actividades[i.id_ingreso].map((actividad) => (
+                            {actividades[ing.id_ingreso].map((actividad) => (
                               <li
                                 key={actividad.id_actividad}
                                 className="list-group-item"
@@ -123,23 +123,23 @@ function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
           <Accordion>
             {ingresos[alumno.id_alumno]?.length > 0 ? (
               <div className="bg-light">
-                {ingresos[alumno.id_alumno].map((i) => (
+                {ingresos[alumno.id_alumno].map((ing) => (
                   <Accordion.Item
-                    key={`assistanceItem-${i.id_ingreso}`}
-                    eventKey={i.id_ingreso}
+                    key={`assistanceItem-${ing.id_ingreso}`}
+                    eventKey={ing.id_ingreso}
                   >
                     <Accordion.Header
                       className="p-0"
-                      onClick={() => GetAttendance(i.id_ingreso)}
+                      onClick={() => GetAttendance(ing.id_ingreso)}
                     >
-                      {i.vigente} | {i.motivo} | {i.titulo} | {i.semestre}
+                      {ing.vigente} | {ing.motivo} | {ing.titulo} | {ing.semestre}
                     </Accordion.Header>
                     <Accordion.Body className="p-0">
                       <ul
                         className="list-group mx-auto"
                         style={{ maxWidth: "95%" }}
                       >
-                        {asistencias[i.id_ingreso]?.length > 0 ? (
+                        {asistencias[ing.id_ingreso]?.length > 0 ? (
                           <div className=" mt-3 mb-3">
                             <li className="list-group-item list-group-item-info text-center">
                               ASISTENCIAS
@@ -156,7 +156,7 @@ function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
                                   </tr>
                                 </thead>
                                 <tbody id="body_table">
-                                  {asistencias[i.id_ingreso].map(
+                                  {asistencias[ing.id_ingreso].map(
                                     (asistencia) => (
                                       <AsistenciasRows
                                         key={asistencia.id_asistencia}
@@ -174,6 +174,7 @@ function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
                           </li>
                         )}
                       </ul>
+                      <PDFCreator alumno={alumno} ingreso={ing} asistencias={asistencias[ing.id_ingreso]}/>
                     </Accordion.Body>
                   </Accordion.Item>
                 ))}
