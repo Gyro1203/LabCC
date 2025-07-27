@@ -6,7 +6,7 @@ import Accordion from "react-bootstrap/Accordion";
 import AsistenciasRows from "../AsistenciasRows.jsx";
 import { getActividadesByIngresoRequest } from "../../services/actividades.api.js";
 import { getAsistenciaByIngresoRequest } from "../../services/asistencias.api.js";
-import PDFCreator from "../PDFCreator.jsx";
+import PDFCreator from "../Reportes/PDFCreator.jsx";
 
 function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
   const [actividades, setActividades] = useState({});
@@ -75,7 +75,7 @@ function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
                       className="p-0"
                       onClick={() => GetActivities(ing.id_ingreso)}
                     >
-                      {ing.vigente} | {ing.motivo} | {ing.titulo} | {ing.semestre}
+                      {ing.vigente ? "✅" : "❌"} ({ing.semestre}) {ing.motivo}: {ing.titulo}
                     </Accordion.Header>
                     <Accordion.Body className="p-0">
                       <ul
@@ -132,7 +132,7 @@ function AlumnosDetailCard({ alumno, ingresos, eliminar, editar }) {
                       className="p-0"
                       onClick={() => GetAttendance(ing.id_ingreso)}
                     >
-                      {ing.vigente} | {ing.motivo} | {ing.titulo} | {ing.semestre}
+                      {ing.vigente ? "✅" : "❌"} ({ing.semestre}) {ing.motivo}: {ing.titulo}
                     </Accordion.Header>
                     <Accordion.Body className="p-0">
                       <ul

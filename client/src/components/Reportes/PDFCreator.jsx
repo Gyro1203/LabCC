@@ -183,8 +183,8 @@ function PDFCreator({ alumno, ingreso, asistencias }) {
   };
 
   return (
-    <div className="container mb-3 d-flex justify-content-center">
-      <button className="btn btn-success" onClick={generarPDF}>
+    <div className="container d-flex justify-content-center">
+      <button className="btn btn-success mt-3 mb-3" type="button" onClick={generarPDF}>
         Generar PDF
       </button>
     </div>

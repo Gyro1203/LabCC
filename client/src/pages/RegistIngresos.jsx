@@ -18,7 +18,7 @@ export default function RegistIngresos() {
     profesor_asignatura: "",
     semestre: "",
     ingreso_alumno: "1",
-  }); // Estado para almacenar el ingreso si es necesario, aunque no se usa en este ejemplo
+  }); // Estado para almacenar el ingreso si es necesario
 
   const params = useParams();
 

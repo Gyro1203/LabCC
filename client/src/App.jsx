@@ -12,16 +12,17 @@ import Actividades from "./pages/Actividades.jsx";
 import Login from "./pages/Login.jsx";
 import Usuarios from "./pages/Usuarios.jsx";
 import Asistencias from "./pages/Asistencias.jsx";
+import Reportes from "./pages/Reportes.jsx";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import IngresoDetalles from "./pages/IngresoDetalles.jsx";
 import AlumnoDetalles from "./pages/AlumnoDetalles.jsx";
 import { SessionProvider } from "@context/SessionContext.jsx"; 
-import PDF from "./components/PDFCreator.jsx"; 
+import { TotalContextProvider } from "./context/TotalContext.jsx";
 
 export default function App() {
   return (
-    <>
+    <TotalContextProvider>
       <Navbar />
       <SessionProvider>
       <Routes>
@@ -49,7 +50,7 @@ export default function App() {
         <Route path="/attendance/register" element={<RegistAsistencias />} />
         <Route path="/attendance/edit/:id" element={<RegistAsistencias />} />
 
-        <Route path="/pdf" element={<PDF />} />
+        <Route path="/reports" element={<Reportes />} />
 
         <Route path="/login" element={<Login />} />
 
@@ -63,6 +64,6 @@ export default function App() {
         />
       </Routes>
       </SessionProvider>
-    </>
+    </TotalContextProvider>
   );
 }
