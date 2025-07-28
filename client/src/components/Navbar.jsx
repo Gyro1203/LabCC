@@ -57,7 +57,7 @@ function Navbar() {
                       <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
                         <a className="nav-link" href="/">
                           {" "}
-                          Home{" "}
+                          Home
                         </a>
                       </li>
                       <li className={`nav-item ${location.pathname === '/students' ? 'active' : ''}`}>
@@ -72,7 +72,7 @@ function Navbar() {
                       </li>
                       <li className={`nav-item ${location.pathname === '/entry' ? 'active' : ''}`}>
                         <a className="nav-link" href="/entry">
-                          Ingresos{" "}
+                          Ingresos
                         </a>
                       </li>
                       <li className={`nav-item ${location.pathname === '/activity' ? 'active' : ''}`}>
@@ -82,8 +82,12 @@ function Navbar() {
                       </li>
                       <li className="nav-item">
                         <a className="nav-link" href="/attendance">
-                          {" "}
-                          Asistencias{" "}
+                          Asistencias
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="/reports">
+                          Reportes{" "}
                         </a>
                       </li>
                     </ul>

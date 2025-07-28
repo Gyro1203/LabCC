@@ -58,6 +58,8 @@ export const getIngresoByAlumnoService = async ( id ) => {
                 i.id_ingreso,
                 i.titulo, 
                 i.motivo, 
+                i.profesor_guia, 
+                i.profesor_asignatura, 
                 i.vigente,
                 i.semestre
             FROM ingresos i 
