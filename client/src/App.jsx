@@ -49,6 +49,7 @@ export default function App() {
         <Route path="/attendance/edit/:id" element={<RegistAsistencias />} />
 
         <Route path="/login" element={<Login />} />
+        
 
         <Route
           path="/users"

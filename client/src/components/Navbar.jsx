@@ -1,9 +1,21 @@
 import { useLocation } from "react-router-dom";
+import '@styles/NavBar.css';
+import { logoutRequest } from '../services/login.api.js';
 
 function Navbar() {
   const location = useLocation();
   const user = JSON.parse(sessionStorage.getItem("usuario"));
   const userRol = user ? user.rol : null;
+
+  const logoutSubmit = () => {
+   try{
+    logoutRequest();
+    console.log("Sesión cerrada correctamente");
+    window.location.href = "/login"; 
+   }catch(error){
+    console.error("Error al cerrar sesión:", error);
+   }
+  }
 
   return (
     <header>
@@ -109,51 +121,98 @@ function Navbar() {
                   </div>
                 </nav>
               </div>
-              <div className="col-md-3 col-sm-5 d_none">
-                <ul className="sign">
-                  <li className="nav-item dropdown">
+              {!user ? (
+                <div className="col-md-3 col-sm-5 d_none">
+                  <ul className="sign">
+                    <li
+                      className={`nav-item ${
+                        location.pathname === "/login" ? "active" : ""
+                      }`}
+                    >
+                      <a className="sign_btn" href="/login">
+                        Login
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              ) : (
+                <div className="col-md-3 col-sm-5 d_none">
+                  <ul className="sign">
                     <button
-                      id="dropdownMenuButton"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="true"
-                      className="btn dropdown-toggle"
+                      className="btn btn-warning"
+                      type="button"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#offcanvasRight"
+                      aria-controls="offcanvasRight"
                     >
-                      {" "}
-                      <i className="fa-solid fa-gear" aria-hidden="true"></i>
+                      <i class="fa-solid fa-bars fa-xl"></i>
                     </button>
-                    <ul
-                      className="dropdown-menu "
-                      aria-labelledby="dropdownMenuButton"
-                      data-bs-theme="dark"
+                    <div
+                      class="offcanvas offcanvas-end"
+                      tabindex="-1"
+                      id="offcanvasRight"
+                      aria-labelledby="offcanvasRightLabel"
                     >
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Ensayos
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Actividades
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Usuarios
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li
-                    className={`nav-item ${
-                      location.pathname === "/login" ? "active" : ""
-                    }`}
-                  >
-                    <a className="sign_btn" href="/login">
-                      Login
-                    </a>
-                  </li>
-                </ul>
-              </div>
+                      <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasRightLabel">
+                          <i class="fa-solid fa-user-gear"></i>
+                          Configuración
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="offcanvas"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="offcanvas-body">
+                        <div>
+                          <p>
+                            <strong>Usuario:</strong> {user.nombre}{" "}
+                            {user.nombre_usuario}
+                          </p>
+                          <p>
+                            <strong>Rol:</strong> {user.rol}
+                          </p>
+                        </div>
+                        <ul className="list-unstyled">
+                          <li>
+                            <a href="/essay">
+                              <i class="fa-solid fa-folder-closed"></i>Ensayos
+                            </a>
+                          </li>
+                          <li>
+                            <a href="/activity">
+                              <i class="fa-solid fa-building-user"></i>
+                              Actividades
+                            </a>
+                          </li>
+                          {userRol === "Admin" && (
+                            <li>
+                              <a href="/users">
+                                <i class="fa-solid fa-user-gear"></i>Usuarios
+                              </a>
+                            </li>
+                          )}
+                          <li>
+                            <a
+                              href="/login"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                logoutSubmit();
+                              }}
+                            >
+                              {" "}
+                              <i class="fa-solid fa-right-from-bracket fa-lg"></i>{" "}
+                              Cerrar sesión
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
