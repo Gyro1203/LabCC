@@ -5,7 +5,7 @@ import { createAsistenciaService, deleteAsistenciaService, getAsistenciasByIngre
 export const getAsistencias = async (req, res) => {
   try {
     const [asistencias, errorAsistencias] = await getAsistenciasService();
-    if(errorAsistencias) handleErrorClient(res, 404, errorAsistencias);
+    if(errorAsistencias) return handleErrorClient(res, 404, errorAsistencias);
     handleSuccess(res, 200, "Registro de asistencias encontrado", asistencias);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
@@ -34,8 +34,8 @@ export const getAsistenciasByIngreso = async (req, res) => {
 
 export const createAsistencia = async (req, res) => {
   try {
-    const { rut, jornada, actividad } = req.body;
-    const [asistencia, errorAsistencia] = await createAsistenciaService( { rut, jornada, actividad } );
+    const { rut, actividad } = req.body;
+    const [asistencia, errorAsistencia] = await createAsistenciaService( { rut, actividad } );
     if (errorAsistencia) return handleErrorClient(res, 400, errorAsistencia);
     handleSuccess(res, 201,"Asistencia creada exitosamente", asistencia);
   } catch (error) {
