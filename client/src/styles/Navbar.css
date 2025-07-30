@@ -43,3 +43,25 @@
     margin-right: 8px; /* Espacio entre el icono y el texto */
     font-size: 1em;  /* Opcional: ajusta el tamaño del icono */
 }
+
+.offcanvas-body .user-info strong {
+    font-weight: 700;
+    color: #014898;
+    /* Azul institucional */
+    font-size: 1.15em;
+    letter-spacing: 0.5px;
+    background: linear-gradient(90deg, #f9b214 0%, #ffe082 100%);
+    padding: 2px 8px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(1, 72, 152, 0.07);
+    transition: background 0.3s, color 0.3s;
+    margin-right: 6px;
+    display: inline-block;
+}
+
+.offcanvas-header h5 {
+    font-weight: 600;
+    color: #014898; /* Azul institucional */
+    font-size: 1.5em;
+    margin-bottom: 0;
+}

@@ -166,13 +166,20 @@ function Navbar() {
                         ></button>
                       </div>
                       <div class="offcanvas-body">
-                        <div>
+                        <div class="user-info">
                           <p>
-                            <strong>Usuario:</strong> {user.nombre}{" "}
-                            {user.nombre_usuario}
+                            <strong>
+                              <i class="fa-solid fa-user-check"></i>
+                              Usuario:
+                            </strong>{" "}
+                            {user.nombre} {user.nombre_usuario}
                           </p>
                           <p>
-                            <strong>Rol:</strong> {user.rol}
+                            <strong>
+                              <i class="fa-solid fa-tachograph-digital"></i>
+                              Rol:
+                            </strong>{" "}
+                            {user.rol}
                           </p>
                         </div>
                         <ul className="list-unstyled">
