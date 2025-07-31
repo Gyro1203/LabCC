@@ -36,8 +36,7 @@ function Ensayos() {
 
   const headers = [
     { id: 1, key: "actividad", label: "Actividad" },
-    { id: 2, key: "tipo", label: "Tipo" },
-    { id: 3, key: "norma", label: "Norma" },
+    { id: 2, key: "area", label: "Area" },
     { id: 4, key: "unidad", label: "Unidad" },
     { id: 5, key: "precio_uf", label: "Precio UF" },
     { id: 6, key: "precio_pesos", label: "Precio $" },
@@ -56,8 +55,7 @@ function Ensayos() {
     try {
       const confirmation = await deleteDataAlert();
       if (confirmation.isConfirmed) {
-        const response = await deleteEnsayosRequest(id);
-        console.log("Ensayo eliminado exitosamente:", response.data);
+        await deleteEnsayosRequest(id);
         showSuccessAlert("Ensayo eliminado exitosamente");
         setEnsayos(ensayos.filter((e) => e.id_ensayo !== id));
       }

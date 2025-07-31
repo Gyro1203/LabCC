@@ -18,7 +18,18 @@ export const getAllAlumnosService = async () => {
 export const getAlumnosService = async () => {
   try {
     const [result] = await db.query(
-      "SELECT id_alumno, nombre, rut, estado, alumno_carrera FROM alumnos WHERE estado != ?",
+      `
+      SELECT 
+        a.id_alumno, 
+        a.nombre, 
+        a.rut, 
+        c.carrera,
+        c.facultad,
+        c.departamento,
+        a.estado
+      FROM alumnos a
+      JOIN carreras c ON a.alumno_carrera = c.id_carrera
+      WHERE estado != ?`,
       "Eliminado"
     );
     if (!result || result.length === 0)
@@ -93,8 +104,9 @@ export const updateAlumnoService = async (body, id) => {
     if (existeAlumno[0] && existeAlumno[0].rut !== actualizarAlumno[0].rut)
       return [null, "Ya existe un alumno con el rut ingresado"];
 
-    if(body.estado && body.estado == "Inactivo") {
-      const [result] = await db.query(`
+    if (body.estado && body.estado == "Inactivo") {
+      const [result] = await db.query(
+        `
         SELECT 1 FROM ingresos i 
         JOIN alumnos a ON i.ingreso_alumno = a.id_alumno
         WHERE a.id_alumno= ? AND i.vigente = true
@@ -130,7 +142,10 @@ export const deleteAlumnoService = async (id) => {
     if (!result || result.length === 0)
       return [null, "No se encontró al alumno"];
     // const [deleted] = await db.query("DELETE FROM alumnos WHERE id_alumno = ?", id );
-    const [deleted] = await db.query("UPDATE alumnos SET estado = ? WHERE id_alumno = ?", ["Eliminado", id]);
+    const [deleted] = await db.query(
+      "UPDATE alumnos SET estado = ? WHERE id_alumno = ?",
+      ["Eliminado", id]
+    );
     const [alumno] = await db.query(
       "SELECT id_alumno, nombre, rut, estado, alumno_carrera FROM alumnos WHERE id_alumno = ?",
       id

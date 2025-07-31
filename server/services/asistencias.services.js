@@ -9,8 +9,8 @@ export const getAsistenciasService = async () => {
         al.nombre AS alumno, 
         DATE_FORMAT(asis.fecha, '%d/%m/%Y') AS fecha, 
         asis.jornada, 
-        asis.entrada, 
-        asis.salida,
+        DATE_FORMAT(asis.entrada, '%H:%i') AS entrada,
+        DATE_FORMAT(asis.salida, '%H:%i') AS salida,
         asis.actividad
       FROM asistencias asis 
       JOIN ingresos i ON asis.asistencia_ingreso = i.id_ingreso
@@ -34,8 +34,8 @@ export const getAsistenciaService = async (id) => {
         al.rut,
         DATE_FORMAT(asis.fecha, '%d/%m/%Y') AS fecha, 
         asis.jornada, 
-        asis.entrada, 
-        asis.salida,
+        DATE_FORMAT(asis.entrada, '%H:%i') AS entrada,
+        DATE_FORMAT(asis.salida, '%H:%i') AS salida,
         asis.actividad,
         asis.asistencia_ingreso
       FROM asistencias asis 
@@ -137,9 +137,9 @@ export const createAsistenciaService = async (body) => {
         al.nombre AS alumno, 
         DATE_FORMAT(fecha, '%d/%m/%Y') AS fecha, 
         asis.jornada, 
-        asis.entrada, 
-        asis.actividad,
-        asis.salida
+        DATE_FORMAT(asis.entrada, '%H:%i') AS entrada,
+        DATE_FORMAT(asis.salida, '%H:%i') AS salida,
+        asis.actividad
       FROM asistencias asis 
       JOIN ingresos i ON asis.asistencia_ingreso = i.id_ingreso
       JOIN alumnos al ON i.ingreso_alumno = al.id_alumno
@@ -224,9 +224,9 @@ export const updateAsistenciaService = async (body, id) => {
         al.nombre AS alumno, 
         DATE_FORMAT(fecha, '%d/%m/%Y') AS fecha,
         asis.jornada, 
-        asis.entrada, 
-        asis.actividad,
-        asis.salida
+        DATE_FORMAT(asis.entrada, '%H:%i') AS entrada,
+        DATE_FORMAT(asis.salida, '%H:%i') AS salida,
+        asis.actividad
       FROM asistencias asis 
       JOIN ingresos i ON asis.asistencia_ingreso = i.id_ingreso
       JOIN alumnos al ON i.ingreso_alumno = al.id_alumno
@@ -266,8 +266,8 @@ export const marcarSalidaService = async (id) => {
         al.nombre AS alumno, 
         DATE_FORMAT(asis.fecha, '%d/%m/%Y') AS fecha, 
         asis.jornada, 
-        asis.entrada, 
-        asis.salida,
+        DATE_FORMAT(asis.entrada, '%H:%i') AS entrada,
+        DATE_FORMAT(asis.salida, '%H:%i') AS salida,
         asis.actividad
       FROM asistencias asis 
       JOIN ingresos i ON asis.asistencia_ingreso = i.id_ingreso
@@ -295,8 +295,8 @@ export const deleteAsistenciaService = async (id) => {
         al.nombre AS alumno, 
         DATE_FORMAT(asis.fecha, '%d/%m/%Y') AS fecha, 
         asis.jornada, 
-        asis.entrada, 
-        asis.salida,
+        DATE_FORMAT(asis.entrada, '%H:%i') AS entrada,
+        DATE_FORMAT(asis.salida, '%H:%i') AS salida,
         asis.actividad
       FROM asistencias asis 
       JOIN ingresos i ON asis.asistencia_ingreso = i.id_ingreso

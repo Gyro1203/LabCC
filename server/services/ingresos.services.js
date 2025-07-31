@@ -89,6 +89,7 @@ export const createIngresoService = async (body) => {
       rut,
       motivo,
       titulo,
+      vigente,
       profesor_guia,
       profesor_asignatura,
       semestre,
@@ -135,7 +136,7 @@ export const createIngresoService = async (body) => {
         profesor_guia,
         profesor_asignatura,
         semestre,
-        true,
+        vigente,
         alumno[0].id_alumno,
       ]
     );
@@ -215,6 +216,7 @@ export const updateIngresoService = async (body, id) => {
         profesor_guia = ?, 
         profesor_asignatura = ?, 
         semestre = ?,
+        vigente = ?,
         ingreso_alumno = ?
       WHERE id_ingreso = ?`,
       [
@@ -223,6 +225,7 @@ export const updateIngresoService = async (body, id) => {
         body.profesor_guia,
         body.profesor_asignatura,
         body.semestre,
+        body.vigente,
         alumno[0].id_alumno,
         id,
       ]

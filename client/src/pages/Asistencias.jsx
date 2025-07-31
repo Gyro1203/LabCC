@@ -12,16 +12,36 @@ import {
   showErrorAlert,
   showSuccessAlert,
 } from "../helpers/sweetAlert.js";
+import Caret from "../components/Caret.jsx";
 
 function Asistencias() {
   const navigate = useNavigate();
 
   const [asistencias, setAsistencias] = useState([]);
   const [filterText, setFilterText] = useState("");
+  const [sort, setSort] = useState({ keyToSort: "alumno", direction: "asc" });
+  const nonSortableKeys = ["opciones"];
 
-  const camposFiltro = ["alumno", "actividad", "jornada"];
+  const camposFiltro = [
+    "alumno",
+    "fecha",
+    "jornada",
+    "entrada",
+    "actividad",
+    "salida",
+  ];
   // Se envia el array de datos, el texto de filtro, y los campos por los que se puede filtrar
   const asistenciasFiltradas = Filter(asistencias, filterText, camposFiltro);
+
+  const headers = [
+    { id: 1, key: "alumno", label: "Alumno" },
+    { id: 2, key: "fecha", label: "Fecha" },
+    { id: 3, key: "jornada", label: "Jornada" },
+    { id: 4, key: "entrada", label: "Entrada" },
+    { id: 5, key: "actividad", label: "Actividad" },
+    { id: 6, key: "salida", label: "Salida" },
+    { id: 7, key: "opciones", label: "Opciones" },
+  ];
 
   useEffect(() => {
     async function fetchData() {
@@ -35,8 +55,7 @@ function Asistencias() {
     try {
       const confirmation = await deleteDataAlert();
       if (confirmation.isConfirmed) {
-        const response = await deleteAsistenciasRequest(id);
-        console.log("Asistencia eliminada exitosamente:", response.data);
+        await deleteAsistenciasRequest(id);
         showSuccessAlert("Alumno eliminado exitosamente");
         setAsistencias(asistencias.filter((e) => e.id_asistencia !== id));
       }
@@ -55,6 +74,34 @@ function Asistencias() {
     }
   };
 
+  function handleHeaderClick(header) {
+    setSort({
+      keyToSort: header.key,
+      direction:
+        header.key === sort.keyToSort
+          ? sort.direction === "asc"
+            ? "desc"
+            : "asc"
+          : "desc",
+    });
+  }
+
+  function getSortedArray(arrayToSort) {
+    if (nonSortableKeys.includes(sort.keyToSort)) {
+      return arrayToSort;
+    }
+    return arrayToSort.slice().sort((a, b) => {
+      const aValue = a[sort.keyToSort] ?? "";
+      const bValue = b[sort.keyToSort] ?? "";
+      if (aValue === bValue) return 0;
+      if (sort.direction === "asc") {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
+  }
+
   function renderAsistencias() {
     if (asistencias.length === 0) {
       return (
@@ -72,7 +119,7 @@ function Asistencias() {
     }
 
     return (
-      <div className="container text-center p-5">
+      <div className="container text-center mt-5 mb-5">
         <div className="d-flex justify-content-between">
           <button
             type="button"
@@ -81,6 +128,7 @@ function Asistencias() {
           >
             Registar en Asistencia
           </button>
+
           <div className="input-group" style={{ maxWidth: "300px" }}>
             <input
               id="input-search"
@@ -100,7 +148,7 @@ function Asistencias() {
             >
               <span className="visually-hidden">Seleccionar Filtro</span>
             </button>
-            <ul className="dropdown-menu" style={{cursor: "pointer"}}>
+            <ul className="dropdown-menu" style={{ cursor: "pointer" }}>
               <li>
                 <a className="dropdown-item">Alumnos</a>
               </li>
@@ -116,17 +164,40 @@ function Asistencias() {
         <table className="table table-striped table-hover table-bordered mt-4">
           <thead>
             <tr>
-              <th scope="col">Alumno</th>
-              <th scope="col">Jornada</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Entrada</th>
-              <th scope="col">Actividad</th>
-              <th scope="col">Salida</th>
-              <th scope="col">Opciones</th>
+              {headers.map((header) => (
+                <th
+                  key={header.id}
+                  onClick={
+                    !nonSortableKeys.includes(header.key)
+                      ? () => handleHeaderClick(header)
+                      : undefined
+                  }
+                  style={{
+                    ...(nonSortableKeys.includes(header.key)
+                      ? { cursor: "default" }
+                      : { cursor: "pointer" }),
+                    userSelect: "none",
+                  }}
+                >
+                  <span>{header.label}</span>
+                  {!nonSortableKeys.includes(header.key) &&
+                    header.key === sort.keyToSort && (
+                      <span className="float-end">
+                        <Caret
+                          direction={
+                            header.key === sort.keyToSort
+                              ? sort.direction
+                              : "asc"
+                          }
+                        />
+                      </span>
+                    )}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody id="body_table">
-            {asistenciasFiltradas.map((asistencia) => (
+            {getSortedArray(asistenciasFiltradas).map((asistencia) => (
               <AsistenciasRows
                 key={asistencia.id_asistencia}
                 asistencia={asistencia}
