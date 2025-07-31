@@ -3,11 +3,15 @@ import {
   getAlumnosRequest,
   deleteAlumnosRequest,
 } from "../services/alumnos.api.js";
-import AlumnosRows from "../components/AlumnosRows.jsx";
+import AlumnosRows from "../components/Alumnos/AlumnosRows.jsx";
 import { useNavigate } from "react-router-dom";
 import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
-import { deleteDataAlert, showErrorAlert, showSuccessAlert } from "../helpers/sweetAlert.js";
+import {
+  deleteDataAlert,
+  showErrorAlert,
+  showSuccessAlert,
+} from "../helpers/sweetAlert.js";
 
 function Alumnos() {
   const navigate = useNavigate();
@@ -26,7 +30,8 @@ function Alumnos() {
     { id: 3, key: "carrera", label: "Carrera" },
     { id: 4, key: "facultad", label: "Facultad" },
     { id: 5, key: "departamento", label: "Departamento" },
-    { id: 6, key: "opciones", label: "Opciones" },
+    { id: 6, key: "estado", label: "Estado" },
+    { id: 7, key: "opciones", label: "Opciones" },
   ];
 
   useEffect(() => {
@@ -40,9 +45,8 @@ function Alumnos() {
   const handleDelete = async (id) => {
     try {
       const confirmation = await deleteDataAlert();
-      if(confirmation.isConfirmed){
-        const response = await deleteAlumnosRequest(id);
-        console.log("Alumno eliminado exitosamente:", response.data);
+      if (confirmation.isConfirmed) {
+        await deleteAlumnosRequest(id);
         showSuccessAlert("Alumno eliminado exitosamente");
         setAlumnos(alumnos.filter((a) => a.id_alumno !== id));
       }
@@ -50,7 +54,7 @@ function Alumnos() {
       showErrorAlert("Error al eliminar alumno");
       console.error("Error al eliminar alumno:", error);
     }
-  }
+  };
 
   function handleHeaderClick(header) {
     setSort({
@@ -85,7 +89,11 @@ function Alumnos() {
       return (
         <div className="container d-flex align-items-center flex-column mt-5 mb-5">
           <h1 className="p-2">No se encontraron alumnos registrados</h1>
-          <button type="button" className="btn btn-primary p-2" onClick={() => navigate(`/students/register`)}>
+          <button
+            type="button"
+            className="btn btn-primary p-2"
+            onClick={() => navigate(`/students/register`)}
+          >
             Registrar Alumno
           </button>
         </div>
@@ -95,8 +103,11 @@ function Alumnos() {
     return (
       <div className="container text-center mt-5 mb-5">
         <div className="d-flex justify-content-between">
-          
-          <button type="button" className="btn btn-primary" onClick={() => navigate(`/students/register`)}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate(`/students/register`)}
+          >
             Registrar Alumno
           </button>
 

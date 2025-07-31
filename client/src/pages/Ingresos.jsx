@@ -49,8 +49,7 @@ function Ingresos() {
     try {
       const confirmation = await deleteDataAlert();
       if (confirmation.isConfirmed) {
-        const response = await deleteIngresosRequest(id);
-        console.log("Ingreso eliminado exitosamente:", response.data);
+        await deleteIngresosRequest(id);
         showSuccessAlert("Ingreso eliminado exitosamente");
         setIngresos(ingresos.filter((e) => e.id_ingreso !== id));
       }

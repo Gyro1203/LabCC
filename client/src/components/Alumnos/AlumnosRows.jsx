@@ -16,6 +16,7 @@ function AlumnosRows({ alumno, editar, eliminar }) {
       <td>{alumno.carrera}</td>
       <td>{alumno.facultad}</td>
       <td>{alumno.departamento}</td>
+      <td>{alumno.estado}</td>
       <td>
         <div className="btn-group" role="group" aria-label="Option Buttons">
           {editar} {eliminar}
