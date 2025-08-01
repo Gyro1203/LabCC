@@ -1,13 +1,12 @@
 import { Form, Formik } from "formik";
-import { useState } from "react";
 import ReporteAsistencias from "../components/Reportes/ReporteAsistencias";
 import ReporteIngresos from "../components/Reportes/ReporteIngresos";
 
 function Reportes() {
-  const [data, setData] = useState({
+  const data = {
     tipo: "",
     nombre: "",
-  });
+  };
 
   return (
     <div className="container text-center mb-5 mt-5 bg-warning">
@@ -15,7 +14,7 @@ function Reportes() {
         <div className="col-md-6 bg-success">
           <h1>Generar Reportes</h1>
           <Formik initialValues={data} enableReinitialize={true}>
-            {({ handleChange, handleSubmit, values, isSubmitting }) => (
+            {({ handleChange, handleSubmit, values }) => (
               <Form onSubmit={handleSubmit}>
                 <div className="form-group mb-3">
                   <label htmlFor="tipoReporte" className="form-label">

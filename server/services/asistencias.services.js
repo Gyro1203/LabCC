@@ -67,8 +67,8 @@ export const getAsistenciasByIngresoService = async (id) => {
         id_asistencia,
         DATE_FORMAT(fecha, '%d/%m/%Y') AS fecha, 
         jornada, 
-        entrada, 
-        salida,
+        DATE_FORMAT(entrada, '%H:%i') AS entrada,
+        DATE_FORMAT(salida, '%H:%i') AS salida,
         actividad
       FROM asistencias
       WHERE asistencia_ingreso = ?`,

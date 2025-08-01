@@ -58,15 +58,45 @@ function IngresoPDF({ alumno, ingreso, actividades }) {
       "Acumulado\n[UF]",
       "Observaciones",
     ];
-    const dataActividades = actividades.map((act) => [
-      act.nombre,
-      act.unidad,
-      act.cantidad,
-      act.precio_uf,
-      act.total_uf,
-      (acumulado += parseFloat(act.total_uf)),
-      act.observaciones,
-    ]);
+    const dataActividades = (actividades && actividades.length > 0)
+      ? [
+          ...actividades.map((act) => [
+            act.actividad,
+            act.unidad,
+            act.cantidad,
+            act.precio_uf,
+            act.total_uf,
+            (acumulado += parseFloat(act.total_uf)).toFixed(2),
+            act.observaciones,
+          ]),
+          [
+            {
+              content: "Total",
+              colSpan: 5,
+              styles: {
+                halign: "center",
+                lineWidth: 0.1, // Líneas suaves
+              },
+            },
+            {
+              content: `${acumulado} UF`,
+              colSpan: 1,
+              styles: {
+                halign: "center",
+                lineWidth: 0.1, // Líneas suaves
+              },
+            }
+          ],
+        ]
+      : [
+          [
+            {
+              content: "Este ingreso no tiene ensayos registrados",
+              colSpan: 7,
+              styles: { halign: "center" },
+            },
+          ],
+        ];
 
     // Transponer los datos, manteniendo headers verticales
     const alumnoVerticalHeader = alumnosCol.map((header, i) => {
@@ -84,9 +114,11 @@ function IngresoPDF({ alumno, ingreso, actividades }) {
 
     //Encabezado
     doc.setFontSize(12);
-    doc.setFont("helvetica", "bold")
-    doc.text("FICHA TRABAJO ALUMNO EN LABCON", centerX, 20, { align: "center" });
-    doc.addImage("images/LogoLabcon.png", "JPEG", 15, 22, 50, 10 );
+    doc.setFont("helvetica", "bold");
+    doc.text("FICHA TRABAJO ALUMNO EN LABCON", centerX, 20, {
+      align: "center",
+    });
+    doc.addImage("images/LogoLabcon.png", "JPEG", 15, 22, 50, 10);
 
     //Tabla Alumnos
     autoTable(doc, {
@@ -177,16 +209,20 @@ function IngresoPDF({ alumno, ingreso, actividades }) {
     });
 
     //Guardar PDF con un nombre especifico
-    doc.save("TEST.pdf");
+    doc.save(`Ensayos_${alumno.nombre}_${ingreso.semestre}.pdf`);
   };
 
   return (
     <div className="container d-flex justify-content-center">
-      <button className="btn btn-success mt-3 mb-3" type="button" onClick={generarPDF}>
+      <button
+        className="btn btn-success mt-3 mb-3"
+        type="button"
+        onClick={generarPDF}
+      >
         Generar PDF
       </button>
     </div>
   );
 }
 
-export default IngresoPDF
+export default IngresoPDF;
