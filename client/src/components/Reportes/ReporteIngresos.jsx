@@ -60,20 +60,7 @@ function ReporteIngresos({ handleChange, values }) {
 
   return (
     <div>
-      <div className="form-group mb-3">
-        <label htmlFor="nombre" className="form-label">
-          RUT
-        </label>
-        <input
-          type="text"
-          name="rut"
-          className="form-control"
-          //disable no puede recibir eventos, por lo que onChange no se está ejecutando
-          disabled
-          value={!alumnSelected ? "" : alumnSelected.rut}
-        />
-      </div>
-
+      <h2>Reporte de Ingresos</h2>
       <div className="form-group mb-3">
         <label htmlFor="nombre" className="form-label">
           Nombre del Alumno
@@ -96,7 +83,7 @@ function ReporteIngresos({ handleChange, values }) {
       <BuscarAlumno />
 
       {alumnSelected ? (
-        <div className="form-group bg-danger p-2">
+        <div className="form-group p-2" style={{ backgroundColor: "#aeaeaeff" }}>
           <h3>Registro de ingresos de {alumnSelected.nombre}</h3>
           {ingresos.map((ing, index) => (
             <div className="form-check" key={index}>
@@ -119,7 +106,7 @@ function ReporteIngresos({ handleChange, values }) {
           {ingSelected && <IngresoPDF alumno={alumnSelected} ingreso={ingSelected} actividades={actividades}/>}
         </div>
       ) : (
-        <div className="bg-light">No encontrado</div>
+        <div className="bg-light mb-2">No se ha encontrado el alumno</div>
       )}
     </div>
   );

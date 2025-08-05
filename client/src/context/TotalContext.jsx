@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import { getAlumnosRequest } from "../services/alumnos.api";
+import {
+  getActividadesRequest,
+} from "../services/actividades.api";
 
 const TotalContext = createContext();
 
@@ -15,21 +17,45 @@ export const useTotalContext = () => {
 };
 
 export const TotalContextProvider = ({ children }) => {
+  const [actividades, setActividades] = useState([]);
   const [totalesUF, setTotalesUF] = useState([]);
 
-  function GetUF(id) {
-    const fetchAlumnos = async () => {
+  function GetUF() {
+    const fetchTotalesUF = () => {
+      actividades.map((actividad) => {
+        setTotalesUF((prevData) => ({
+          ...prevData, //Carga los datos anteriores del objeto para mantenerlos
+          [actividad.id_alumno]:
+            actividad && actividad.length > 0 // actualiza los datos del objeto con ese id
+              ? actividad
+            : [],
+      }));
+    })};
+    fetchTotalesUF();
+  }
+
+  function GetActivities() {
+    const fetchActivities = async () => {
       try {
-        const dataAlumnos = await getAlumnosRequest();
+        const dataActividades = await getActividadesRequest();
+        setActividades(dataActividades.data);
       } catch (error) {
-        console.log("Error al obtener alumnos:", error); // En caso de error el contenido es vacio.
+        console.log("Error al obtener actividades:", error);
+        setActividades([]); // En caso de error el contenido es vacio.
       }
     };
-    fetchAlumnos();
+    fetchActivities();
   }
 
   return (
-    <TotalContext.Provider value={{ text: "Hello, World!" }}>
+    <TotalContext.Provider
+      value={{
+        actividades,
+        totalesUF,
+        GetUF,
+        GetActivities,
+      }}
+    >
       {children}
     </TotalContext.Provider>
   );
