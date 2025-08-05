@@ -1,13 +1,11 @@
 import { jsPDF } from "jspdf";
 import { autoTable } from "jspdf-autotable";
-// import { useTotalContext } from "../../context/TotalContext.jsx";
 
 function IngresoPDF({ alumno, ingreso, actividades }) {
   console.log("Alumno: ", alumno);
   console.log("Ingreso: ", ingreso);
   console.log("Actividades: ", actividades);
-  // const { text } = useTotalContext();
-
+  
   //FECHA -> 0: Año; 1: Semestre
   const date = ingreso.semestre.split("-");
 

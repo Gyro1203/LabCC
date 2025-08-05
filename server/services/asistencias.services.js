@@ -6,7 +6,10 @@ export const getAsistenciasService = async () => {
     const [result] = await db.query(`
       SELECT 
         asis.id_asistencia,
+        al.id_alumno,
         al.nombre AS alumno, 
+        c.carrera,
+        i.semestre AS periodo,
         DATE_FORMAT(asis.fecha, '%d/%m/%Y') AS fecha, 
         asis.jornada, 
         DATE_FORMAT(asis.entrada, '%H:%i') AS entrada,
@@ -15,6 +18,7 @@ export const getAsistenciasService = async () => {
       FROM asistencias asis 
       JOIN ingresos i ON asis.asistencia_ingreso = i.id_ingreso
       JOIN alumnos al ON i.ingreso_alumno = al.id_alumno
+      JOIN carreras c ON al.alumno_carrera = c.id_carrera
     `);
     if (!result || result.length === 0)
       return [null, "No se encontraron registros de asistencias"];
