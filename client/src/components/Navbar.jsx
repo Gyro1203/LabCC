@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import '@styles/NavBar.css';
-import { logoutRequest } from '../services/login.api.js';
+import "@styles/NavBar.css";
+import { logoutRequest } from "../services/login.api.js";
 
 function Navbar() {
   const location = useLocation();
@@ -8,14 +8,14 @@ function Navbar() {
   const userRol = user ? user.rol : null;
 
   const logoutSubmit = () => {
-   try{
-    logoutRequest();
-    console.log("Sesión cerrada correctamente");
-    window.location.href = "/login"; 
-   }catch(error){
-    console.error("Error al cerrar sesión:", error);
-   }
-  }
+    try {
+      logoutRequest();
+      console.log("Sesión cerrada correctamente");
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
 
   return (
     <header>
@@ -115,13 +115,13 @@ function Navbar() {
                               Asistencias{" "}
                             </a>
                           </li>
+                          <li className="nav-item">
+                            <a className="nav-link" href="/reports">
+                              Reportes{" "}
+                            </a>
+                          </li>
                         </>
                       )}
-                      <li className="nav-item">
-                        <a className="nav-link" href="/reports">
-                          Reportes{" "}
-                        </a>
-                      </li
                     </ul>
                   </div>
                 </nav>
@@ -150,38 +150,38 @@ function Navbar() {
                       data-bs-target="#offcanvasRight"
                       aria-controls="offcanvasRight"
                     >
-                      <i class="fa-solid fa-bars fa-xl"></i>
+                      <i className="fa-solid fa-bars fa-xl"></i>
                     </button>
                     <div
-                      class="offcanvas offcanvas-end"
-                      tabindex="-1"
+                      className="offcanvas offcanvas-end"
+                      tabIndex="-1"
                       id="offcanvasRight"
                       aria-labelledby="offcanvasRightLabel"
                     >
-                      <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasRightLabel">
-                          <i class="fa-solid fa-user-gear"></i>
+                      <div className="offcanvas-header">
+                        <h5 className="offcanvas-title" id="offcanvasRightLabel">
+                          <i className="fa-solid fa-user-gear"></i>
                           Configuración
                         </h5>
                         <button
                           type="button"
-                          class="btn-close"
+                          className="btn-close"
                           data-bs-dismiss="offcanvas"
                           aria-label="Close"
                         ></button>
                       </div>
-                      <div class="offcanvas-body">
-                        <div class="user-info">
+                      <div className="offcanvas-body">
+                        <div className="user-info">
                           <p>
                             <strong>
-                              <i class="fa-solid fa-user-check"></i>
+                              <i className="fa-solid fa-user-check"></i>
                               Usuario:
                             </strong>{" "}
                             {user.nombre} {user.nombre_usuario}
                           </p>
                           <p>
                             <strong>
-                              <i class="fa-solid fa-tachograph-digital"></i>
+                              <i className="fa-solid fa-tachograph-digital"></i>
                               Rol:
                             </strong>{" "}
                             {user.rol}
@@ -190,19 +190,19 @@ function Navbar() {
                         <ul className="list-unstyled">
                           <li>
                             <a href="/essay">
-                              <i class="fa-solid fa-folder-closed"></i>Ensayos
+                              <i className="fa-solid fa-folder-closed"></i>Ensayos
                             </a>
                           </li>
                           <li>
                             <a href="/activity">
-                              <i class="fa-solid fa-building-user"></i>
+                              <i className="fa-solid fa-building-user"></i>
                               Actividades
                             </a>
                           </li>
                           {userRol === "Admin" && (
                             <li>
                               <a href="/users">
-                                <i class="fa-solid fa-user-gear"></i>Usuarios
+                                <i className="fa-solid fa-user-gear"></i>Usuarios
                               </a>
                             </li>
                           )}
@@ -215,7 +215,7 @@ function Navbar() {
                               }}
                             >
                               {" "}
-                              <i class="fa-solid fa-right-from-bracket fa-lg"></i>{" "}
+                              <i className="fa-solid fa-right-from-bracket fa-lg"></i>{" "}
                               Cerrar sesión
                             </a>
                           </li>

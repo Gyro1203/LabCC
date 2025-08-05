@@ -27,7 +27,7 @@ function Ingresos() {
 
   const headers = [
     { id: 1, key: "nombre", label: "Nombre" },
-    { id: 2, key: "rut", label: "Rut" },
+    // { id: 2, key: "rut", label: "Rut" },
     { id: 3, key: "motivo", label: "Motivo de Uso" },
     { id: 4, key: "titulo", label: "Titulo del Proyecto" },
     { id: 5, key: "profesor_guia", label: "Profesor Guía" },
