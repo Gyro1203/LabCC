@@ -121,7 +121,7 @@ function Navbar() {
                         <a className="nav-link" href="/reports">
                           Reportes{" "}
                         </a>
-                      </li
+                      </li>
                     </ul>
                   </div>
                 </nav>
