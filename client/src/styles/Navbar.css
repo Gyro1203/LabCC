@@ -1,0 +1,67 @@
+.list-unstyled {
+    padding-left: 0; /* Elimina el padding por defecto */
+    list-style: none; /* Elimina los puntos de la lista */
+    margin-bottom: 0; /* Elimina el margen inferior */
+    background: #014898;         /* Fondo claro */
+    border-radius: 8px;          /* Bordes redondeados */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07); /* Sombra suave */
+}
+/* Estilos para los elementos de la lista */
+.list-unstyled li {
+    padding: 16px 18px; /* Espaciado interno */
+    border-bottom: 2px solid #e9ecef; /* Línea divisoria */
+    transition: background 0.2s;
+    align-items: center; /* Alinea los elementos al centro */
+    display: flex; /* Hace que los elementos sean flexibles */
+    justify-content: space-between; /* Espacio entre los elementos */
+}
+
+.list-unstyled li:last-child {
+    border-bottom: none; /* Elimina la línea divisoria del último elemento */
+}
+/* Enlaces dentro de la lista */
+.list-unstyled li a {
+    display: flex;
+    align-items: center;
+    color: #014898;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 4px 0;
+}
+/* Efecto hover para los enlaces */
+.list-unstyled li:hover {
+    background: #f9b214; /* Fondo amarillo al pasar el mouse */
+    color: #000000; /* Cambia el color del texto al blanco */
+    border-radius: 4px; /* Bordes redondeados al pasar el mouse */
+}
+
+.list-unstyled li:hover a {
+    color: #000000;
+}
+
+.list-unstyled li i {
+    margin-right: 8px; /* Espacio entre el icono y el texto */
+    font-size: 1em;  /* Opcional: ajusta el tamaño del icono */
+}
+
+.offcanvas-body .user-info strong {
+    font-weight: 700;
+    color: #014898;
+    /* Azul institucional */
+    font-size: 1.15em;
+    letter-spacing: 0.5px;
+    background: linear-gradient(90deg, #f9b214 0%, #ffe082 100%);
+    padding: 2px 8px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(1, 72, 152, 0.07);
+    transition: background 0.3s, color 0.3s;
+    margin-right: 6px;
+    display: inline-block;
+}
+
+.offcanvas-header h5 {
+    font-weight: 600;
+    color: #014898; /* Azul institucional */
+    font-size: 1.5em;
+    margin-bottom: 0;
+}
