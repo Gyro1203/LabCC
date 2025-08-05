@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import carrerasRoutes from './routes/carreras.routes.js';
 import alumnosRoutes from './routes/alumnos.routes.js';
 import ensayosRoutes from './routes/ensayos.routes.js';
 import ingresosRoutes from './routes/ingresos.routes.js'
@@ -32,6 +33,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 passportJwtSetUp();
+app.use(carrerasRoutes)
 app.use(alumnosRoutes);
 app.use(ensayosRoutes);
 app.use(ingresosRoutes);

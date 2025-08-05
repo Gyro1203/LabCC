@@ -93,7 +93,7 @@ export default function RegistActividades() {
                   >
                     <option value="" disabled hidden>Selecciona una opción</option>
                     {ensayos.map((ensayo) => (
-                      <option key={ensayo.id_ensayo} value={ensayo.actividad}>
+                      <option key={ensayo.id_ensayo} value={ensayo.id_ensayo}>
                         {ensayo.actividad}
                       </option> 
                     ))}

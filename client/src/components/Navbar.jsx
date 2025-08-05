@@ -76,7 +76,7 @@ function Navbar() {
                       >
                         <a className="nav-link" href="/">
                           {" "}
-                          Home{" "}
+                          Home
                         </a>
                       </li>
                       {userRol === "Admin" && (
@@ -117,6 +117,11 @@ function Navbar() {
                           </li>
                         </>
                       )}
+                      <li className="nav-item">
+                        <a className="nav-link" href="/reports">
+                          Reportes{" "}
+                        </a>
+                      </li
                     </ul>
                   </div>
                 </nav>

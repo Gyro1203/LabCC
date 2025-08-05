@@ -6,14 +6,14 @@ import {
 } from "../services/ensayos.api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { showSuccessAlert } from "../helpers/sweetAlert";
 
 export default function RegistEnsayos() {
   const navigate = useNavigate();
 
   const [ensayo, setEnsayo] = useState({
     actividad: "",
-    tipo: "",
-    norma: "",
+    area: "",
     unidad: "",
     precio_uf: "1",
   });
@@ -25,7 +25,6 @@ export default function RegistEnsayos() {
       if (params.id) {
         try {
           const dataEnsayo = await getEnsayoByIdRequest(params.id);
-          console.log("Ensayo encontrado:", dataEnsayo);
           setEnsayo(dataEnsayo.data);
         } catch (error) {
           console.error("Error al obtener el ensayo:", error);
@@ -46,23 +45,23 @@ export default function RegistEnsayos() {
           <Formik
             initialValues={ensayo}
             enableReinitialize={true} // Permite que los valores iniciales se actualicen cuando cambie el estado
-            onSubmit={async (values) => {
+            onSubmit={async (values, { resetForm }) => {
               try {
                 if (params.id) {
                   await updateEnsayosRequest(params.id, values);
-                  console.log("Ensayo actualizado:", values);
+                  navigate("/essay"); // Redirigir a la lista de ensayos después de crear o actualizar
                 } else {
-                  const response = await createEnsayosRequest(values);
-                  console.log("Ensayo creado:", response.data);
+                  await createEnsayosRequest(values);
+                  showSuccessAlert("Ensayo creado exitosamente");
                 }
-                setEnsayo({
-                  actividad: "",
-                  tipo: "",
-                  norma: "",
-                  unidad: "",
-                  precio_uf: "1",
+                resetForm({
+                  values: {
+                    actividad: "",
+                    area: "",
+                    unidad: "",
+                    precio_uf: "1",
+                  },
                 });
-                navigate("/essay"); // Redirigir a la lista de ensayos después de crear o actualizar
               } catch (error) {
                 console.error("Error al crear ensayo:", error);
               }
@@ -71,7 +70,9 @@ export default function RegistEnsayos() {
             {({ handleChange, handleSubmit, values, isSubmitting }) => (
               <Form onSubmit={handleSubmit}>
                 <div className="form-group mb-3">
-                  <label htmlFor="actividad" className="form-label">Actividad</label>
+                  <label htmlFor="actividad" className="form-label">
+                    Actividad
+                  </label>
                   <input
                     type="text"
                     name="actividad"
@@ -85,18 +86,26 @@ export default function RegistEnsayos() {
                 </div>
 
                 <div className="form-group mb-3">
-                  <label htmlFor="tipo" className="form-label">Area</label>
+                  <label htmlFor="area" className="form-label">
+                    Area
+                  </label>
                   <select
                     name="area"
                     className="form-select"
                     onChange={handleChange}
-                    value={values.tipo} //cambia nombre tipo -> area en la BD
+                    value={values.area}
                   >
-                    <option value="" disabled hidden>Selecciona una opción</option>
-                    <option value="Mecanica de suelos">Mecanica de suelos</option>
+                    <option value="" disabled hidden>
+                      Selecciona una opción
+                    </option>
+                    <option value="Mecanica de suelos">
+                      Mecanica de suelos
+                    </option>
                     <option value="Asfaltos">Asfaltos</option>
                     <option value="Hormigón">Hormigón</option>
-                    <option value="Elementos y Componentes">Elementos y Componentes</option>
+                    <option value="Elementos y Componentes">
+                      Elementos y Componentes
+                    </option>
                   </select>
                   <div className="invalid-feedback">
                     Por favor, selecciona una opción válida.
@@ -104,18 +113,9 @@ export default function RegistEnsayos() {
                 </div>
 
                 <div className="form-group mb-3">
-                  <label htmlFor="norma" className="form-label">Norma</label>
-                  <input
-                    type="text"
-                    name="norma"
-                    className="form-control"
-                    onChange={handleChange}
-                    value={values.norma}
-                  />
-                </div>
-
-                <div className="form-group mb-3">
-                  <label htmlFor="unidad" className="form-label">Unidad</label>
+                  <label htmlFor="unidad" className="form-label">
+                    Unidad
+                  </label>
                   <input
                     type="text"
                     name="unidad"
@@ -126,7 +126,9 @@ export default function RegistEnsayos() {
                 </div>
 
                 <div className="form-group mb-3">
-                  <label htmlFor="precio_uf" className="form-label">Costo</label>
+                  <label htmlFor="precio_uf" className="form-label">
+                    Costo
+                  </label>
                   <div className="input-group mb-3">
                     <input
                       type="number"

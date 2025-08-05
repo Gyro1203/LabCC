@@ -11,14 +11,15 @@ export default function RegistIngresos() {
   const navigate = useNavigate();
 
   const [ingreso, setIngreso] = useState({
-    rut:"",
+    rut: "",
     motivo: "",
     titulo: "",
     profesor_guia: "",
     profesor_asignatura: "",
     semestre: "",
+    vigente: true,
     ingreso_alumno: "1",
-  }); // Estado para almacenar el ingreso si es necesario, aunque no se usa en este ejemplo
+  }); // Estado para almacenar el ingreso si es necesario
 
   const params = useParams();
 
@@ -28,8 +29,12 @@ export default function RegistIngresos() {
         try {
           const dataIngreso = await getIngresoByIdRequest(params.id);
           //console.log('Ingreso encontrado:', dataIngreso);
-          const { nombre: _nombre, ingreso_alumno: _ingreso_alumno, ...filtered } = dataIngreso.data; // nombre y rut is assigned but not used. Solucion
-          //console.log('Ingreso filtrado:', filtered);
+          const {
+            nombre: _nombre,
+            ingreso_alumno: _ingreso_alumno,
+            ...filtered
+          } = dataIngreso.data; // nombre y rut is assigned but not used. Solucion
+          // console.log("Ingreso filtrado:", filtered);
           setIngreso(filtered);
         } catch (error) {
           console.error("Error al obtener el ingreso:", error);
@@ -54,18 +59,17 @@ export default function RegistIngresos() {
               try {
                 if (params.id) {
                   await updateIngresosRequest(params.id, values);
-                  console.log("Ingreso actualizado:", values);
                 } else {
-                  const response = await createIngresosRequest(values);
-                  console.log("Ingreso creado:", response.data);
+                  await createIngresosRequest(values);
                 }
                 setIngreso({
-                  rut:"",
+                  rut: "",
                   motivo: "",
                   titulo: "",
                   profesor_guia: "",
                   profesor_asignatura: "",
                   semestre: "",
+                  vigente: true,
                   ingreso_alumno: "1",
                 });
                 navigate("/entry"); // Redirigir a la lista de ingresos después de crear o actualizar
@@ -74,7 +78,13 @@ export default function RegistIngresos() {
               }
             }}
           >
-            {({ handleChange, handleSubmit, values, isSubmitting }) => (
+            {({
+              handleChange,
+              handleSubmit,
+              setFieldValue,
+              values,
+              isSubmitting,
+            }) => (
               <Form onSubmit={handleSubmit}>
                 <div className="form-group mb-3">
                   <label htmlFor="rut" className="form-label">
@@ -99,14 +109,22 @@ export default function RegistIngresos() {
                     onChange={handleChange}
                     value={values.motivo}
                   >
-                    <option value="" disabled hidden>Selecciona una opción</option>
-                    <option value="Seminario Aplicado" >Seminario Aplicado</option>
-                    <option value="Tesis o Proyecto de Titulo">Tesis o Proyecto de Titulo</option>
-                    <option value="Proyecto de Investigación">Proyecto de Investigación</option>
+                    <option value="" disabled hidden>
+                      Selecciona una opción
+                    </option>
+                    <option value="Seminario Aplicado">
+                      Seminario Aplicado
+                    </option>
+                    <option value="Tesis o Proyecto de Titulo">
+                      Tesis o Proyecto de Titulo
+                    </option>
+                    <option value="Proyecto de Investigación">
+                      Proyecto de Investigación
+                    </option>
                     <option value="Practica I">Practica I</option>
                     <option value="Practica II">Practica II</option>
                     <option value="Practica III">Practica III</option>
-                    <option value="Otros">Otros</option>
+                    <option value="Otro">Otro</option>
                   </select>
                 </div>
 
@@ -167,6 +185,27 @@ export default function RegistIngresos() {
                     value={values.semestre}
                   />
                 </div>
+
+                {params.id ? (
+                  <div className="form-group mb-3">
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="vigente"
+                        name="vigente"
+                        checked={Boolean(values.vigente)} // Convierte 1/0 a true/false
+                        onChange={() =>
+                          setFieldValue("vigente", !values.vigente)
+                        }
+                      />
+                      <label className="form-check-label" htmlFor="vigente">
+                        {values.vigente ? "Vigente" : "No Vigente"}
+                      </label>
+                    </div>
+                  </div>
+                ) : null}
 
                 <div className="d-flex flex-row-reverse">
                   <button

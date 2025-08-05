@@ -11,7 +11,6 @@ export const getEnsayoByIdRequest = async (id) => {
 }
 
 export const createEnsayosRequest = async (ensayo) => {
-    console.log("Ensayo recibido:", ensayo);
     const response = await axios.post('http://localhost:3000/essay', ensayo);
     return response.data;
 };
