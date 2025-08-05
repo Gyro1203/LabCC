@@ -28,7 +28,7 @@ export const loginRequest = async (email, password) => {
 // logout
 export const logoutRequest = async () => {
     try {
-      await axios.get(`http://localhost:3000/logout`);
+      await axios.post(`http://localhost:3000/logout`);
       sessionStorage.removeItem("usuario"); // Elimina los datos del usuario de sessionStorage
       cookies.remove("jwt"); // Elimina el token de las cookies
       cookies.remove("jwt-auth");

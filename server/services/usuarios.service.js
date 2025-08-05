@@ -78,7 +78,11 @@ export const updateUsuariosService = async (body, id) => {
         const encryptedPassword = await encryptPassword(body.password);
         updatedBody = { ...body, password: encryptedPassword };
         }else{
-        updatedBody = { ...body };
+        updatedBody = { 
+            nombre_usuario: body.nombre_usuario,
+            rol: body.rol,
+            email: body.email
+         };
         }
 
         await db.query("UPDATE usuarios SET ? WHERE id_usuario = ?", [updatedBody, id]);

@@ -116,7 +116,7 @@ function Usuarios() {
 
  return (
    <div className="container text-center mt-4 mb-5">
-     <button onClick={handleClickCreate}>Registrar Alumno</button>
+     <button onClick={handleClickCreate}>Registrar Usuario</button>
      <div className="d-flex justify-content-end mt-4">
        <div className="input-group" style={{ maxWidth: "300px" }}>
          <input

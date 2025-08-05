@@ -49,7 +49,7 @@ export const updateUsuarios = async (req, res) => {
      try {
             const [usuario, errorUsuario] = await updateUsuariosService(req.body, req.params.id);
             if(errorUsuario) return handleErrorClient(res, 400, "Error al actualizar usuario", errorUsuario);
-            handleSuccess(res, 200, "Datos del alumno actualizados", usuario);
+            handleSuccess(res, 200, "Datos del usuario actualizados", usuario);
         } catch (error) {
             handleErrorServer(res, 500, error.message);
         }
