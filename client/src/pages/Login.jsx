@@ -23,7 +23,7 @@ function Login() {
             setError(false);
             setTimeout(() => {
               setLoading(false);
-              navigate("/");
+              navigate("/students");
             }, 1500);
         } catch (error) {
             setTimeout(() => {
