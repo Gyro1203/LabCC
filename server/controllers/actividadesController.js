@@ -13,6 +13,8 @@ import {
   updateActividadService,
 } from "../services/actividades.services.js";
 
+import { actividadBodyValdation } from "../validations/actividades.validation.js";
+
 export const getActividades = async (req, res) => {
   try {
     const [actividades, erroActividades] = await getActividadesService();
@@ -48,6 +50,12 @@ export const getActividadesByIngreso = async (req, res) => {
 
 export const createActividad = async (req, res) => {
   try {
+    const { body } = req;
+    const { error } = actividadBodyValdation.validate(body);
+    if(error){
+            return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+        }
+
     const { cantidad, observaciones, actividad_ensayo, actividad_ingreso } = req.body;
     const [actividad, errorActividad] = await createActividadService({
       cantidad,
@@ -64,6 +72,13 @@ export const createActividad = async (req, res) => {
 
 export const updateActividad = async (req, res) => {
   try {
+
+    const { body } = req;
+    const { error } = actividadBodyValdation.validate(body);
+    if(error){
+            return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+        }
+        
     const [actividad, errorActividad] = await updateActividadService(
       req.body,
       req.params.id
