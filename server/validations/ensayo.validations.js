@@ -1,7 +1,7 @@
 "use strict";
 import Joi from 'joi';
 
-const ensayoBodyValidation = Joi.object({
+export const ensayoBodyValidation = Joi.object({
     actividad: Joi.string()
         .max(30)
         .pattern(/^[a-zA-Z0-9-ZáéíóúÁÉÍÓÚñÑ\s.,;:!?-]+$/)

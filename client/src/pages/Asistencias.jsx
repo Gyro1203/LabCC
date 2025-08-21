@@ -91,8 +91,24 @@ function Asistencias() {
       return arrayToSort;
     }
     return arrayToSort.slice().sort((a, b) => {
-      const aValue = a[sort.keyToSort] ?? "";
-      const bValue = b[sort.keyToSort] ?? "";
+      let aValue = a[sort.keyToSort] ?? "";
+      let bValue = b[sort.keyToSort] ?? "";
+
+      // Si la columna es fecha, transforma a objeto Date para comparar
+      if (sort.keyToSort === "fecha") {
+        // Asume formato "DD MM YY" o "DD-MM-YY"
+        const parseFecha = (str) => {
+          if (!str) return new Date(0);
+          const parts = str.replace(/[-/]/g, " ").split(" ");
+          // Si el año es 2 dígitos, conviértelo a 4 dígitos (ej: 25 -> 2025)
+          let [dd, mm, yy] = parts;
+          yy = yy.length === 2 ? "20" + yy : yy;
+          return new Date(`${yy}-${mm}-${dd}`);
+        };
+        aValue = parseFecha(aValue);
+        bValue = parseFecha(bValue);
+      }
+
       if (aValue === bValue) return 0;
       if (sort.direction === "asc") {
         return aValue > bValue ? 1 : -1;
