@@ -62,7 +62,6 @@ export const createAlumno = async (req, res) => {
 
 export const updateAlumno = async (req, res) => {
   try {
-    
     const { body } = req;
     const { error } = alumnoBodyValidation.validate(body);
     if (error) {

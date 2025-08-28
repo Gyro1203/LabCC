@@ -2,6 +2,11 @@
 import Joi from 'joi';
 
 export const ensayoBodyValidation = Joi.object({
+  id_ensayo: Joi.number().integer().min(1).messages({
+      "number.base": "El ID del alumno debe ser un número.",
+      "number.integer": "El ID del alumno debe ser un número entero.",
+      "number.min": "El ID del alumno debe ser mayor o igual a 1.",
+    }),
     actividad: Joi.string()
         .max(30)
         .pattern(/^[a-zA-Z0-9-ZáéíóúÁÉÍÓÚñÑ\s.,;:!?-]+$/)
@@ -22,7 +27,7 @@ export const ensayoBodyValidation = Joi.object({
         }),
     unidad: Joi.string()
         .min(1)
-        .max(3)
+        .max(10)
         .pattern(/^[a-zA-Z0-9-ZáéíóúÁÉÍÓÚñÑ\s.,;:!?-]+$/)
         .pattern(/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/)
         .messages({

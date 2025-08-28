@@ -2,6 +2,11 @@
 import Joi from "joi";
 
 export const alumnoBodyValidation = Joi.object({
+  id_alumno: Joi.number().integer().min(1).messages({
+    "number.base": "El ID del alumno debe ser un número.",
+    "number.integer": "El ID del alumno debe ser un número entero.",
+    "number.min": "El ID del alumno debe ser mayor o igual a 1.",
+  }),
   nombre: Joi.string()
     .min(4)
     .max(30)
