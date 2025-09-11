@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import {
-  getActividadesRequest,
-  deleteActividadesRequest,
-} from "../services/actividades.api.js";
-import ActividadesRows from "../components/ActividadesRows.jsx";
+  getCarrerasRequest,
+  deleteCarreraRequest,
+} from "../services/carreras.api.js";
+import CarrerasRows from "../components/CarrerasRows.jsx";
 import { useNavigate } from "react-router-dom";
 import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
@@ -13,46 +13,30 @@ import {
   showSuccessAlert,
 } from "../helpers/sweetAlert.js";
 
-function Actividades() {
+function Carreras() {
   const navigate = useNavigate();
 
-  const [actividades, setActividades] = useState([]);
+  const [carreras, setCarreras] = useState([]);
   const [filterText, setFilterText] = useState("");
 
-  const [sort, setSort] = useState({ keyToSort: "alumno", direction: "asc" });
+  const [sort, setSort] = useState({ keyToSort: "carrera", direction: "asc" });
   const nonSortableKeys = ["opciones"];
 
-  const camposFiltro = [
-    "actividad",
-    "alumno",
-    "unidad",
-    "cantidad",
-    "precio_uf",
-    "precio_peso",
-    "total_uf",
-    "total_peso",
-    "observaciones",
-  ];
-  const actividadesFiltradas = Filter(actividades, filterText, camposFiltro);
+  const camposFiltro = ["carrera", "facultad", "departamento"];
+  const carrerasFiltradas = Filter(carreras, filterText, camposFiltro);
 
   const headers = [
-    { id: 1, key: "actividad", label: "Actividad" },
-    { id: 2, key: "alumno", label: "Alumno" },
-    { id: 3, key: "unidad", label: "Unidad" },
-    { id: 4, key: "cantidad", label: "Cantidad" },
-    { id: 5, key: "precio_uf", label: "Precio UF" },
-    { id: 6, key: "precio_peso", label: "Precio $" },
-    { id: 7, key: "total_uf", label: "Total UF" },
-    { id: 8, key: "total_peso", label: "Total $" },
-    { id: 9, key: "observaciones", label: "Observaciones" },
-    { id: 10, key: "opciones", label: "Opciones" },
+    { id: 1, key: "carrera", label: "Carrera" },
+    { id: 2, key: "facultad", label: "Facultad" },
+    { id: 3, key: "departamento", label: "Departamento" },
+    { id: 4, key: "opciones", label: "Opciones" },
   ];
 
   useEffect(() => {
     async function fetchData() {
-      const dataActividades = await getActividadesRequest();
-      console.log(dataActividades.data);
-      setActividades(dataActividades.data);
+      const dataCarreras = await getCarrerasRequest();
+      console.log(dataCarreras.data);
+      setCarreras(dataCarreras.data);
     }
     fetchData();
   }, []);
@@ -61,14 +45,13 @@ function Actividades() {
     try {
       const confirmation = await deleteDataAlert();
       if (confirmation.isConfirmed) {
-        const response = await deleteActividadesRequest(id);
-        console.log("Actividad eliminada exitosamente:", response.data);
-        showSuccessAlert("Actividad eliminada exitosamente");
-        setActividades(actividades.filter((e) => e.id_actividad !== id));
+        await deleteCarreraRequest(id);
+        showSuccessAlert("Carrera eliminada exitosamente");
+        setCarreras(carreras.filter((e) => e.id_carrera !== id));
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar actividad");
-      console.error("Error al eliminar actividad:", error);
+      showErrorAlert("Error al eliminar carrera");
+      console.error("Error al eliminar carrera:", error);
     }
   };
 
@@ -102,10 +85,10 @@ function Actividades() {
   }
 
   function renderActividades() {
-    if (actividades.length === 0) {
+    if (carreras.length === 0) {
       return (
         <div className="container d-flex align-items-center flex-column mt-5 mb-5">
-          <h1 className="p-2">No se encontraron actividades registradas</h1>
+          <h1 className="p-2">No se encontraron carreras registradas</h1>
           <button
             type="button"
             className="btn btn-primary p-2"
@@ -119,8 +102,14 @@ function Actividades() {
 
     return (
       <div className="container text-center mt-5 mb-5">
-        <div className="d-flex justify-content-end">
-
+        <div className="d-flex justify-content-between">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate(`/careers/register`)}
+          >
+            Registrar Carrera
+          </button>
           <div className="input-group" style={{ maxWidth: "300px" }}>
             <input
               id="input-search"
@@ -168,16 +157,16 @@ function Actividades() {
             </tr>
           </thead>
           <tbody>
-            {getSortedArray(actividadesFiltradas).map((actividad) => (
-              <ActividadesRows
-                key={actividad.id_actividad}
-                actividad={actividad}
+            {getSortedArray(carrerasFiltradas).map((carrera) => (
+              <CarrerasRows
+                key={carrera.id_carrera}
+                carreras={carrera}
                 editar={
                   <button
                     className="btn btn-primary"
                     title="Editar"
                     onClick={() =>
-                      navigate(`/activity/edit/${actividad.id_actividad}`)
+                      navigate(`/careers/edit/${carrera.id_carrera}`)
                     }
                   >
                     <i className="fa-solid fa-pencil"></i>
@@ -187,7 +176,7 @@ function Actividades() {
                   <button
                     className="btn btn-danger"
                     title="Eliminar"
-                    onClick={() => handleDelete(actividad.id_actividad)}
+                    onClick={() => handleDelete(carrera.id_carrera)}
                   >
                     <i className="fa-solid fa-trash-can"></i>
                   </button>
@@ -200,11 +189,7 @@ function Actividades() {
     );
   }
 
-  return (
-    <div>
-      {renderActividades()}
-    </div>
-  );
+  return <div>{renderActividades()}</div>;
 }
 
-export default Actividades;
+export default Carreras;

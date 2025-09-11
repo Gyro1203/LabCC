@@ -25,7 +25,11 @@ export default function RegistEnsayos() {
       if (params.id) {
         try {
           const dataEnsayo = await getEnsayoByIdRequest(params.id);
-          setEnsayo(dataEnsayo.data);
+          const {
+            precio_peso: _precio_peso,
+            ...filtered
+          } = dataEnsayo.data;
+          setEnsayo(filtered);
         } catch (error) {
           console.error("Error al obtener el ensayo:", error);
         }
@@ -36,12 +40,14 @@ export default function RegistEnsayos() {
 
   return (
     <div className="container mt-5">
+      <button className="btn btn-secondary" onClick={() => navigate("/essay")}>
+        Volver
+      </button>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <h1 className="mb-4 text-center">
             {params.id ? "Editar datos del ensayo" : "Registrar nuevo ensayo"}
           </h1>
-
           <Formik
             initialValues={ensayo}
             enableReinitialize={true} // Permite que los valores iniciales se actualicen cuando cambie el estado

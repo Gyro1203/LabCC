@@ -16,10 +16,7 @@ export const createAlumnosRequest = async (alumn) => {
 };
 
 export const updateAlumnosRequest = async (id, alumn) => {
-  const response = await axios.put(
-    `http://localhost:3000/students/${id}`,
-    alumn
-  );
+  const response = await axios.put(`http://localhost:3000/students/${id}`, alumn);
   return response.data;
 };
 

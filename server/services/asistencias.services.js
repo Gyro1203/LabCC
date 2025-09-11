@@ -166,7 +166,7 @@ export const createAsistenciaService = async (body) => {
 export const updateAsistenciaService = async (body, id) => {
   try {
     const [actualizarAsistencia] = await db.query(
-      "SELECT fecha, entrada, jornada, actividad FROM asistencias WHERE id_asistencia = ?",
+      "SELECT fecha, entrada, salida, jornada, actividad FROM asistencias WHERE id_asistencia = ?",
       id
     );
     if (!actualizarAsistencia || actualizarAsistencia.length === 0)
