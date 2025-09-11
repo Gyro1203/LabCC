@@ -35,6 +35,7 @@ export default function RegistAsistencias() {
             fecha: _fecha,
             jornada: _jornada,
             entrada: _entrada,
+            salida: _salida,
             asistencia_ingreso: _asistencia_ingreso,
             ...filtered
           } = dataAsistencia.data; // nombre y rut is assigned but not used. Solucion

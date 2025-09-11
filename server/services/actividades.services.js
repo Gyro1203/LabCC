@@ -37,8 +37,10 @@ export const getActividadService = async (id) => {
       `
       SELECT 
         ac.id_actividad,
+        i.id_ingreso AS actividad_ingreso,
         al.nombre AS alumno,
         e.actividad,
+        e.id_ensayo AS actividad_ensayo,
         e.unidad, 
         ac.cantidad, 
         e.precio_uf, 

@@ -20,11 +20,14 @@ export default function RegistIngresos() {
     vigente: true,
     ingreso_alumno: "1",
   }); // Estado para almacenar el ingreso si es necesario
-
+  const [fecha, setFecha] = useState("");
   const params = useParams();
 
   useEffect(() => {
     const fetchIngreso = async () => {
+      const fechaActual = new Date().toISOString().split("T")[0].split("-")[0];
+      console.log(fechaActual);
+      setFecha(fechaActual);
       if (params.id) {
         try {
           const dataIngreso = await getIngresoByIdRequest(params.id);
@@ -177,13 +180,18 @@ export default function RegistIngresos() {
                   <label htmlFor="semestre" className="form-label">
                     Semestre
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="semestre"
                     className="form-control"
                     onChange={handleChange}
                     value={values.semestre}
-                  />
+                  >
+                    <option value="" disabled hidden>
+                      Selecciona una opción
+                    </option>
+                    <option value={`${fecha}-1`}>{`${fecha}-1`}</option>
+                    <option value={`${fecha}-2`}>{`${fecha}-2`}</option>
+                  </select>
                 </div>
 
                 {params.id ? (

@@ -203,6 +203,12 @@ function Navbar() {
                               Actividades
                             </a>
                           </li>
+                          <li>
+                            <a href="/careers">
+                              <i className="fa-solid fa-book"></i>
+                              Carreras
+                            </a>
+                          </li>
                           {userRol === "Admin" && (
                             <li>
                               <a href="/users">
