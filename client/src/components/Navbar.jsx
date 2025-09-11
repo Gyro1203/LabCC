@@ -110,18 +110,18 @@ function Navbar() {
                         </a>
                       </li> */}
                           <li className="nav-item">
-                            <a className="nav-link" href="/attendance">
-                              {" "}
-                              Asistencias{" "}
-                            </a>
-                          </li>
-                          <li className="nav-item">
                             <a className="nav-link" href="/reports">
                               Reportes{" "}
                             </a>
                           </li>
                         </>
                       )}
+                      <li className="nav-item">
+                        <a className="nav-link" href="/attendance">
+                          {" "}
+                          Asistencias{" "}
+                        </a>
+                      </li>
                     </ul>
                   </div>
                 </nav>
@@ -159,7 +159,10 @@ function Navbar() {
                       aria-labelledby="offcanvasRightLabel"
                     >
                       <div className="offcanvas-header">
-                        <h5 className="offcanvas-title" id="offcanvasRightLabel">
+                        <h5
+                          className="offcanvas-title"
+                          id="offcanvasRightLabel"
+                        >
                           <i className="fa-solid fa-user-gear"></i>
                           Configuración
                         </h5>
@@ -190,7 +193,8 @@ function Navbar() {
                         <ul className="list-unstyled">
                           <li>
                             <a href="/essay">
-                              <i className="fa-solid fa-folder-closed"></i>Ensayos
+                              <i className="fa-solid fa-folder-closed"></i>
+                              Ensayos
                             </a>
                           </li>
                           <li>
@@ -202,7 +206,8 @@ function Navbar() {
                           {userRol === "Admin" && (
                             <li>
                               <a href="/users">
-                                <i className="fa-solid fa-user-gear"></i>Usuarios
+                                <i className="fa-solid fa-user-gear"></i>
+                                Usuarios
                               </a>
                             </li>
                           )}
