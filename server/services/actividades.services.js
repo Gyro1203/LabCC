@@ -6,7 +6,9 @@ export const getActividadesService = async () => {
     const [result] = await db.query(`
       SELECT 
         ac.id_actividad,
+        al.id_alumno,
         al.nombre AS alumno,
+        i.semestre AS periodo,
         e.actividad,
         e.unidad, 
         ac.cantidad, 

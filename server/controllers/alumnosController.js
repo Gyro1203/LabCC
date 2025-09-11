@@ -11,6 +11,7 @@ import {
   updateAlumnoService,
   deleteAlumnoService,
 } from "../services/alumnos.services.js";
+import { alumnoBodyValidation } from "../validations/alumno.validation.js";
 
 export const getAlumnos = async (req, res) => {
   try {
@@ -36,6 +37,13 @@ export const getAlumno = async (req, res) => {
 
 export const createAlumno = async (req, res) => {
   try {
+
+    const { body } = req;
+    const { error } = alumnoBodyValidation.validate(body);
+    if (error) {
+      return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+    }
+
     const { nombre, rut, estado, alumno_carrera } = req.body;
     const [alumno, errorAlumno] = await createAlumnoService({
       nombre,
@@ -54,6 +62,13 @@ export const createAlumno = async (req, res) => {
 
 export const updateAlumno = async (req, res) => {
   try {
+    
+    const { body } = req;
+    const { error } = alumnoBodyValidation.validate(body);
+    if (error) {
+      return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+    }
+
     const [alumno, errorAlumno] = await updateAlumnoService(
       req.body,
       req.params.id

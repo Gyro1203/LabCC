@@ -12,7 +12,7 @@ function IngresosRows({ ingreso, editar, eliminar, registrar }) {
       >
         {ingreso.nombre}
       </td>
-      <td>{ingreso.rut}</td>
+      {/* <td>{ingreso.rut}</td> */}
       <td>{ingreso.motivo}</td>
       <td>{ingreso.titulo}</td>
       <td>{ingreso.profesor_guia}</td>

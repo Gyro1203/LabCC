@@ -1,7 +1,7 @@
 function ActividadesRows({ actividad  , editar, eliminar }) {
   return (
     <tr>
-      <td>{actividad.nombre}</td>
+      <td>{actividad.actividad}</td>
       {(actividad.alumno) ? <td>{actividad.alumno}</td> : null}
       <td>{actividad.unidad}</td>
       <td>{actividad.cantidad}</td>

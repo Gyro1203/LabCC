@@ -1,21 +1,21 @@
 import { Form, Formik } from "formik";
-import { useState } from "react";
 import ReporteAsistencias from "../components/Reportes/ReporteAsistencias";
 import ReporteIngresos from "../components/Reportes/ReporteIngresos";
+import ReporteTotales from "../components/Reportes/ReporteTotales";
 
 function Reportes() {
-  const [data, setData] = useState({
+  const data = {
     tipo: "",
     nombre: "",
-  });
+  };
 
   return (
-    <div className="container text-center mb-5 mt-5 bg-warning">
+    <div className="container text-center mb-5 mt-5">
       <div className="row justify-content-center">
-        <div className="col-md-6 bg-success">
+        <div className="col-md-6" style={{ backgroundColor: "#e4e4e4ff" }}>
           <h1>Generar Reportes</h1>
           <Formik initialValues={data} enableReinitialize={true}>
-            {({ handleChange, handleSubmit, values, isSubmitting }) => (
+            {({ handleChange, handleSubmit, values }) => (
               <Form onSubmit={handleSubmit}>
                 <div className="form-group mb-3">
                   <label htmlFor="tipoReporte" className="form-label">
@@ -48,7 +48,9 @@ function Reportes() {
                     values={values}
                   />
                 )}
-                {values.tipo === "3" && <div>Mostrando reporte Totales</div>}
+                {values.tipo === "3" && (
+                  <ReporteTotales />
+                )}
               </Form>
             )}
           </Formik>

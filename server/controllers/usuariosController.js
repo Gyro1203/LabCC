@@ -6,6 +6,7 @@ import { getUsuariosService,
          updateUsuariosService,
          deleteUsuariosService
  } from '../services/usuarios.service.js';
+import { userBodyValidation } from '../validations/users.validation.js';
 
  export const getUsuarios = async (req, res) => {
 
@@ -34,6 +35,14 @@ import { getUsuariosService,
  export const createUsuario = async (req, res) => {
 
     try {
+
+        const { body } = req;
+        const { error } = userBodyValidation.validate(body);
+
+        if(error){
+            return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+        }
+
          const { nombre_usuario, rol, email, password } = req.body;
          const [usuario, errorUsuario] = await createUsuariosService({ nombre_usuario, rol, email, password });
          if(errorUsuario) return handleErrorClient(res, 400, "Error al crear usuario", errorUsuario);
@@ -47,6 +56,14 @@ import { getUsuariosService,
 
 export const updateUsuarios = async (req, res) => {
      try {
+        
+        const { body } = req;
+        const { error } = userBodyValidation.validate(body);
+
+        if(error){
+            return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+        }
+        
             const [usuario, errorUsuario] = await updateUsuariosService(req.body, req.params.id);
             if(errorUsuario) return handleErrorClient(res, 400, "Error al actualizar usuario", errorUsuario);
             handleSuccess(res, 200, "Datos del usuario actualizados", usuario);

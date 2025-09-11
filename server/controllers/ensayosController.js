@@ -12,6 +12,8 @@ import {
   updateEnsayoService,
 } from "../services/ensayos.services.js";
 
+import { ensayoBodyValidation } from "../validations/ensayo.validations.js";
+
 export const getEnsayos = async (req, res) => {
   try {
     const [ensayos, errorEsayos] = await getEnsayosService();
@@ -34,6 +36,13 @@ export const getEnsayo = async (req, res) => {
 
 export const createEnsayo = async (req, res) => {
   try {
+
+    const { body } = req;
+    const { error } = ensayoBodyValidation.validate(body);
+    if (error) {
+      return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+    }
+
     const { actividad, area, unidad, norma, precio_uf } = req.body;
     const [ensayo, errorEnsayo] = await createEnsayoService({
       actividad,
@@ -51,6 +60,13 @@ export const createEnsayo = async (req, res) => {
 
 export const updateEnsayo = async (req, res) => {
   try {
+
+    const { body } = req;
+    const { error } = ensayoBodyValidation.validate(body);
+    if (error) {
+      return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+    }
+    
     const [ensayo, errorEnsayo] = await updateEnsayoService(
       req.body,
       req.params.id

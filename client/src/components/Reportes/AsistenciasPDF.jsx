@@ -9,11 +9,6 @@ function AsistenciasPDF({ alumno, ingreso, asistencias }) {
   //FECHA -> 0: Año; 1: Semestre
   const date = ingreso.semestre.split("-");
 
-  function formatoFecha(fecha){
-    const entrada = new Date(fecha);
-    return entrada.toLocaleString("es-CL",{ dateStyle:"medium" });
-  }
-
   const generarPDF = () => {
     const doc = new jsPDF();
 
@@ -52,23 +47,28 @@ function AsistenciasPDF({ alumno, ingreso, asistencias }) {
     //Datos Tabla Asistencias
     const asistenciasCol = [
       "Fecha",
-      "Actividades y/o Ensayos",
-      "Unidad",
-      "Cantidad",
-      "P Unitario [UF]",
-      "Total [UF]",
-      "Observaciones",
+      "Jornada",
+      "Entrada",
+      "Actividades",
+      "Salida",
     ];
-    const dataAsistencias = asistencias.map((asis) => [
-      formatoFecha(asis.entrada),
-      asis.actividad,
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-    ]);
+    const dataAsistencias = (asistencias && asistencias.length > 0)
+      ? asistencias.map((asis) => [
+          asis.fecha,
+          asis.jornada,
+          asis.entrada,
+          asis.actividad,
+          asis.salida,
+        ])
+      : [
+          [
+            {
+              content: "Este ingreso no tiene asistencias registradas",
+              colSpan: 5,
+              styles: { halign: "center" },
+            },
+          ],
+        ];
 
     // Transponer los datos, manteniendo headers verticales
     const alumnoVerticalHeader = alumnosCol.map((header, i) => {
@@ -86,9 +86,11 @@ function AsistenciasPDF({ alumno, ingreso, asistencias }) {
 
     //Encabezado
     doc.setFontSize(12);
-    doc.setFont("helvetica", "bold")
-    doc.text("FICHA TRABAJO ALUMNO EN LABCON", centerX, 20, { align: "center" });
-    doc.addImage("images/LogoLabcon.png", "JPEG", 15, 22, 50, 10 );
+    doc.setFont("helvetica", "bold");
+    doc.text("FICHA TRABAJO ALUMNO EN LABCON", centerX, 20, {
+      align: "center",
+    });
+    doc.addImage("images/LogoLabcon.png", "JPEG", 15, 22, 50, 10);
 
     //Tabla Alumnos
     autoTable(doc, {
@@ -179,16 +181,20 @@ function AsistenciasPDF({ alumno, ingreso, asistencias }) {
     });
 
     //Guardar PDF con un nombre especifico
-    doc.save("TEST.pdf");
+    doc.save(`Asistencias_${alumno.nombre}_${ingreso.semestre}.pdf`);
   };
 
   return (
     <div className="container d-flex justify-content-center">
-      <button className="btn btn-success mt-3 mb-3" type="button" onClick={generarPDF}>
+      <button
+        className="btn btn-success mt-3 mb-3"
+        type="button"
+        onClick={generarPDF}
+      >
         Generar PDF
       </button>
     </div>
   );
 }
 
-export default AsistenciasPDF
+export default AsistenciasPDF;
