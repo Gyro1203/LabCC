@@ -200,7 +200,7 @@ function Navbar() {
                             </a>
                           </li>
                           <li>
-                            <a href="/carreras">
+                            <a href="/careers">
                               <i className="fa-solid fa-book"></i>
                               Carreras
                             </a>

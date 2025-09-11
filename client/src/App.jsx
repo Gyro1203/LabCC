@@ -10,6 +10,7 @@ import ProtectedRoute from "@components/usuarios/ProtectedRoute.jsx";
 import Ingresos from "./pages/Ingresos.jsx";
 import Actividades from "./pages/Actividades.jsx";
 import Carreras from "./pages/Carreras.jsx";
+import RegistCarreras from "./pages/RegistCarreras.jsx";
 import Login from "./pages/Login.jsx";
 import Usuarios from "./pages/Usuarios.jsx";
 import Asistencias from "./pages/Asistencias.jsx";
@@ -51,9 +52,9 @@ export default function App() {
         <Route path="/attendance/register" element={<RegistAsistencias />} />
         <Route path="/attendance/edit/:id" element={<RegistAsistencias />} />
 
-        <Route path="/carreras" element={<Carreras />} />
-        {/* <Route path="/carreras/register" element={<RegistCarreras />} />
-        <Route path="/carreras/edit/:id" element={<RegistCarreras />} /> */}
+        <Route path="/careers" element={<Carreras />} />
+        <Route path="/careers/register" element={<RegistCarreras />} />
+        <Route path="/careers/edit/:id" element={<RegistCarreras />} />
 
         <Route path="/reports" element={<Reportes />} />
 

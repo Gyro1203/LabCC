@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import {
-  getActividadesRequest,
-  deleteActividadesRequest,
-} from "../services/actividades.api.js";
-import ActividadesRows from "../components/ActividadesRows.jsx";
+  getCarrerasRequest,
+  deleteCarreraRequest,
+} from "../services/carreras.api.js";
+import CarrerasRows from "../components/CarrerasRows.jsx";
 import { useNavigate } from "react-router-dom";
 import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
@@ -12,8 +12,6 @@ import {
   showErrorAlert,
   showSuccessAlert,
 } from "../helpers/sweetAlert.js";
-import { getCarrerasRequest } from "../services/carreras.api.js";
-import CarrerasRows from "../components/CarrerasRows.jsx";
 
 function Carreras() {
   const navigate = useNavigate();
@@ -24,11 +22,7 @@ function Carreras() {
   const [sort, setSort] = useState({ keyToSort: "carrera", direction: "asc" });
   const nonSortableKeys = ["opciones"];
 
-  const camposFiltro = [
-    "carrera",
-    "facultad",
-    "departamento",
-  ];
+  const camposFiltro = ["carrera", "facultad", "departamento"];
   const carrerasFiltradas = Filter(carreras, filterText, camposFiltro);
 
   const headers = [
@@ -51,14 +45,13 @@ function Carreras() {
     try {
       const confirmation = await deleteDataAlert();
       if (confirmation.isConfirmed) {
-        const response = await deleteActividadesRequest(id);
-        console.log("Actividad eliminada exitosamente:", response.data);
-        showSuccessAlert("Actividad eliminada exitosamente");
-        setCarreras(carreras.filter((e) => e.id_actividad !== id));
+        await deleteCarreraRequest(id);
+        showSuccessAlert("Carrera eliminada exitosamente");
+        setCarreras(carreras.filter((e) => e.id_carrera !== id));
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar actividad");
-      console.error("Error al eliminar actividad:", error);
+      showErrorAlert("Error al eliminar carrera");
+      console.error("Error al eliminar carrera:", error);
     }
   };
 
@@ -109,8 +102,14 @@ function Carreras() {
 
     return (
       <div className="container text-center mt-5 mb-5">
-        <div className="d-flex justify-content-end">
-
+        <div className="d-flex justify-content-between">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate(`/careers/register`)}
+          >
+            Registrar Carrera
+          </button>
           <div className="input-group" style={{ maxWidth: "300px" }}>
             <input
               id="input-search"
@@ -167,7 +166,7 @@ function Carreras() {
                     className="btn btn-primary"
                     title="Editar"
                     onClick={() =>
-                      navigate(`/activity/edit/${carrera.id_carrera}`)
+                      navigate(`/careers/edit/${carrera.id_carrera}`)
                     }
                   >
                     <i className="fa-solid fa-pencil"></i>
@@ -177,7 +176,7 @@ function Carreras() {
                   <button
                     className="btn btn-danger"
                     title="Eliminar"
-                    onClick={() => handleDelete(actividad.id_actividad)}
+                    onClick={() => handleDelete(carrera.id_carrera)}
                   >
                     <i className="fa-solid fa-trash-can"></i>
                   </button>
@@ -190,11 +189,7 @@ function Carreras() {
     );
   }
 
-  return (
-    <div>
-      {renderActividades()}
-    </div>
-  );
+  return <div>{renderActividades()}</div>;
 }
 
-export default Carreras
+export default Carreras;

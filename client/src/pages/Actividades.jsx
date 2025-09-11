@@ -19,11 +19,11 @@ function Actividades() {
   const [actividades, setActividades] = useState([]);
   const [filterText, setFilterText] = useState("");
 
-  const [sort, setSort] = useState({ keyToSort: "nombre", direction: "asc" });
+  const [sort, setSort] = useState({ keyToSort: "alumno", direction: "asc" });
   const nonSortableKeys = ["opciones"];
 
   const camposFiltro = [
-    "nombre",
+    "actividad",
     "alumno",
     "unidad",
     "cantidad",
@@ -36,7 +36,7 @@ function Actividades() {
   const actividadesFiltradas = Filter(actividades, filterText, camposFiltro);
 
   const headers = [
-    { id: 1, key: "nombre", label: "Nombre" },
+    { id: 1, key: "actividad", label: "Actividad" },
     { id: 2, key: "alumno", label: "Alumno" },
     { id: 3, key: "unidad", label: "Unidad" },
     { id: 4, key: "cantidad", label: "Cantidad" },
