@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/careers";
+const BASE_URL = import.meta.env.VITE_BASE_URL + "/careers";
 
 export const getCarrerasRequest = async () => {
   const response = await axios.get(BASE_URL);
