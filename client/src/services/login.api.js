@@ -2,10 +2,12 @@ import axios from 'axios';
 import cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 // login
 export const loginRequest = async (email, password) => {
   try {
-    const response = await axios.post(`http://localhost:3000/login`, {
+    const response = await axios.post(BASE_URL + `/login`, {
       email,
       password,
     });
@@ -28,7 +30,7 @@ export const loginRequest = async (email, password) => {
 // logout
 export const logoutRequest = async () => {
     try {
-      await axios.post(`http://localhost:3000/logout`);
+      await axios.post(BASE_URL + `/logout`);
       sessionStorage.removeItem("usuario"); // Elimina los datos del usuario de sessionStorage
       cookies.remove("jwt"); // Elimina el token de las cookies
       cookies.remove("jwt-auth");
