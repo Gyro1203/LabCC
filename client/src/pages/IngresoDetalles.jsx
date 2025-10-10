@@ -138,7 +138,12 @@ function IngresoDetalles() {
                       className="btn btn-primary"
                       title="Editar"
                       onClick={() =>
-                        navigate(`/activity/edit/${actividad.id_actividad}`)
+                        navigate(`/activity/edit/${actividad.id_actividad}`, {
+                          state: {
+                            id_ingreso: ingreso.id_ingreso,
+                            from: `/entry/details/${ingreso.id_ingreso}`,
+                          },
+                        })
                       }
                     >
                       <i className="fa-solid fa-pencil"></i>

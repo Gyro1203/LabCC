@@ -49,6 +49,14 @@ export default function RegistIngresos() {
 
   return (
     <div className="container mt-5">
+      <div className="d-flex justify-content-start">
+        <button
+          className="btn btn-secondary mb-4"
+          onClick={() => navigate(`/entry`)}
+        >
+          Volver
+        </button>
+      </div>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <h1 className="mb-4 text-center">

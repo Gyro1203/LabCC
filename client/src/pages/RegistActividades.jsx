@@ -90,12 +90,11 @@ export default function RegistActividades() {
                   observaciones: "",
                   actividad_ingreso: state.id_ingreso || 1,
                 });
-                if(!addMore) navigate(state.from);
-                else{
+                if (!addMore) navigate(state.from);
+                else {
                   showSuccessAlert("Actividad añadida");
                   resetForm();
-                } 
-                  
+                }
               } catch (error) {
                 console.error("Error al crear actividad:", error);
               }
@@ -162,18 +161,20 @@ export default function RegistActividades() {
                   />
                 </div>
 
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="checkDefault"
-                    checked={addMore}
-                    onChange={() => setAddMore(!addMore)}
-                  />
-                  <label className="form-check-label" htmlFor="checkDefault">
-                    Añadir mas de una actividad.
-                  </label>
-                </div>
+                {params.id ? null : (
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="checkDefault"
+                      checked={addMore}
+                      onChange={() => setAddMore(!addMore)}
+                    />
+                    <label className="form-check-label" htmlFor="checkDefault">
+                      Añadir mas de una actividad.
+                    </label>
+                  </div>
+                )}
 
                 <div className="d-flex flex-row-reverse">
                   <button
