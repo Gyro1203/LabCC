@@ -7,6 +7,7 @@ import {
   getActividadesByIngresoRequest,
 } from "../services/actividades.api.js";
 import ActividadesRows from "../components/ActividadesRows.jsx";
+import { deleteDataAlert, showSuccessAlert } from "../helpers/sweetAlert.js";
 
 function IngresoDetalles() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function IngresoDetalles() {
   const [actividades, setActividades] = useState([]);
 
   const headers = [
-    { id: 1, key: "nombre", label: "Nombre" },
+    { id: 1, key: "actividad", label: "Actividad" },
     { id: 2, key: "unidad", label: "Unidad" },
     { id: 3, key: "cantidad", label: "Cantidad" },
     { id: 4, key: "precio_uf", label: "Precio UF" },
@@ -52,9 +53,12 @@ function IngresoDetalles() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteActividadesRequest(id);
-      console.log("Ingreso eliminado exitosamente:", response.data);
-      setIngreso(ingreso.filter((e) => e.id_ingreso !== id));
+      const confirmation = await deleteDataAlert();
+      if (confirmation.isConfirmed) {
+        await deleteActividadesRequest(id);
+        showSuccessAlert("Actividad eliminada exitosamente");
+        setActividades(actividades.filter((e) => e.id_actividad !== id));
+      }
     } catch (error) {
       console.error("Error al eliminar ingreso:", error);
     }
@@ -96,19 +100,23 @@ function IngresoDetalles() {
           </h2>
           <div className="d-flex align-items-center flex-column mb-2">
             <button
-            className="btn btn-warning"
-            title="Registrar Actividad"
-            onClick={() => {
-              if (!ingreso.vigente)
-                alert("Este ingreso no se encuentra vigente");
-              else
-                navigate(`/activity/register`, {
-                  state: ingreso.id_ingreso,
-                });
-            }}
-          >
-            <i className="fa-regular fa-calendar-plus"></i> Registrar Actividad
-          </button>
+              className="btn btn-warning"
+              title="Registrar Actividad"
+              onClick={() => {
+                if (!ingreso.vigente)
+                  alert("Este ingreso no se encuentra vigente");
+                else
+                  navigate(`/activity/register`, {
+                    state: {
+                      id_ingreso: ingreso.id_ingreso,
+                      from: `/entry/details/${ingreso.id_ingreso}`,
+                    },
+                  });
+              }}
+            >
+              <i className="fa-regular fa-calendar-plus"></i> Registrar
+              Actividad
+            </button>
           </div>
           <table className="table table-striped table-hover table-bordered">
             <thead>

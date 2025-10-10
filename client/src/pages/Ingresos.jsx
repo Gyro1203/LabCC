@@ -194,7 +194,10 @@ function Ingresos() {
                         alert("Este ingreso no se encuentra vigente");
                       else
                         navigate(`/activity/register`, {
-                          state: ingreso.id_ingreso,
+                          state: {
+                            id_ingreso: ingreso.id_ingreso,
+                            from: "/entry",
+                          },
                         });
                     }}
                   >

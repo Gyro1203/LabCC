@@ -7,6 +7,7 @@ import {
 import { getEnsayosRequest } from "../services/ensayos.api";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { showSuccessAlert } from "../helpers/sweetAlert";
 
 export default function RegistActividades() {
   const navigate = useNavigate();
@@ -16,17 +17,17 @@ export default function RegistActividades() {
     actividad_ensayo: "",
     cantidad: 1,
     observaciones: "",
-    actividad_ingreso: state || 1,
+    actividad_ingreso: state.id_ingreso || 1,
   }); // Estado para almacenar la actividad si es necesario, aunque no se usa en este ejemplo
 
   const [ensayos, setEnsayos] = useState([]);
+  const [addMore, setAddMore] = useState(false);
 
   const params = useParams();
 
   useEffect(() => {
     const fetchActividad = async () => {
       const dataEnsayos = await getEnsayosRequest();
-      console.log(dataEnsayos.data);
       setEnsayos(dataEnsayos.data);
       if (params.id) {
         try {
@@ -54,6 +55,14 @@ export default function RegistActividades() {
 
   return (
     <div className="container mt-5">
+      <div className="d-flex justify-content-start">
+        <button
+          className="btn btn-secondary mb-4"
+          onClick={() => navigate(state.from)}
+        >
+          Volver
+        </button>
+      </div>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <h1 className="mb-4 text-center">
@@ -65,7 +74,7 @@ export default function RegistActividades() {
           <Formik
             initialValues={actividad}
             enableReinitialize={true} // Permite que los valores iniciales se actualicen cuando cambie el estado
-            onSubmit={async (values) => {
+            onSubmit={async (values, { resetForm }) => {
               try {
                 if (params.id) {
                   console.log("values", values);
@@ -79,9 +88,14 @@ export default function RegistActividades() {
                   actividad_ensayo: "",
                   cantidad: 1,
                   observaciones: "",
-                  actividad_ingreso: state || 1,
+                  actividad_ingreso: state.id_ingreso || 1,
                 });
-                navigate("/activity"); // Redirigir a la lista de actividades después de crear o actualizar
+                if(!addMore) navigate(state.from);
+                else{
+                  showSuccessAlert("Actividad añadida");
+                  resetForm();
+                } 
+                  
               } catch (error) {
                 console.error("Error al crear actividad:", error);
               }
@@ -146,6 +160,19 @@ export default function RegistActividades() {
                     onChange={handleChange}
                     value={values.actividad_ingreso}
                   />
+                </div>
+
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="checkDefault"
+                    checked={addMore}
+                    onChange={() => setAddMore(!addMore)}
+                  />
+                  <label className="form-check-label" htmlFor="checkDefault">
+                    Añadir mas de una actividad.
+                  </label>
                 </div>
 
                 <div className="d-flex flex-row-reverse">
