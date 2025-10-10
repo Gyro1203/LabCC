@@ -13,6 +13,8 @@ import {
   showSuccessAlert,
 } from "../helpers/sweetAlert.js";
 
+// PÁGINA ACTUALMENTE SIN USO, PERO SE DEJA PARA POSIBLES FUTURAS IMPLEMENTACIONES
+
 function Actividades() {
   const navigate = useNavigate();
 

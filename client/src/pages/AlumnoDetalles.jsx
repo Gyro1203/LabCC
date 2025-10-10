@@ -7,6 +7,8 @@ import { getActividadesByIngresoRequest } from "../services/actividades.api.js";
 import { getAsistenciaByIngresoRequest } from "../services/asistencias.api.js";
 import AsistenciasRows from "../components/AsistenciasRows.jsx";
 
+// PÁGINA ACTUALMENTE SIN USO, PERO SE DEJA PARA POSIBLES FUTURAS IMPLEMENTACIONES
+
 function AlumnoDetalles() {
   const navigate = useNavigate();
   const params = useParams();

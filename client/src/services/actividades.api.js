@@ -18,7 +18,6 @@ export const getActividadesByIngresoRequest = async (id) => {
 }
 
 export const createActividadesRequest = async (actividad) => {
-    console.log("Actividad a enviar:", actividad);
     const response = await axios.post(BASE_URL + '/activity', actividad);
     return response.data;
 };

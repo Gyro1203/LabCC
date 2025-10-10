@@ -104,11 +104,12 @@ function Navbar() {
                               Ingresos{" "}
                             </a>
                           </li>
-                          {/* <li className={`nav-item ${location.pathname === '/activity' ? 'active' : ''}`}>
-                        <a className="nav-link" href="/activity">
-                          Actividades
-                        </a>
-                      </li> */}
+                          <li className="nav-item">
+                            <a className="nav-link" href="/attendance">
+                              {" "}
+                              Asistencias{" "}
+                            </a>
+                          </li>
                           <li className="nav-item">
                             <a className="nav-link" href="/reports">
                               Reportes{" "}
@@ -116,12 +117,6 @@ function Navbar() {
                           </li>
                         </>
                       )}
-                      <li className="nav-item">
-                        <a className="nav-link" href="/attendance">
-                          {" "}
-                          Asistencias{" "}
-                        </a>
-                      </li>
                     </ul>
                   </div>
                 </nav>
@@ -195,12 +190,6 @@ function Navbar() {
                             <a href="/essay">
                               <i className="fa-solid fa-folder-closed"></i>
                               Ensayos
-                            </a>
-                          </li>
-                          <li>
-                            <a href="/activity">
-                              <i className="fa-solid fa-building-user"></i>
-                              Actividades
                             </a>
                           </li>
                           <li>
