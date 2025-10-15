@@ -1,11 +1,13 @@
 import { jsPDF } from "jspdf";
 import { autoTable } from "jspdf-autotable";
 
-function TotalesPDF({ totales }) {
+function TotalesPDF({ totales, periodo, carreras }) {
   //FECHA -> 0: Año; 1: Semestre
   // const date = totales.semestre.split("-");
 
   console.log("Totales recibidos:", totales);
+  console.log("Filtro periodo:", periodo);
+  console.log("Filtro carreras:", carreras);
 
   const generarPDF = () => {
     const doc = new jsPDF();
@@ -16,7 +18,7 @@ function TotalesPDF({ totales }) {
 
     //Datos Tabla Alumnos
     const tablaInicial = ["Periodo", "Carreras"];
-    const datosInicio = [[`2025`, ``]];
+    const datosInicio = [[`${periodo}`, `${carreras}`]];
 
     //Datos Tabla Asistencias
     const totalesCol = [

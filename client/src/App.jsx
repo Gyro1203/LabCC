@@ -18,7 +18,6 @@ import Reportes from "./pages/Reportes.jsx";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import IngresoDetalles from "./pages/IngresoDetalles.jsx";
-import AlumnoDetalles from "./pages/AlumnoDetalles.jsx";
 import { SessionProvider } from "@context/SessionContext.jsx"; 
 import { TotalContextProvider } from "./context/TotalContext.jsx";
 
@@ -33,7 +32,6 @@ export default function App() {
         <Route path="/students" element={<Alumnos />} />
         <Route path="/students/register" element={<RegistAlumnos />} />
         <Route path="/students/edit/:id" element={<RegistAlumnos />} />
-        <Route path="/students/details/:id" element={<AlumnoDetalles />} />
 
         <Route path="/essay" element={<Ensayos />} />
         <Route path="/essay/register" element={<RegistEnsayos />} />
@@ -44,7 +42,7 @@ export default function App() {
         <Route path="/entry/edit/:id" element={<RegistIngresos />} />
         <Route path="/entry/details/:id" element={<IngresoDetalles />} />
 
-        <Route path="/activity" element={<Actividades />} />
+        {/* <Route path="/activity" element={<Actividades />} /> */}
         <Route path="/activity/register" element={<RegistActividades />} />
         <Route path="/activity/edit/:id" element={<RegistActividades />} />
 

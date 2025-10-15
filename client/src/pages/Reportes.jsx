@@ -32,7 +32,7 @@ function Reportes() {
                       Seleccione una opción
                     </option>
                     <option value="1">Asistencias</option>
-                    <option value="2">Ingresos</option>
+                    <option value="2">Ensayos</option> {/*<-- ReporteIngresos*/}
                     <option value="3">Totales</option>
                   </select>
                 </div>

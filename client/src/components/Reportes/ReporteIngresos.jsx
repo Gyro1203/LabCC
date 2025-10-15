@@ -60,7 +60,7 @@ function ReporteIngresos({ handleChange, values }) {
 
   return (
     <div>
-      <h2>Reporte de Ingresos</h2>
+      <h2>Reporte de Ensayos</h2>
       <div className="form-group mb-3">
         <label htmlFor="nombre" className="form-label">
           Nombre del Alumno
