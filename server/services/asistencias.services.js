@@ -1,5 +1,8 @@
 "use strict";
 import db from "../config/db.js";
+import { DateTime } from 'luxon';
+
+const TIMEZONE = 'America/Santiago';
 
 export const getAsistenciasService = async () => {
   try {
@@ -117,10 +120,10 @@ export const createAsistenciaService = async (body) => {
     if (!ingreso_vigente)
       return [null, "El alumno no cuenta con un ingreso vigente"];
 
-    const now = new Date();
-    const fecha = now.toISOString().split("T")[0];
-    const entrada = now.toTimeString().split(" ")[0];
-    const jornada = now.getHours() < 12 ? "Mañana" : "Tarde";
+    const now = DateTime.now().setZone(TIMEZONE);
+    const fecha = now.toFormat('yyyy-MM-dd');
+    const entrada = now.toFormat('HH:mm:ss');
+    const jornada = now.hour < 12 ? "Mañana" : "Tarde";
 
     const [result] = await db.query(
       `INSERT INTO asistencias(
@@ -252,8 +255,8 @@ export const updateAsistenciaService = async (body, id) => {
 
 export const marcarSalidaService = async (id) => {
   try {
-    const now = new Date();
-    const salida = now.toTimeString().split(" ")[0];
+    const now = DateTime.now().setZone(TIMEZONE);
+    const salida = now.toFormat('HH:mm:ss');
 
     const [result] = await db.query(
       "UPDATE asistencias SET salida = ? WHERE id_asistencia = ?",

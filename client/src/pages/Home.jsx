@@ -35,20 +35,23 @@ function Home() {
         const dataAsistencias = await getAsistenciaByIngresoRequest(
           alumno.id_ingreso
         );
-        console.log("dataAsistencias: ", dataAsistencias);
+        //console.log("dataAsistencias: ", dataAsistencias);
         const salidaPendiente = dataAsistencias.data.filter(
           (asistencia) => !asistencia.salida
         );
-        console.log("salidaPendiente: ", salidaPendiente);
+        //console.log("salidaPendiente: ", salidaPendiente);
+
         const hoy = new Date();
-        const fechaHoy = hoy.toISOString().split("T")[0];
+        const fechaHoy = new Intl.DateTimeFormat('es-CL', { 
+          timeZone: 'America/Santiago',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        }).format(hoy).split('-').join('/');
 
         const salidaHoy = dataAsistencias.data.filter((asistencia) => {
           if (!asistencia.fecha) return false;
-          // Convierte "DD/MM/YYYY" a "YYYY-MM-DD"
-          const [dd, mm, yyyy] = asistencia.fecha.split("/");
-          const fechaAsistencia = `${yyyy}-${mm}-${dd}`;
-          return fechaAsistencia === fechaHoy;
+          return asistencia.fecha === fechaHoy;
         });
         setToday(salidaHoy);
         // console.log("salidaHoy: ", salidaHoy);
@@ -89,14 +92,19 @@ function Home() {
         const salidaPendiente = dataAsistencias.data.filter(
           (asistencia) => !asistencia.salida
         );
+
         const hoy = new Date();
-        const fechaHoy = hoy.toISOString().split("T")[0];
+        const fechaHoy = new Intl.DateTimeFormat('es-CL', { 
+          timeZone: 'America/Santiago',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        }).format(hoy).split('-').join('/');
         const salidaHoy = dataAsistencias.data.filter((asistencia) => {
           if (!asistencia.fecha) return false;
-          const [dd, mm, yyyy] = asistencia.fecha.split("/");
-          const fechaAsistencia = `${yyyy}-${mm}-${dd}`;
-          return fechaAsistencia === fechaHoy;
+          return asistencia.fecha === fechaHoy;
         });
+
         setToday(salidaHoy);
         setPendiente(
           salidaPendiente && salidaPendiente.length > 0 ? salidaPendiente : []
@@ -181,7 +189,7 @@ function Home() {
                     ) : (
                       <div>
                         <h3 className="d-flex justify-content-center">
-                          No hay salidas registradas para hoy
+                          No se encontraron asistencias registradas el día de hoy. 
                         </h3>
                       </div>
                     )}
