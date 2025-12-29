@@ -81,9 +81,9 @@ function Home() {
     return null;
   };
 
-  const marcarSalida = async (id) => {
+  const marcarSalida = async (id, body) => {
     try {
-      await marcarSalidaRequest(id);
+      await marcarSalidaRequest(id, body);
       // Refresca los datos de asistencias
       if (alumno) {
         const dataAsistencias = await getAsistenciaByIngresoRequest(
@@ -126,35 +126,70 @@ function Home() {
           <Formik
             initialValues={asistencia}
             enableReinitialize={true} // Permite que los valores iniciales se actualicen cuando cambie el estado
-            onSubmit={async (values) => {
+            onSubmit={async (values, { setSubmitting }) => {
+              // No permitir registrar si hay salida pendiente
+              if (pendiente.length > 0) return;
+
               try {
-                await createAsistenciasRequest(values);
-                setAsistencia({
-                  rut: "",
+                await createAsistenciasRequest({
+                  rut: values.rut,
                   actividad: "",
                 });
+                setAsistencia({ rut: "", actividad: "" });
                 setForm(false);
+                values.actividad = "";
               } catch (error) {
                 console.error("Error al crear asistencia:", error);
+              } finally {
+                setSubmitting(false);
               }
             }}
           >
             {({ handleChange, handleSubmit, values, isSubmitting }) => (
               <Form onSubmit={handleSubmit}>
-                <div className="form-group mb-3">
-                  <label htmlFor="rut" className="form-label">
-                    Rut
-                  </label>
+                <label htmlFor="rut" className="form-label">Rut</label>
+                <div className="input-group">
                   <input
                     type="text"
                     name="rut"
-                    className="form-control"
-                    onChange={(e) => {
-                      handleChange(e);
-                    }}
+                    className="form-control shadow"
                     value={values.rut || ""}
+                    onChange={(event) => {
+                      const inputValue = event.target.value;
+
+                      // Solo números, guión y vacío
+                      const validPattern = /^[0-9kK-]*$/;
+
+                      if (inputValue === "" || validPattern.test(inputValue)) {
+                        handleChange(event); // ← SOLO si es válido
+                      }
+                    }}
+                    maxLength={10}
+                    onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
                   />
+
+                  {values.rut && (
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      title="Limpiar"
+                      onClick={() => {
+                        setAsistencia({ rut: "", actividad: "" });
+                        setAlumno(null);
+                        setToday([]);
+                        setPendiente([]);
+                        setForm(false);
+                        values.rut = "";
+                        values.actividad = "";
+                      }}
+                    >
+                      ❌
+                    </button>
+                  )}
                 </div>
+                <small className="form-text text-muted mb-3">
+                  Ingrese su rut sin puntos y con guión
+                </small>
 
                 <BuscarAlumno setAlumno={setAlumno} />
 
@@ -211,62 +246,69 @@ function Home() {
                             <AsistenciasRows asistencia={pendiente[0]} />
                           </tbody>
                         </table>
-                        <div className="d-flex flex-row-reverse">
-                          <button
-                            className="btn btn-success"
-                            type="button"
-                            title="Marcar Salida"
-                            onClick={async () => {
-                              await marcarSalida(pendiente[0].id_asistencia);
-                              // window.location.reload();
-                            }}
-                          >
-                            <i className="fa-solid fa-door-open"></i> Marcar
-                            Salida
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div>
+                        
                         {form ? (
                           <div>
-                            <div className="form-group mt-3 mb-3">
+                            <div className="form-group mt-5 mb-1">
                               <h5 htmlFor="actividad" className="form-label">
-                                Ingrese la actividad que va a realizar
+                                Actividad Realizada
                               </h5>
                               <input
                                 type="text"
                                 name="actividad"
                                 className="form-control"
-                                onChange={handleChange}
                                 value={values.actividad}
+                                onChange={handleChange}
                               />
-                            </div>
-                            <div className="d-flex flex-row-reverse">
-                              <button
-                                className="btn btn-primary p-2 ms-2"
-                                type="submit"
-                                disabled={isSubmitting}
-                              >
-                                {isSubmitting ? "Registrando..." : "Registrar"}
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="d-flex justify-content-center">
+                            </div> 
+                            <small className="form-text text-muted mb-4">
+                              Escriba la o las actividades que realizó durante su instancia en el laboratorio
+                            </small>
+                            
                             <button
-                              className="btn btn-primary p-2"
+                              className="btn btn-danger"
                               type="button"
-                              title="Registrar Asistencia"
-                              onClick={() => {
-                                setForm(true);
+                              onClick={async () => {
+                                if (!values.actividad.trim()) return;
+
+                                await marcarSalida(pendiente[0].id_asistencia, {
+                                  actividad: values.actividad,
+                                });
+
+                                setForm(false);
+                                setAsistencia((prev) => ({ ...prev, actividad: "" }));
                               }}
                             >
-                              Registrar Asistencia
+                              Confirmar salida
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="d-flex flex-row-reverse">
+                            <button
+                              className="btn btn-success"
+                              type="button"
+                              title="Marcar Salida"
+                              onClick={async () => {
+                                setForm(true);
+                                setAsistencia((prev) => ({ ...prev, actividad: "" }));
+                              }}
+                            >
+                              <i className="fa-solid fa-door-open"></i> Marcar
+                              Salida
                             </button>
                           </div>
                         )}
                       </div>
+                    ) : (
+                      <div className="d-flex justify-content-center">
+                            <button
+                              className="btn btn-primary p-2"
+                              type="submit"
+                              disabled={isSubmitting}
+                            >
+                              {isSubmitting ? "Registrando..." : "Registrar Asistencia"}
+                            </button>
+                          </div>
                     )}
                   </div>
                 )}

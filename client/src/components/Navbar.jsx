@@ -26,7 +26,7 @@ function Navbar() {
               <div className="col-md-4 col-sm-4 d_none">
                 <ul className="conta_icon">
                   <li>
-                    <a href="#">
+                    <a>
                       <i className="fa fa-phone" aria-hidden="true"></i>
                       Contactanos : +41 3111052
                     </a>{" "}
@@ -41,10 +41,10 @@ function Navbar() {
               <div className="col-md-4 col-sm-4 d_none">
                 <ul className="conta_icon ">
                   <li>
-                    <a href="#">
+                    <a href="mailto:labcon@ubiobio.cl">
                       <i className="fa fa-envelope" aria-hidden="true"></i>{" "}
-                      rcervante@ubiobio.cl
-                    </a>{" "}
+                      labcon@ubiobio.cl
+                    </a>
                   </li>
                 </ul>
               </div>
