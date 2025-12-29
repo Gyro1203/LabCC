@@ -253,14 +253,21 @@ export const updateAsistenciaService = async (body, id) => {
   }
 };
 
-export const marcarSalidaService = async (id) => {
+export const marcarSalidaService = async (id, body) => {
   try {
     const now = DateTime.now().setZone(TIMEZONE);
     const salida = now.toFormat('HH:mm:ss');
 
+    const [actualizarAsistencia] = await db.query(
+      "SELECT salida, actividad FROM asistencias WHERE id_asistencia = ?",
+      id
+    );
+
+    const actividad = body.actividad ? body.actividad : actualizarAsistencia[0].actividad;
+
     const [result] = await db.query(
-      "UPDATE asistencias SET salida = ? WHERE id_asistencia = ?",
-      [salida, id]
+      "UPDATE asistencias SET salida = ?, actividad = ? WHERE id_asistencia = ?",
+      [salida, actividad, id]
     );
     if (result.affectedRows === 0)
       return [
