@@ -8,12 +8,12 @@ export const ensayoBodyValidation = Joi.object({
     "number.min": "El ID del alumno debe ser mayor o igual a 1.",
   }),
   actividad: Joi.string()
-    .max(30)
+    .max(255)
     .pattern(/^[a-zA-Z0-9-ZáéíóúÁÉÍÓÚñÑ\s.,;:!?-]+$/)
     .pattern(/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/) // Debe contener al menos una letra
     .messages({
       "string.empty": "La actividad es obligatoria.",
-      "string.max": "La actividad no puede exceder los 30 caracteres.",
+      "string.max": "La actividad no puede exceder los 255 caracteres.",
       "string.pattern.base":
         "La actividad debe contener al menos una letra y solo puede incluir letras, números, espacios y algunos caracteres especiales como .,;:!?-.",
     }),
