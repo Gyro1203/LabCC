@@ -112,6 +112,7 @@ export default function RegistEnsayos() {
                     <option value="Elementos y Componentes">
                       Elementos y Componentes
                     </option>
+                    <option value="Morteros">Morteros</option>
                   </select>
                   <div className="invalid-feedback">
                     Por favor, selecciona una opción válida.
