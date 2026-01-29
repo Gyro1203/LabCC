@@ -9,6 +9,7 @@ import Filter from "../components/Filter.jsx";
 import Caret from "../components/Caret.jsx";
 import {
   deleteDataAlert,
+  permanentDeleteAlert,
   showErrorAlert,
   showSuccessAlert,
 } from "../helpers/sweetAlert.js";
@@ -48,10 +49,13 @@ function Ingresos() {
   const handleDelete = async (id) => {
     try {
       const confirmation = await deleteDataAlert();
-      if (confirmation.isConfirmed) {
-        await deleteIngresosRequest(id);
-        showSuccessAlert("Ingreso eliminado exitosamente");
-        setIngresos(ingresos.filter((e) => e.id_ingreso !== id));
+      if(confirmation){
+        const realConfirmation = await permanentDeleteAlert();
+        if (realConfirmation.isConfirmed) {
+          await deleteIngresosRequest(id);
+          showSuccessAlert("Ingreso eliminado exitosamente");
+          setIngresos(ingresos.filter((e) => e.id_ingreso !== id));
+        }
       }
     } catch (error) {
       showErrorAlert("Error al eliminar ingreso");
