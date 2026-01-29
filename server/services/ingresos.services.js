@@ -1,5 +1,7 @@
 "use strict";
 import db from "../config/db.js";
+import { getActividadesByIngresoService, deleteActividadService } from "./actividades.services.js";
+import { getAsistenciasByIngresoService, deleteAsistenciaService } from "./asistencias.services.js";
 
 export const getIngresosService = async () => {
   try {
@@ -259,6 +261,20 @@ export const updateIngresoService = async (body, id) => {
 
 export const deleteIngresoService = async (id) => {
   try {
+    const [asistencias, errorAsistencias] = await getAsistenciasByIngresoService(id);
+
+    asistencias ? asistencias.map(asis => {
+      console.log("Asistencia:", asis);
+      deleteAsistenciaService(asis.id_asistencia);
+    }) : null; //console.log("No se encontraron asistencias");
+    
+    const [actividades, errorActividades] = await getActividadesByIngresoService(id);
+
+    actividades ? actividades.map(acti => {
+      console.log("Actividad:", acti);
+      deleteActividadService(acti.id_actividad);
+    }) : null; //console.log("No se encontraron actividades");
+
     const [result] = await db.query(`
       SELECT 
         i.id_ingreso,
