@@ -263,15 +263,15 @@ export const deleteIngresoService = async (id) => {
   try {
     const [asistencias, errorAsistencias] = await getAsistenciasByIngresoService(id);
 
-    asistencias ? asistencias.map(asis => {
-      console.log("Asistencia:", asis);
+    asistencias ? await asistencias.map(asis => {
+      // console.log("Asistencia:", asis);
       deleteAsistenciaService(asis.id_asistencia);
     }) : null; //console.log("No se encontraron asistencias");
     
     const [actividades, errorActividades] = await getActividadesByIngresoService(id);
 
-    actividades ? actividades.map(acti => {
-      console.log("Actividad:", acti);
+    actividades ? await actividades.map(acti => {
+      // console.log("Actividad:", acti);
       deleteActividadService(acti.id_actividad);
     }) : null; //console.log("No se encontraron actividades");
 
