@@ -39,6 +39,6 @@ export const showErrorAlert = (titleMessage, message) => {
   Swal.fire(
     titleMessage,
     message,
-    'error'
+    'warning'
   );
 };
