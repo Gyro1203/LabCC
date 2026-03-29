@@ -16,6 +16,8 @@ import Caret from "../components/Caret.jsx";
 
 function Asistencias() {
   const navigate = useNavigate();
+  const user = JSON.parse(sessionStorage.getItem("usuario"));
+  const userRol = user ? user.rol : null;
 
   const [asistencias, setAsistencias] = useState([]);
   const [filterText, setFilterText] = useState("");
@@ -217,6 +219,7 @@ function Asistencias() {
               <AsistenciasRows
                 key={asistencia.id_asistencia}
                 asistencia={asistencia}
+                isAdmin={userRol === "Admin"}
                 editar={
                   <button
                     className="btn btn-primary"

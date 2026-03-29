@@ -1,5 +1,6 @@
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import {
+  getIngresosRequest,
   createIngresosRequest,
   getIngresoByIdRequest,
   updateIngresosRequest,
@@ -20,11 +21,20 @@ export default function RegistIngresos() {
     vigente: true,
     ingreso_alumno: "1",
   }); // Estado para almacenar el ingreso si es necesario
-
+  const [nombres, setNombres] = useState([]);
+  const [alumno, setAlumno] = useState(null); //Guarda solo los datos ingreso realacionado rut ingresado
+  const [fecha, setFecha] = useState("");
   const params = useParams();
 
   useEffect(() => {
     const fetchIngreso = async () => {
+      const fechaActual = new Date().toISOString().split("T")[0].split("-")[0];
+      console.log(fechaActual);
+      setFecha(fechaActual);
+      const dataNombres = await getIngresosRequest();
+      // OPCIÓN: solo traer nombre y rut 
+      // console.log(dataNombres.data.map(({nombre, rut}) => ({nombre, rut})));
+      setNombres(dataNombres.data); 
       if (params.id) {
         try {
           const dataIngreso = await getIngresoByIdRequest(params.id);
@@ -44,8 +54,31 @@ export default function RegistIngresos() {
     fetchIngreso();
   }, [params.id]);
 
+  const BuscarAlumno = ({ setAlumno }) => {
+      const { values } = useFormikContext();
+  
+      useEffect(() => {
+        if (values.rut) {
+          const dataAlumno = nombres.find(
+            ({ rut, vigente }) => rut == values.rut && vigente
+          ); //o vigente == true;
+          setAlumno(dataAlumno);
+        }
+      }, [values.rut, setAlumno]);
+  
+      return null;
+    };
+
   return (
     <div className="container mt-5">
+      <div className="d-flex justify-content-start">
+        <button
+          className="btn btn-secondary mb-4"
+          onClick={() => navigate(`/entry`)}
+        >
+          Volver
+        </button>
+      </div>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <h1 className="mb-4 text-center">
@@ -87,6 +120,23 @@ export default function RegistIngresos() {
             }) => (
               <Form onSubmit={handleSubmit}>
                 <div className="form-group mb-3">
+                  <label htmlFor="nombre" className="form-label">
+                    Nombre Alumno
+                  </label>
+                  <input
+                    type="text"
+                    name="rut"
+                    className="form-control"
+                    //disable no puede recibir eventos, por lo que onChange no se está ejecutando
+                    disabled
+                    value={!alumno ? "" : alumno.nombre}
+                  />
+                  <small className="form-text text-muted">
+                    Este campo se autocompletará con el nombre del alumno según el RUT ingresado
+                  </small>
+                </div>
+
+                <div className="form-group mb-3">
                   <label htmlFor="rut" className="form-label">
                     Rut del alumno
                   </label>
@@ -98,6 +148,8 @@ export default function RegistIngresos() {
                     value={values.rut}
                   />
                 </div>
+
+                <BuscarAlumno setAlumno={setAlumno} />
 
                 <div className="form-group mb-3">
                   <label htmlFor="motivo" className="form-label">
@@ -177,13 +229,18 @@ export default function RegistIngresos() {
                   <label htmlFor="semestre" className="form-label">
                     Semestre
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="semestre"
                     className="form-control"
                     onChange={handleChange}
                     value={values.semestre}
-                  />
+                  >
+                    <option value="" disabled hidden>
+                      Selecciona una opción
+                    </option>
+                    <option value={`${fecha}-1`}>{`${fecha}-1`}</option>
+                    <option value={`${fecha}-2`}>{`${fecha}-2`}</option>
+                  </select>
                 </div>
 
                 {params.id ? (

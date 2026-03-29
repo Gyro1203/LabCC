@@ -35,6 +35,7 @@ export default function RegistAsistencias() {
             fecha: _fecha,
             jornada: _jornada,
             entrada: _entrada,
+            salida: _salida,
             asistencia_ingreso: _asistencia_ingreso,
             ...filtered
           } = dataAsistencia.data; // nombre y rut is assigned but not used. Solucion
@@ -65,6 +66,14 @@ export default function RegistAsistencias() {
 
   return (
     <div className="container mt-5">
+      <div className="d-flex justify-content-start">
+        <button
+          className="btn btn-secondary mb-4"
+          onClick={() => navigate(`/attendance`)}
+        >
+          Volver
+        </button>
+      </div>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <h1 className="mb-4 text-center">

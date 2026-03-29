@@ -1,5 +1,8 @@
 "use strict";
 import db from "../config/db.js";
+import { DateTime } from 'luxon';
+
+const TIMEZONE = 'America/Santiago';
 
 export const getAsistenciasService = async () => {
   try {
@@ -117,10 +120,10 @@ export const createAsistenciaService = async (body) => {
     if (!ingreso_vigente)
       return [null, "El alumno no cuenta con un ingreso vigente"];
 
-    const now = new Date();
-    const fecha = now.toISOString().split("T")[0];
-    const entrada = now.toTimeString().split(" ")[0];
-    const jornada = now.getHours() < 12 ? "Mañana" : "Tarde";
+    const now = DateTime.now().setZone(TIMEZONE);
+    const fecha = now.toFormat('yyyy-MM-dd');
+    const entrada = now.toFormat('HH:mm:ss');
+    const jornada = now.hour < 12 ? "Mañana" : "Tarde";
 
     const [result] = await db.query(
       `INSERT INTO asistencias(
@@ -166,7 +169,7 @@ export const createAsistenciaService = async (body) => {
 export const updateAsistenciaService = async (body, id) => {
   try {
     const [actualizarAsistencia] = await db.query(
-      "SELECT fecha, entrada, jornada, actividad FROM asistencias WHERE id_asistencia = ?",
+      "SELECT fecha, entrada, salida, jornada, actividad FROM asistencias WHERE id_asistencia = ?",
       id
     );
     if (!actualizarAsistencia || actualizarAsistencia.length === 0)
@@ -250,14 +253,21 @@ export const updateAsistenciaService = async (body, id) => {
   }
 };
 
-export const marcarSalidaService = async (id) => {
+export const marcarSalidaService = async (id, body) => {
   try {
-    const now = new Date();
-    const salida = now.toTimeString().split(" ")[0];
+    const now = DateTime.now().setZone(TIMEZONE);
+    const salida = now.toFormat('HH:mm:ss');
+
+    const [actualizarAsistencia] = await db.query(
+      "SELECT salida, actividad FROM asistencias WHERE id_asistencia = ?",
+      id
+    );
+
+    const actividad = body.actividad ? body.actividad : actualizarAsistencia[0].actividad;
 
     const [result] = await db.query(
-      "UPDATE asistencias SET salida = ? WHERE id_asistencia = ?",
-      [salida, id]
+      "UPDATE asistencias SET salida = ?, actividad = ? WHERE id_asistencia = ?",
+      [salida, actividad, id]
     );
     if (result.affectedRows === 0)
       return [

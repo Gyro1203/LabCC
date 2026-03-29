@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import "@styles/NavBar.css";
+import "@styles/Navbar.css";
 import { logoutRequest } from "../services/login.api.js";
 
 function Navbar() {
@@ -26,7 +26,7 @@ function Navbar() {
               <div className="col-md-4 col-sm-4 d_none">
                 <ul className="conta_icon">
                   <li>
-                    <a href="#">
+                    <a>
                       <i className="fa fa-phone" aria-hidden="true"></i>
                       Contactanos : +41 3111052
                     </a>{" "}
@@ -41,10 +41,10 @@ function Navbar() {
               <div className="col-md-4 col-sm-4 d_none">
                 <ul className="conta_icon ">
                   <li>
-                    <a href="#">
+                    <a href="mailto:labcon@ubiobio.cl">
                       <i className="fa fa-envelope" aria-hidden="true"></i>{" "}
-                      rcervante@ubiobio.cl
-                    </a>{" "}
+                      labcon@ubiobio.cl
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -104,11 +104,6 @@ function Navbar() {
                               Ingresos{" "}
                             </a>
                           </li>
-                          {/* <li className={`nav-item ${location.pathname === '/activity' ? 'active' : ''}`}>
-                        <a className="nav-link" href="/activity">
-                          Actividades
-                        </a>
-                      </li> */}
                           <li className="nav-item">
                             <a className="nav-link" href="/attendance">
                               {" "}
@@ -159,7 +154,10 @@ function Navbar() {
                       aria-labelledby="offcanvasRightLabel"
                     >
                       <div className="offcanvas-header">
-                        <h5 className="offcanvas-title" id="offcanvasRightLabel">
+                        <h5
+                          className="offcanvas-title"
+                          id="offcanvasRightLabel"
+                        >
                           <i className="fa-solid fa-user-gear"></i>
                           Configuración
                         </h5>
@@ -190,19 +188,21 @@ function Navbar() {
                         <ul className="list-unstyled">
                           <li>
                             <a href="/essay">
-                              <i className="fa-solid fa-folder-closed"></i>Ensayos
+                              <i className="fa-solid fa-folder-closed"></i>
+                              Ensayos
                             </a>
                           </li>
                           <li>
-                            <a href="/activity">
-                              <i className="fa-solid fa-building-user"></i>
-                              Actividades
+                            <a href="/careers">
+                              <i className="fa-solid fa-book"></i>
+                              Carreras
                             </a>
                           </li>
                           {userRol === "Admin" && (
                             <li>
                               <a href="/users">
-                                <i className="fa-solid fa-user-gear"></i>Usuarios
+                                <i className="fa-solid fa-user-gear"></i>
+                                Usuarios
                               </a>
                             </li>
                           )}

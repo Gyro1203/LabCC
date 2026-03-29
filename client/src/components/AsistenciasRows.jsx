@@ -1,4 +1,4 @@
-function AsistenciasRows({ asistencia, editar, eliminar, salida }) {
+function AsistenciasRows({ asistencia, isAdmin, editar, eliminar, salida }) {
 
   return (
     <tr>
@@ -8,7 +8,7 @@ function AsistenciasRows({ asistencia, editar, eliminar, salida }) {
       <td>{asistencia.entrada}</td>
       <td>{asistencia.actividad}</td>
       <td>{asistencia.salida}</td>
-      {(editar) ? <td>{editar} {eliminar} {salida}</td> : null}
+      {(editar) ? <td>{isAdmin && editar} {isAdmin && eliminar} {salida}</td> : null}
       
     </tr>
   );

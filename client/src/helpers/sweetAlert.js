@@ -13,6 +13,20 @@ export async function deleteDataAlert() {
   })
 }
 
+export async function permanentDeleteAlert() {
+  return Swal.fire({
+    title: "ADVERTENCIA",
+    text: "Eliminar el ingreso implica la eliminación de todas las actividades y asistencias asociadas a este. Una vez eliminados estos datos, no habrá forma de recuperarlos. ¿Estas seguro que deseas eliminarlo?",
+    backdrop: 'rgba(220, 134, 53, 0.2)',
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Estoy seguro",
+    confirmButtonColor: "#d33",
+    cancelButtonText: "Cancelar",
+    cancelButtonColor: "#404040",
+  })
+}
+
 export const showSuccessAlert = (titleMessage, message) => {
   Swal.fire(
     titleMessage,

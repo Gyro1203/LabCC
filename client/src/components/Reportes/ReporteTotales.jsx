@@ -59,34 +59,41 @@ function ReporteTotales() {
       totalesObj[actividad.id_alumno].totalUF +=
         parseFloat(actividad.total_uf) || 0;
     });
+    console.log(asistencias);
 
     // Acumular HH y carrera
     asistencias.forEach((asistencia) => {
       if (!asistencia || !asistencia.id_alumno) return;
-      const [hEntrada, mEntrada] = asistencia.entrada.split(":").map(Number);
-      const [hSalida, mSalida] = asistencia.salida.split(":").map(Number);
+      if (asistencia.salida) {
+        const [hEntrada, mEntrada] = asistencia.entrada.split(":").map(Number);
+        const [hSalida, mSalida] = asistencia.salida.split(":").map(Number);
 
-      const fechaBase = new Date();
-      const dateEntrada = new Date(fechaBase);
-      dateEntrada.setHours(hEntrada, mEntrada, 0);
-      const dateSalida = new Date(fechaBase);
-      dateSalida.setHours(hSalida, mSalida, 0);
+        const fechaBase = new Date();
+        const dateEntrada = new Date(fechaBase);
+        dateEntrada.setHours(hEntrada, mEntrada, 0);
+        const dateSalida = new Date(fechaBase);
+        dateSalida.setHours(hSalida, mSalida, 0);
 
-      const diffMs = dateSalida - dateEntrada;
-      const diffMin = Math.floor(diffMs / 60000);
-      const horas = diffMin / 60; // horas con decimales
+        if (dateEntrada > dateSalida) return;
+        /* Si la salida es mejor (hora) a la entrada, la salida se marco al día siguiente
+        lo que generaría un error de calculo pero resultado negativo*/
 
-      if (!totalesObj[asistencia.id_alumno]) {
-        totalesObj[asistencia.id_alumno] = {
-          alumno: asistencia.alumno || "",
-          periodo: asistencia.periodo || "",
-          carrera: asistencia.carrera || "",
-          totalUF: 0,
-          totalHH: 0,
-        };
+        const diffMs = dateSalida - dateEntrada;
+        const diffMin = Math.floor(diffMs / 60000);
+        const horas = diffMin / 60; // horas con decimales
+
+        if (!totalesObj[asistencia.id_alumno]) {
+          totalesObj[asistencia.id_alumno] = {
+            alumno: asistencia.alumno || "",
+            periodo: asistencia.periodo || "",
+            carrera: asistencia.carrera || "",
+            totalUF: 0,
+            totalHH: 0,
+          };
+        }
+        totalesObj[asistencia.id_alumno].carrera = asistencia.carrera || "";
+        totalesObj[asistencia.id_alumno].totalHH += horas;
       }
-      totalesObj[asistencia.id_alumno].carrera = asistencia.carrera || "";
-      totalesObj[asistencia.id_alumno].totalHH += horas;
     });
 
     // Formatear los totales
@@ -152,7 +159,7 @@ function ReporteTotales() {
           }}
           className="form-select mb-2"
         >
-          <option value="todos">Cualquier año</option>
+          <option value="cualquiera">Cualquier año</option>
           <option value="especifico">Año específico</option>
           <option value="rango">Rango de años</option>
         </select>
@@ -201,7 +208,19 @@ function ReporteTotales() {
           )}
         </div>
       </div>
-      {totales && <TotalesPDF totales={totales} />}
+      {totales && (
+        <TotalesPDF 
+          totales={totales} 
+          carreras={carreraFiltro || "Todas"} 
+          periodo={
+            tipoFiltroAño === "rango" 
+              ? `${fechaInicio} - ${fechaFin}` 
+              : tipoFiltroAño === "especifico"
+                ? [fechaInicio]
+                : "Cualquiera"
+          } 
+        />
+      )}
     </div>
   );
 }

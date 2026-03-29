@@ -67,7 +67,7 @@ export const updateAsistencia = async (req, res) => {
 export const marcarSalida = async (req, res) => {
   //Probar PATCH en lugar de PUT
   try {
-    const [asistencia, errorAsistencia] = await marcarSalidaService(req.params.id);
+    const [asistencia, errorAsistencia] = await marcarSalidaService(req.params.id, req.body);
     if (errorAsistencia) return handleErrorClient(res, 404, errorAsistencia);
     handleSuccess(res, 200, "Salida marcada", asistencia);
   } catch (error) {
