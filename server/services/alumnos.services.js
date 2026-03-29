@@ -61,18 +61,23 @@ export const createAlumnoService = async (body) => {
     const { nombre, rut, estado, alumno_carrera } = body;
     console.log("Creando alumno:", body);
     const [existeAlumno] = await db.query(
-      "SELECT 1 FROM alumnos WHERE rut = ?",
+      "SELECT id_alumno, nombre, estado, alumno_carrera FROM alumnos WHERE rut = ?",
       rut
     );
 
-    if (existeAlumno[0])
-      return [null, "Ya existe un alumno con el rut ingresado"];
+    if (existeAlumno[0]){
+      if(existeAlumno[0].estado !== "Eliminado")
+        return [null, "Ya existe un alumno con el rut ingresado"];
+      console.log(existeAlumno[0]);
+      await db.query("UPDATE alumnos SET nombre = ?, estado = ?, alumno_carrera = ? WHERE id_alumno = ?", [body.nombre, "Activo", body.alumno_carrera, existeAlumno[0].id_alumno]);  
+    }else{
+      const [result] = await db.query(
+        "INSERT INTO alumnos (nombre, rut, estado, alumno_carrera) VALUES (?, ?, ?, ?)",
+        [nombre, rut, estado, alumno_carrera]
+      );
+      if (result.affectedRows === 0) return [null, "Error en la creación"];
+    }
 
-    const [result] = await db.query(
-      "INSERT INTO alumnos (nombre, rut, estado, alumno_carrera) VALUES (?, ?, ?, ?)",
-      [nombre, rut, estado, alumno_carrera]
-    );
-    if (result.affectedRows === 0) return [null, "Error en la creación"];
 
     const [created] = await db.query(
       "SELECT id_alumno, nombre, rut, estado FROM alumnos WHERE rut = ?",

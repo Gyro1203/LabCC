@@ -7,6 +7,7 @@ import {
 import { getCarrerasRequest } from "../services/carreras.api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { showErrorAlert } from "../helpers/sweetAlert";
 
 export default function RegistAlumnos() {
   const navigate = useNavigate();
@@ -83,7 +84,8 @@ export default function RegistAlumnos() {
                 });
                 navigate("/students"); // Redirigir a la lista de alumnos después de crear o actualizar
               } catch (error) {
-                console.error("Error al crear alumno:", error);
+                showErrorAlert("Error al crear alumno", error.response?.data?.details || "Error desconocido");
+                console.error("Error al crear alumno:", error.response);
               }
             }}
           >
