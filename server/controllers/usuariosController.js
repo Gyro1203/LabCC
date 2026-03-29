@@ -74,6 +74,9 @@ export const updateUsuarios = async (req, res) => {
 
 export const deleteUsuarios = async (req, res) => {
     try {
+            if (req.params.id === req.user.id_usuario) {
+                return handleErrorClient(res, 403, "No puedes eliminar tu propia cuenta");
+            }
             const [usuario, errorUsuario] = await deleteUsuariosService([req.params.id]);
             if(errorUsuario) return handleErrorClient(res, 400, "Error al eliminar usuario", errorUsuario);
             handleSuccess(res, 200, "Usuario eliminado exitosamente", usuario);

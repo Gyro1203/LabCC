@@ -1,12 +1,12 @@
 import { Form, Formik, useFormikContext } from "formik";
 import {
-  getIngresosRequest,
   createIngresosRequest,
   getIngresoByIdRequest,
   updateIngresosRequest,
 } from "../services/ingresos.api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { getAlumnosRequest } from "../services/alumnos.api";
 
 export default function RegistIngresos() {
   const navigate = useNavigate();
@@ -17,21 +17,19 @@ export default function RegistIngresos() {
     titulo: "",
     profesor_guia: "",
     profesor_asignatura: "",
+    año: "",
     semestre: "",
     vigente: true,
     ingreso_alumno: "1",
   }); // Estado para almacenar el ingreso si es necesario
   const [nombres, setNombres] = useState([]);
   const [alumno, setAlumno] = useState(null); //Guarda solo los datos ingreso realacionado rut ingresado
-  const [fecha, setFecha] = useState("");
   const params = useParams();
 
   useEffect(() => {
     const fetchIngreso = async () => {
-      const fechaActual = new Date().toISOString().split("T")[0].split("-")[0];
-      console.log(fechaActual);
-      setFecha(fechaActual);
-      const dataNombres = await getIngresosRequest();
+      // const fechaActual = new Date().toISOString().split("T")[0].split("-")[0];
+      const dataNombres = await getAlumnosRequest();
       // OPCIÓN: solo traer nombre y rut 
       // console.log(dataNombres.data.map(({nombre, rut}) => ({nombre, rut})));
       setNombres(dataNombres.data); 
@@ -42,10 +40,16 @@ export default function RegistIngresos() {
           const {
             nombre: _nombre,
             ingreso_alumno: _ingreso_alumno,
+            semestre: _semestre,
             ...filtered
           } = dataIngreso.data; // nombre y rut is assigned but not used. Solucion
-          // console.log("Ingreso filtrado:", filtered);
-          setIngreso(filtered);
+          console.log("Ingreso filtrado:", filtered);
+          setIngreso(
+            { año: _semestre.split("-")[0], 
+              semestre: _semestre.split("-")[1], 
+              ...filtered 
+            }
+          );
         } catch (error) {
           console.error("Error al obtener el ingreso:", error);
         }
@@ -55,19 +59,20 @@ export default function RegistIngresos() {
   }, [params.id]);
 
   const BuscarAlumno = ({ setAlumno }) => {
-      const { values } = useFormikContext();
+    const { values } = useFormikContext();
   
-      useEffect(() => {
-        if (values.rut) {
-          const dataAlumno = nombres.find(
-            ({ rut, vigente }) => rut == values.rut && vigente
-          ); //o vigente == true;
-          setAlumno(dataAlumno);
-        }
-      }, [values.rut, setAlumno]);
+    useEffect(() => {
+      if (values.rut) {
+        console.log(values.rut);
+        const dataAlumno = nombres.find(
+          ({ rut , estado}) => rut == values.rut && estado === "Activo"
+        ); //o vigente == true;
+        setAlumno(dataAlumno);
+      }
+    }, [values.rut, setAlumno]);
   
-      return null;
-    };
+    return null;
+  };
 
   return (
     <div className="container mt-5">
@@ -91,9 +96,31 @@ export default function RegistIngresos() {
             onSubmit={async (values) => {
               try {
                 if (params.id) {
-                  await updateIngresosRequest(params.id, values);
+                  await updateIngresosRequest(params.id, 
+                    {
+                      rut: values.rut,
+                      motivo: values.motivo,
+                      titulo: values.titulo,
+                      profesor_guia: values.profesor_guia,
+                      profesor_asignatura: values.profesor_asignatura,
+                      semestre: values.año + "-" + values.semestre,
+                      vigente: values.vigente,
+                      ingreso_alumno: values.ingreso_alumno,
+                    }
+                  );
                 } else {
-                  await createIngresosRequest(values);
+                  await createIngresosRequest(
+                    {
+                      rut: values.rut,
+                      motivo: values.motivo,
+                      titulo: values.titulo,
+                      profesor_guia: values.profesor_guia,
+                      profesor_asignatura: values.profesor_asignatura,
+                      semestre: values.año + "-" + values.semestre,
+                      vigente: values.vigente,
+                      ingreso_alumno: values.ingreso_alumno,
+                    }
+                  );
                 }
                 setIngreso({
                   rut: "",
@@ -101,6 +128,7 @@ export default function RegistIngresos() {
                   titulo: "",
                   profesor_guia: "",
                   profesor_asignatura: "",
+                  año: "",
                   semestre: "",
                   vigente: true,
                   ingreso_alumno: "1",
@@ -225,22 +253,38 @@ export default function RegistIngresos() {
                   />
                 </div>
 
-                <div className="form-group mb-3">
-                  <label htmlFor="semestre" className="form-label">
-                    Semestre
-                  </label>
-                  <select
-                    name="semestre"
-                    className="form-control"
-                    onChange={handleChange}
-                    value={values.semestre}
-                  >
-                    <option value="" disabled hidden>
-                      Selecciona una opción
-                    </option>
-                    <option value={`${fecha}-1`}>{`${fecha}-1`}</option>
-                    <option value={`${fecha}-2`}>{`${fecha}-2`}</option>
-                  </select>
+                <div className="row align-items-cemter mb-3">
+                  <div className="form-group col ">
+                    <label htmlFor="año" className="form-label">
+                      Año
+                    </label>
+                    <input
+                      type="number"
+                      maxLength="4"
+                      name="año"
+                      className="form-control"
+                      onChange={handleChange}
+                      value={values.año}
+                    />
+                  </div>
+
+                  <div className="form-group col">
+                    <label htmlFor="semestre" className="form-label">
+                      Semestre
+                    </label>
+                    <select
+                      name="semestre"
+                      className="form-control"
+                      onChange={handleChange}
+                      value={values.semestre}
+                    >
+                      <option value="" disabled hidden>
+                        Selecciona una opción
+                      </option>
+                      <option value={`1`}>{`1`}</option>
+                      <option value={`2`}>{`2`}</option>
+                    </select>
+                  </div>
                 </div>
 
                 {params.id ? (
