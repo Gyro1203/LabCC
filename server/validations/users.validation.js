@@ -29,6 +29,7 @@ export const userBodyValidation = Joi.object({
     .min(8)
     .max(26)
     .pattern(/^[a-zA-Z0-9]+$/)
+    .empty("") // Permite que el campo sea opcional
     .messages({
         "string.min": "La contraseña debe tener al menos 8 caracteres.",
         "string.max": "La contraseña no puede exceder los 26 caracteres.",
