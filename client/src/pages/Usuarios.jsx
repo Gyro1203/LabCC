@@ -60,7 +60,16 @@ function Usuarios() {
 
   
   // handlers
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, userEmail) => {
+    // datos del usuario logueado almacenados en el Login
+    const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuario") || "{}");
+    
+    // verifica si el email del usuario a borrar es el mismo que el logueado
+    if (usuarioLogueado && usuarioLogueado.email === userEmail) {
+      showErrorAlert("No puedes eliminar tu propia cuenta");
+      return;
+    }
+
     try {
       const confirmation = await deleteDataAlert();
       if (confirmation.isConfirmed) {
@@ -116,7 +125,7 @@ function Usuarios() {
 
  return (
    <div className="container text-center mt-4 mb-5">
-     <button onClick={handleClickCreate}>Registrar Usuario</button>
+     <button className="btn btn-primary" onClick={handleClickCreate}>Registrar Usuario</button>
      <div className="d-flex justify-content-end mt-4">
        <div className="input-group" style={{ maxWidth: "300px" }}>
          <input
@@ -171,7 +180,7 @@ function Usuarios() {
                <button
                  className="btn btn-danger"
                  title="Eliminar"
-                 onClick={() => handleDelete(usuario.id_usuario)}
+                 onClick={() => handleDelete(usuario.id_usuario, usuario.email)}
                >
                  <i className="fa-solid fa-trash-can"></i>
                </button>

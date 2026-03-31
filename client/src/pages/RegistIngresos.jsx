@@ -175,6 +175,7 @@ export default function RegistIngresos() {
                     onChange={handleChange}
                     value={values.rut}
                   />
+                  <small class="text-muted">Sin puntos y con guión</small>
                 </div>
 
                 <BuscarAlumno setAlumno={setAlumno} />
