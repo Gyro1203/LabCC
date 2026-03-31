@@ -5,7 +5,7 @@ import QuestionIcon from '@assets/Login/QuestionCircleIcon.svg';
 import { createPortal } from 'react-dom';
 
 export default function Popup({ show, setShow, data, action }) {
-  const userData = data && data.length > 0 ? data[0] : {};
+  const userData = Array.isArray(data) ? (data[0] || {}) : (data || {});
 
   const handleSubmit = (formData) => {
     action(formData);

@@ -117,6 +117,7 @@ export default function RegistAlumnos() {
                     onChange={handleChange}
                     value={values.rut}
                   />
+                  <small class="text-muted">Sin puntos y con guión</small>
                 </div>
 
                 <div className="form-group mb-3">
