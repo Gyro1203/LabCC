@@ -8,7 +8,7 @@ function Login() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState("");
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -17,21 +17,28 @@ function Login() {
         const password = formData.get("password");
 
         setLoading(true);
-        try {
-            await loginRequest(email, password);
-            setSuccess(true);
-            setError(false);
-            setTimeout(() => {
-              setLoading(false);
-              navigate("/students");
-            }, 1500);
-        } catch (error) {
-            setTimeout(() => {
-              setLoading(false);
-            }, 1500);
-            setSuccess(false);
-            setError(true);
-            console.error("Error al iniciar sesión:", error);
+        const result = await loginRequest(email, password);
+        
+        // No me pagan lo suficiente para arreglar esto: Verifica si la respuesta fue exitosa y despues muestra el mensaje
+        //  de error que existe
+        if (result && result.data && result.data.token) {
+          setSuccess(true);
+          setError("");
+          setTimeout(() => {
+            setLoading(false);
+            navigate("/students");
+          }, 1500);
+        } else {
+          setSuccess(false);
+          let errorMessage = "Error al iniciar sesión. Por favor, verifica tus credenciales.";
+          if (result?.details) {
+            errorMessage = typeof result.details === "string" ? result.details : result.details.message;
+          } else if (result?.message) {
+            errorMessage = result.message;
+          }
+          setError(errorMessage);
+          setLoading(false);
+          console.error("Error al iniciar sesión:", result);
         }
     }
 
@@ -89,8 +96,7 @@ function Login() {
                             className="alert alert-warning text-center"
                             role="alert"
                           >
-                            Error al iniciar sesión. Por favor, verifica tus
-                            credenciales.
+                            {error}
                           </div>
                         )}
                         <form onSubmit={handleLogin}>

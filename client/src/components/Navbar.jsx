@@ -1,19 +1,26 @@
 import { useLocation } from "react-router-dom";
 import "@styles/Navbar.css";
 import { logoutRequest } from "../services/login.api.js";
+import { logoutAlert } from "../helpers/sweetAlert.js";
 
 function Navbar() {
   const location = useLocation();
   const user = JSON.parse(sessionStorage.getItem("usuario"));
   const userRol = user ? user.rol : null;
 
-  const logoutSubmit = () => {
-    try {
-      logoutRequest();
-      console.log("Sesión cerrada correctamente");
-      window.location.href = "/login";
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+  const logoutSubmit = async () => {
+    
+    const confirmation = await logoutAlert();
+    if (confirmation.isConfirmed) {
+
+      try {
+        await logoutRequest();
+        console.log("Sesión cerrada correctamente");
+        window.location.href = "/login";
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+      }
+
     }
   };
 
