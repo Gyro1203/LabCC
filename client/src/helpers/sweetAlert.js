@@ -55,3 +55,11 @@ export const showErrorAlert = (titleMessage, message) => {
     'warning'
   );
 };
+
+export const showInfoAlert = (titleMessage, message) => {
+  Swal.fire(
+    titleMessage,
+    message,
+    'info',
+  );
+};

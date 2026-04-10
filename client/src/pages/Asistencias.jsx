@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   getAsistenciasRequest,
-  marcarSalidaRequest,
   deleteAsistenciasRequest,
 } from "../services/asistencias.api.js";
 import AsistenciasRows from "../components/AsistenciasRows.jsx";
@@ -10,9 +9,16 @@ import Filter from "../components/Filter.jsx";
 import {
   deleteDataAlert,
   showErrorAlert,
+  showInfoAlert,
   showSuccessAlert,
 } from "../helpers/sweetAlert.js";
 import Caret from "../components/Caret.jsx";
+
+import useCreateAsis from "../hooks/asistencias/useCreateAsis.jsx";
+import PopUpCreateAsistencias from "../components/Asistencias/PopUpCreateAsistencias.jsx";
+import useEditAsis from "../hooks/asistencias/useEditAsis.jsx";
+import PopUpMarcarSalida from "../components/Asistencias/PopUpMarcarSalida.jsx";
+import useMarcarSalida from "../hooks/asistencias/useMarcarSalida.jsx";
 
 function Asistencias() {
   const navigate = useNavigate();
@@ -45,6 +51,29 @@ function Asistencias() {
     { id: 7, key: "opciones", label: "Opciones" },
   ];
 
+  const {
+    isCreatePopUpOpen,
+    setIsCreatePopUpOpen,
+    handleClickCreate,
+    handleCreate,
+  } = useCreateAsis(setAsistencias);
+
+  
+  const {
+    isEditPopUpOpen,
+    setIsEditPopUpOpen,
+    handleClickUpdate,
+    handleUpdate,
+  } = useEditAsis(setAsistencias)
+  
+  const {
+    isSalidaPopUpOpen,
+    setIsSalidaPopUpOpen,
+    dataAsistencia,
+    handleClickSalida,
+    handleMarcarSalida,
+  } = useMarcarSalida(setAsistencias);
+  
   useEffect(() => {
     async function fetchData() {
       const dataAsistencias = await getAsistenciasRequest();
@@ -58,21 +87,12 @@ function Asistencias() {
       const confirmation = await deleteDataAlert();
       if (confirmation.isConfirmed) {
         await deleteAsistenciasRequest(id);
-        showSuccessAlert("Alumno eliminado exitosamente");
+        showSuccessAlert("Registro de asistencia eliminado");
         setAsistencias(asistencias.filter((e) => e.id_asistencia !== id));
       }
     } catch (error) {
       showErrorAlert("Error al eliminar alumno");
       console.error("Error al eliminar asistencia:", error);
-    }
-  };
-
-  const marcarSalida = async (id) => {
-    try {
-      const response = await marcarSalidaRequest(id);
-      console.log("Se marco salida:", response.data);
-    } catch (error) {
-      console.error("Error al marcar salida:", error);
     }
   };
 
@@ -128,9 +148,10 @@ function Asistencias() {
           <button
             type="button"
             className="btn btn-primary p-2"
-            onClick={() => navigate(`/attendance/register`)}
+            // onClick={() => navigate(`/attendance/register`)}
+            onClick={handleClickCreate}
           >
-            Registrar Ensayos
+            Registrar Asistencias
           </button>
         </div>
       );
@@ -142,7 +163,8 @@ function Asistencias() {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={() => navigate(`/attendance/register`)}
+            // onClick={() => navigate(`/attendance/register`)}
+            onClick={handleClickCreate}
           >
             Registar en Asistencia
           </button>
@@ -226,6 +248,9 @@ function Asistencias() {
                     title="Editar"
                     onClick={() =>
                       navigate(`/attendance/edit/${asistencia.id_asistencia}`)
+                      // handleClickUpdate(asistencia)
+                      // console.log(asistencia)
+                      
                     }
                   >
                     <i id="editar" className="fa-solid fa-pencil"></i>
@@ -245,8 +270,12 @@ function Asistencias() {
                     className="btn btn-success"
                     title="Marcar Salida"
                     onClick={async () => {
-                      await marcarSalida(asistencia.id_asistencia);
-                      window.location.reload();
+                      if(asistencia.salida) {
+                        showInfoAlert("Ya has marcado tu salida");
+                        return;
+                      }
+                      handleClickSalida(asistencia)
+                      // window.location.reload();
                     }}
                   >
                     <i className="fa-solid fa-door-open"></i>
@@ -256,6 +285,17 @@ function Asistencias() {
             ))}
           </tbody>
         </table>
+        <PopUpCreateAsistencias 
+          show={isCreatePopUpOpen}
+          setShow={setIsCreatePopUpOpen}
+          action={handleCreate}
+        />
+        <PopUpMarcarSalida
+          show={isSalidaPopUpOpen}
+          setShow={setIsSalidaPopUpOpen}
+          data={dataAsistencia}
+          action={handleMarcarSalida}
+        />
       </div>
     );
   }

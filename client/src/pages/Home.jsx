@@ -83,6 +83,8 @@ function Home() {
 
   const marcarSalida = async (id, body) => {
     try {
+      console.log(id, body);
+      
       await marcarSalidaRequest(id, body);
       // Refresca los datos de asistencias
       if (alumno) {

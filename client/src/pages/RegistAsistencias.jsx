@@ -14,6 +14,9 @@ export default function RegistAsistencias() {
   const [asistencia, setAsistencia] = useState({
     rut: "",
     actividad: "",
+    fecha: "",
+    entrada: "",
+    salida: "",
   }); // Estado para almacenar la asistencia si es necesario, aunque no se usa en este ejemplo
 
   const [ingresos, setIngresos] = useState([]); // Guarda todos los ingresos
@@ -29,6 +32,8 @@ export default function RegistAsistencias() {
       if (params.id) {
         try {
           const dataAsistencia = await getAsistenciaByIdRequest(params.id);
+          console.log(dataAsistencia.data);
+          
           const {
             alumno: _alumno,
             asistencia_actividad: _asistencia_actividada,
@@ -39,8 +44,14 @@ export default function RegistAsistencias() {
             asistencia_ingreso: _asistencia_ingreso,
             ...filtered
           } = dataAsistencia.data; // nombre y rut is assigned but not used. Solucion
-          // console.log("Asistencia filtrada:", filtered);
-          setAsistencia(filtered);
+          console.log("Asistencia filtrada:", filtered);
+          const fechaFormateada = _fecha ? _fecha.split('/').reverse().join('-') : "";
+          setAsistencia({
+            ...filtered,
+            fecha: fechaFormateada || "",
+            entrada: _entrada || "",
+            salida: _salida || "",
+          });
         } catch (error) {
           console.error("Error al obtener la asistencia:", error);
         }
@@ -88,13 +99,18 @@ export default function RegistAsistencias() {
             onSubmit={async (values) => {
               try {
                 if (params.id) {
+                  console.log("UPDATE");
                   await updateAsistenciasRequest(params.id, values);
                 } else {
+                  console.log("CREATE");
                   await createAsistenciasRequest(values);
                 }
                 setAsistencia({
                   rut: "",
                   actividad: "",
+                  fecha: "",
+                  entrada: "",
+                  salida: "",
                 });
                 navigate("/attendance"); // Redirigir a la lista de asistencias después de crear o actualizar
               } catch (error) {
@@ -144,6 +160,45 @@ export default function RegistAsistencias() {
                     className="form-control"
                     onChange={handleChange}
                     value={values.actividad}
+                  />
+                </div>
+
+                <div className="form-group mb-3">
+                  <label htmlFor="fecha" className="form-label">
+                    Fecha
+                  </label>
+                  <input
+                    type="date"
+                    name="fecha"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.fecha}
+                  />
+                </div>
+
+                <div className="form-group mb-3">
+                  <label htmlFor="entrada" className="form-label">
+                    Hora de Entrada
+                  </label>
+                  <input
+                    type="time"
+                    name="entrada"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.entrada}
+                  />
+                </div>
+
+                <div className="form-group mb-3">
+                  <label htmlFor="salida" className="form-label">
+                    Hora de Salida
+                  </label>
+                  <input
+                    type="time"
+                    name="salida"
+                    className="form-control"
+                    onChange={handleChange}
+                    value={values.salida}
                   />
                 </div>
 

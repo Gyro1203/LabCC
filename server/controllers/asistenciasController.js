@@ -52,6 +52,8 @@ export const createAsistencia = async (req, res) => {
 export const updateAsistencia = async (req, res) => {
   try {
     const { body } = req;
+    console.log("UPDATE CONTROLLER: ", body);
+    
     const { error } = asistenciaBodyValidation.validate(body);
     if (error) {
       return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
