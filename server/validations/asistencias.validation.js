@@ -19,4 +19,25 @@ export const asistenciaBodyValidation = Joi.object({
       "string.max": "El RUT no puede exceder los 12 caracteres.",
     }),
   actividad: Joi.string().allow(""),
+  fecha: Joi.string()
+    .optional()
+    .allow("")
+    .pattern(/^\d{4}-\d{2}-\d{2}$/)
+    .messages({
+      "string.pattern.base": "La fecha debe tener el formato YYYY-MM-DD.",
+    }),
+  entrada: Joi.string()
+    .optional()
+    .allow("")
+    .pattern(/^(?:[01]\d|2[0-3]):[0-5]\d$/)
+    .messages({
+      "string.pattern.base": "La hora de entrada debe tener el formato HH:mm.",
+    }),
+  salida: Joi.string()
+    .optional()
+    .allow("")
+    .pattern(/^(?:[01]\d|2[0-3]):[0-5]\d$/)
+    .messages({
+      "string.pattern.base": "La hora de salida debe tener el formato HH:mm.",
+    }),
 });
