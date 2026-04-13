@@ -23,6 +23,7 @@ export const createAsistenciasRequest = async (asistencia) => {
 };
 
 export const updateAsistenciasRequest = async (id, asistencia) => {
+  console.log("UPDATE API: ", asistencia);
     return await axios.put(BASE_URL + `/attendance/${id}`, asistencia);
 }
 
