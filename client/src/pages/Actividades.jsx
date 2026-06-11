@@ -53,7 +53,7 @@ function Actividades() {
   useEffect(() => {
     async function fetchData() {
       const dataActividades = await getActividadesRequest();
-      console.log(dataActividades.data);
+      // console.log(dataActividades.data);
       setActividades(dataActividades.data);
     }
     fetchData();

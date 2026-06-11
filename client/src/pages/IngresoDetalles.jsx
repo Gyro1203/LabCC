@@ -7,7 +7,7 @@ import {
   getActividadesByIngresoRequest,
 } from "../services/actividades.api.js";
 import ActividadesRows from "../components/ActividadesRows.jsx";
-import { deleteDataAlert, showSuccessAlert } from "../helpers/sweetAlert.js";
+import { deleteDataAlert, showErrorAlert, showSuccessAlert } from "../helpers/sweetAlert.js";
 
 function IngresoDetalles() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ function IngresoDetalles() {
           const dataActividades = await getActividadesByIngresoRequest(
             filteredIngreso.id_ingreso
           );
-          console.log(dataActividades);
+          // console.log(dataActividades);
           setActividades(dataActividades.data);
         } catch (error) {
           console.error("Error al obtener el ingreso:", error);
@@ -96,26 +96,27 @@ function IngresoDetalles() {
               backgroundColor: "#014898",
             }}
           >
-            Actividades
+            Ensayos
           </h2>
           <div className="d-flex align-items-center flex-column mb-2">
             <button
               className="btn btn-warning"
-              title="Registrar Actividad"
+              title="Registrar Ensayo"
               onClick={() => {
                 if (!ingreso.vigente)
-                  alert("Este ingreso no se encuentra vigente");
+                  showErrorAlert("Este ingreso no se encuentra vigente", "Para añadir nuevas actividades, por favor edite este ingreso y cambie su estado a vigente.");
                 else
                   navigate(`/activity/register`, {
                     state: {
                       id_ingreso: ingreso.id_ingreso,
+                      alumno: ingreso.nombre,
                       from: `/entry/details/${ingreso.id_ingreso}`,
                     },
                   });
               }}
             >
               <i className="fa-regular fa-calendar-plus"></i> Registrar
-              Actividad
+              Ensayos
             </button>
           </div>
           <table className="table table-striped table-hover table-bordered">
@@ -141,6 +142,7 @@ function IngresoDetalles() {
                         navigate(`/activity/edit/${actividad.id_actividad}`, {
                           state: {
                             id_ingreso: ingreso.id_ingreso,
+                            alumno: ingreso.nombre,
                             from: `/entry/details/${ingreso.id_ingreso}`,
                           },
                         })

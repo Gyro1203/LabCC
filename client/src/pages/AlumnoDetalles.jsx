@@ -62,7 +62,7 @@ function AlumnoDetalles() {
               : [],
         }));
       } catch (error) {
-        console.log("Error al obtener actividades:", error);
+        console.error("Error al obtener actividades:", error);
         setActividades((prevData) => ({ ...prevData, [id]: [] })); // En caso de error el contenido es vacio.
       }
     };
@@ -81,7 +81,7 @@ function AlumnoDetalles() {
               : [],
         }));
       } catch (error) {
-        console.log("Error al obtener asistencias:", error);
+        console.error("Error al obtener asistencias:", error);
         setAsistencias((prevData) => ({ ...prevData, [id]: [] })); // En caso de error el contenido es vacio.
       }
     };

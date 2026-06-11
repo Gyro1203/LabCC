@@ -32,7 +32,7 @@ export default function RegistAsistencias() {
       if (params.id) {
         try {
           const dataAsistencia = await getAsistenciaByIdRequest(params.id);
-          console.log(dataAsistencia.data);
+          // console.log(dataAsistencia.data);
           
           const {
             alumno: _alumno,
@@ -44,7 +44,7 @@ export default function RegistAsistencias() {
             asistencia_ingreso: _asistencia_ingreso,
             ...filtered
           } = dataAsistencia.data; // nombre y rut is assigned but not used. Solucion
-          console.log("Asistencia filtrada:", filtered);
+          // console.log("Asistencia filtrada:", filtered);
           const fechaFormateada = _fecha ? _fecha.split('/').reverse().join('-') : "";
           setAsistencia({
             ...filtered,
@@ -99,10 +99,8 @@ export default function RegistAsistencias() {
             onSubmit={async (values) => {
               try {
                 if (params.id) {
-                  console.log("UPDATE");
                   await updateAsistenciasRequest(params.id, values);
                 } else {
-                  console.log("CREATE");
                   await createAsistenciasRequest(values);
                 }
                 setAsistencia({
