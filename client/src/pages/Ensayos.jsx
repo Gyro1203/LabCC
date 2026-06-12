@@ -103,7 +103,7 @@ function Ensayos() {
             className="btn btn-primary p-2"
             onClick={() => navigate(`/essay/register`)}
           >
-            Registrar Ensayos
+            Registrar Nuevo Ensayo
           </button>
         </div>
       );
@@ -118,7 +118,7 @@ function Ensayos() {
             className="btn btn-primary"
             onClick={() => navigate(`/essay/register`)}
           >
-            Registrar Ensayo
+            Registrar Nuevo Ensayo
           </button>
 
           <div className="input-group" style={{ maxWidth: "300px" }}>

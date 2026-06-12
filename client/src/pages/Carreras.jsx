@@ -35,7 +35,7 @@ function Carreras() {
   useEffect(() => {
     async function fetchData() {
       const dataCarreras = await getCarrerasRequest();
-      console.log(dataCarreras.data);
+      // console.log(dataCarreras.data);
       setCarreras(dataCarreras.data);
     }
     fetchData();

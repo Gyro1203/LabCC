@@ -40,8 +40,8 @@ export const createAsistencia = async (req, res) => {
     if (error) {
       return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
     }
-    const { rut, actividad } = req.body;
-    const [asistencia, errorAsistencia] = await createAsistenciaService( { rut, actividad } );
+    const { rut, actividad, fecha, entrada, salida } = req.body;
+    const [asistencia, errorAsistencia] = await createAsistenciaService({ rut, actividad, fecha, entrada, salida });
     if (errorAsistencia) return handleErrorClient(res, 400, errorAsistencia);
     handleSuccess(res, 201,"Asistencia creada exitosamente", asistencia);
   } catch (error) {

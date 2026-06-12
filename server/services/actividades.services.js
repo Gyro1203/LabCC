@@ -7,7 +7,6 @@ export const getActividadesService = async () => {
       SELECT 
         ac.id_actividad,
         al.id_alumno,
-        al.nombre AS alumno,
         i.semestre AS periodo,
         e.actividad,
         e.unidad, 
@@ -38,7 +37,6 @@ export const getActividadService = async (id) => {
       SELECT 
         ac.id_actividad,
         i.id_ingreso AS actividad_ingreso,
-        al.nombre AS alumno,
         e.actividad,
         e.id_ensayo AS actividad_ensayo,
         e.unidad, 
@@ -157,7 +155,6 @@ export const createActividadService = async (body) => {
       `
       SELECT 
         ac.id_actividad,
-        al.nombre AS alumno,
         e.actividad,
         e.unidad, 
         ac.cantidad, 
@@ -246,7 +243,6 @@ export const updateActividadService = async (body, id) => {
       `
       SELECT 
         ac.id_actividad,
-        al.nombre AS alumno,
         e.actividad,
         e.unidad, 
         ac.cantidad, 

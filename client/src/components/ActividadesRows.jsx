@@ -10,10 +10,12 @@ function ActividadesRows({ actividad  , editar, eliminar }) {
       <td>{actividad.total_uf} UF</td>
       <td>${actividad.total_peso}</td>
       <td>{actividad.observaciones}</td>
-      <td>
-        {editar}
-        {eliminar}
-      </td>
+      {editar || eliminar ? (
+        <td>
+          {editar}
+          {eliminar}
+        </td>
+      ) : null}
     </tr>
   );
 }
