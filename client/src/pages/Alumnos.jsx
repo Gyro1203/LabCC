@@ -51,7 +51,13 @@ function Alumnos() {
         setAlumnos(alumnos.filter((a) => a.id_alumno !== id));
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar alumno");
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al eliminar alumno", errorMessage);
+      console.error("Error al eliminar alumno:", error.response || error);
       console.error("Error al eliminar alumno:", error);
     }
   };

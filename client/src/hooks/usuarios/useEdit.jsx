@@ -32,7 +32,13 @@ const useEdit = (setUsers) => {
         );
         setDataUser([]);
       } catch (error) {
-        showErrorAlert("Error al actualizar el usuario");
+        const errorMessage =
+        error.response?.data?.details ||
+        error.response?.data?.message ||
+          error.message ||
+          "Error desconocido";
+        showErrorAlert("Error al actualizar el usuario", errorMessage);
+        console.error("Error al actualizar el usuario:", error.response || error);
         console.error("Error al actualizar usuario:", error);
       }
     }

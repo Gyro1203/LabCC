@@ -7,6 +7,7 @@ import {
 import { getIngresosRequest } from "../services/ingresos.api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { showSuccessAlert, showErrorAlert } from "../helpers/sweetAlert";
 
 export default function RegistAsistencias() {
   const navigate = useNavigate();
@@ -100,8 +101,10 @@ export default function RegistAsistencias() {
               try {
                 if (params.id) {
                   await updateAsistenciasRequest(params.id, values);
+                  showSuccessAlert("Asistencia actualizada", "Los datos se guardaron correctamente");
                 } else {
                   await createAsistenciasRequest(values);
+                  showSuccessAlert("Asistencia registrada", "La asistencia se registró correctamente");
                 }
                 setAsistencia({
                   rut: "",
@@ -110,9 +113,15 @@ export default function RegistAsistencias() {
                   entrada: "",
                   salida: "",
                 });
-                navigate("/attendance"); // Redirigir a la lista de asistencias después de crear o actualizar
+                navigate("/attendance");
               } catch (error) {
-                console.error("Error al crear asistencia:", error);
+                const errorMessage =
+                error.response?.data?.details ||
+                  error.response?.data?.message ||
+                  error.message ||
+                  "Error desconocido";
+                showErrorAlert("Error al guardar asistencia", errorMessage);
+                console.error("Error al guardar asistencia:", error.response || error);
               }
             }}
           >

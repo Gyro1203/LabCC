@@ -60,7 +60,13 @@ function Ensayos() {
         setEnsayos(ensayos.filter((e) => e.id_ensayo !== id));
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar ensayo");
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al eliminar ensayo", errorMessage);
+      console.error("Error al eliminar ensayo:", error.response || error);
       console.error("Error al eliminar ensayo:", error);
     }
   };

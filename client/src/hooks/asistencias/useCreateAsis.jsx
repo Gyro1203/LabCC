@@ -22,7 +22,13 @@ const useCreateAsis = (setAsistencias) => {
         setAsistencias((prevAsistencias) => [...prevAsistencias, dataAsistencia.data]);
         //setCreateDataUser({});
       } catch (error) {
-        showErrorAlert("Error al resgistrar la asistencia");
+        const errorMessage =
+        error.response?.data?.details ||
+        error.response?.data?.message ||
+          error.message ||
+          "Error desconocido";
+        showErrorAlert("Error al registrar la asistencia", errorMessage);
+        console.error("Error al registrar la asistencia:", error.response || error);
         console.error("Error al registrar la asistencia:", error);
       }
     }

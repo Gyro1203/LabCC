@@ -91,7 +91,13 @@ function Asistencias() {
         setAsistencias(asistencias.filter((e) => e.id_asistencia !== id));
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar alumno");
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al eliminar alumno", errorMessage);
+      console.error("Error al eliminar alumno:", error.response || error);
       console.error("Error al eliminar asistencia:", error);
     }
   };

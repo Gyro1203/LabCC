@@ -84,7 +84,13 @@ export default function RegistAlumnos() {
                 });
                 navigate("/students"); // Redirigir a la lista de alumnos después de crear o actualizar
               } catch (error) {
-                showErrorAlert("Error al crear alumno", error.response?.data?.details || "Error desconocido");
+                const errorMessage =
+                error.response?.data?.details ||
+                error.response?.data?.message ||
+                  error.message ||
+                  "Error desconocido";
+                showErrorAlert("Error al crear alumno", errorMessage);
+                console.error("Error al crear alumno:", error.response || error);
                 console.error("Error al crear alumno:", error.response);
               }
             }}

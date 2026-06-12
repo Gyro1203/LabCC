@@ -42,7 +42,7 @@ function Navbar() {
               </div>
               <div className="col-md-4 col-sm-4 ">
                 <a className="logo" href="#">
-                  <img src="images/LogoLabcon.png" alt="#" />
+                  <img src="/images/LogoLabcon.png" alt="#" />
                 </a>
               </div>
               <div className="col-md-4 col-sm-4 d_none">
@@ -111,13 +111,21 @@ function Navbar() {
                               Ingresos{" "}
                             </a>
                           </li>
-                          <li className="nav-item">
+                          <li
+                            className={`nav-item ${
+                              location.pathname === "/attendance" ? "active" : ""
+                            }`} 
+                          >
                             <a className="nav-link" href="/attendance">
                               {" "}
                               Asistencias{" "}
                             </a>
                           </li>
-                          <li className="nav-item">
+                          <li 
+                            className={`nav-item ${
+                              location.pathname === "/reports" ? "active" : ""
+                            }`} 
+                          >
                             <a className="nav-link" href="/reports">
                               Reportes{" "}
                             </a>

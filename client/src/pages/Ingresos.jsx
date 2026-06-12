@@ -58,7 +58,13 @@ function Ingresos() {
         }
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar ingreso");
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al eliminar ingreso", errorMessage);
+      console.error("Error al eliminar ingreso:", error.response || error);
       console.error("Error al eliminar ingreso:", error);
     }
   };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { showSuccessAlert, showErrorAlert } from "../helpers/sweetAlert";
 import {
   createCarreraRequest,
   getCarreraByIdRequest,
@@ -42,8 +43,10 @@ export default function RegistCarreras() {
     try {
       if (params.id) {
         await updateCarreraRequest(params.id, carrera);
+        showSuccessAlert("Carrera actualizada", "Los datos se guardaron correctamente");
       } else {
         await createCarreraRequest(carrera);
+        showSuccessAlert("Carrera creada", "La carrera se registró correctamente");
       }
       setCarrera({
         carrera: "",
@@ -52,7 +55,13 @@ export default function RegistCarreras() {
       });
       navigate("/careers");
     } catch (error) {
-      console.error("Error al guardar carrera:", error);
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al guardar carrera", errorMessage);
+      console.error("Error al guardar carrera:", error.response || error);
     }
   };
 
