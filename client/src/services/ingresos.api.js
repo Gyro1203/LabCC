@@ -23,7 +23,6 @@ export const createIngresosRequest = async (ingreso) => {
 };
 
 export const updateIngresosRequest = async (id, ingreso) => {
-    console.log("Ingreso recibido: ", ingreso)
     return await axios.put(BASE_URL + `/entry/${id}`, ingreso);
 }
 

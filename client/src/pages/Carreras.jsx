@@ -50,7 +50,13 @@ function Carreras() {
         setCarreras(carreras.filter((e) => e.id_carrera !== id));
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar carrera");
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al eliminar carrera", errorMessage);
+      console.error("Error al eliminar carrera:", error.response || error);
       console.error("Error al eliminar carrera:", error);
     }
   };

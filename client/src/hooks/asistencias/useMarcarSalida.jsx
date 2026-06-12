@@ -29,8 +29,13 @@ const useMarcarSalida = (setAsistencias) => {
             (asis) => asis.id_asistencia != id
           ), dataAsistencia.data.data]);
       } catch (error) {
-        showErrorAlert("Error al marcar la salida");
-        console.error("Error al marcar la salida:", error);
+        const errorMessage =
+        error.response?.data?.details ||
+        error.response?.data?.message ||
+          error.message ||
+          "Error desconocido";
+        showErrorAlert("Error al marcar salida", errorMessage);
+        console.error("Error al marcar la salida:", error.response || error);
       }
     }
   };

@@ -7,6 +7,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAlumnosRequest } from "../services/alumnos.api";
+import { showErrorAlert } from "../helpers/sweetAlert";
 
 export default function RegistIngresos() {
   const navigate = useNavigate();
@@ -135,7 +136,13 @@ export default function RegistIngresos() {
                 });
                 navigate("/entry"); // Redirigir a la lista de ingresos después de crear o actualizar
               } catch (error) {
-                console.error("Error al crear ingreso:", error);
+                const errorMessage =
+                error.response?.data?.details ||
+                error.response?.data?.message ||
+                  error.message ||
+                  "Error desconocido";
+                showErrorAlert("Error al guardar ingreso", errorMessage);
+                console.error("Error al crear ingreso:", error.response || error);
               }
             }}
           >

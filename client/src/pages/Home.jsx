@@ -7,6 +7,7 @@ import {
 } from "../services/asistencias.api";
 import { getIngresosRequest } from "../services/ingresos.api";
 import AsistenciasRows from "../components/AsistenciasRows";
+import { showErrorAlert } from "../helpers/sweetAlert";
 
 function Home() {
 
@@ -113,7 +114,13 @@ function Home() {
         );
       }
     } catch (error) {
-      console.error("Error al marcar salida:", error);
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al marcar salida", errorMessage);
+      console.error("Error al marcar salida:", error.response || error);
     }
   };
 
