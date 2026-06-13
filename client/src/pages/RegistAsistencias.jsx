@@ -7,6 +7,7 @@ import {
 import { getIngresosRequest } from "../services/ingresos.api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { showSuccessAlert, showErrorAlert } from "../helpers/sweetAlert";
 
 export default function RegistAsistencias() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export default function RegistAsistencias() {
       if (params.id) {
         try {
           const dataAsistencia = await getAsistenciaByIdRequest(params.id);
-          console.log(dataAsistencia.data);
+          // console.log(dataAsistencia.data);
           
           const {
             alumno: _alumno,
@@ -44,7 +45,7 @@ export default function RegistAsistencias() {
             asistencia_ingreso: _asistencia_ingreso,
             ...filtered
           } = dataAsistencia.data; // nombre y rut is assigned but not used. Solucion
-          console.log("Asistencia filtrada:", filtered);
+          // console.log("Asistencia filtrada:", filtered);
           const fechaFormateada = _fecha ? _fecha.split('/').reverse().join('-') : "";
           setAsistencia({
             ...filtered,
@@ -99,11 +100,11 @@ export default function RegistAsistencias() {
             onSubmit={async (values) => {
               try {
                 if (params.id) {
-                  console.log("UPDATE");
                   await updateAsistenciasRequest(params.id, values);
+                  showSuccessAlert("Asistencia actualizada", "Los datos se guardaron correctamente");
                 } else {
-                  console.log("CREATE");
                   await createAsistenciasRequest(values);
+                  showSuccessAlert("Asistencia registrada", "La asistencia se registró correctamente");
                 }
                 setAsistencia({
                   rut: "",
@@ -112,9 +113,15 @@ export default function RegistAsistencias() {
                   entrada: "",
                   salida: "",
                 });
-                navigate("/attendance"); // Redirigir a la lista de asistencias después de crear o actualizar
+                navigate("/attendance");
               } catch (error) {
-                console.error("Error al crear asistencia:", error);
+                const errorMessage =
+                error.response?.data?.details ||
+                  error.response?.data?.message ||
+                  error.message ||
+                  "Error desconocido";
+                showErrorAlert("Error al guardar asistencia", errorMessage);
+                console.error("Error al guardar asistencia:", error.response || error);
               }
             }}
           >

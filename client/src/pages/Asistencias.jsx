@@ -16,7 +16,7 @@ import Caret from "../components/Caret.jsx";
 
 import useCreateAsis from "../hooks/asistencias/useCreateAsis.jsx";
 import PopUpCreateAsistencias from "../components/Asistencias/PopUpCreateAsistencias.jsx";
-import useEditAsis from "../hooks/asistencias/useEditAsis.jsx";
+// import useEditAsis from "../hooks/asistencias/useEditAsis.jsx";
 import PopUpMarcarSalida from "../components/Asistencias/PopUpMarcarSalida.jsx";
 import useMarcarSalida from "../hooks/asistencias/useMarcarSalida.jsx";
 
@@ -59,12 +59,12 @@ function Asistencias() {
   } = useCreateAsis(setAsistencias);
 
   
-  const {
-    isEditPopUpOpen,
-    setIsEditPopUpOpen,
-    handleClickUpdate,
-    handleUpdate,
-  } = useEditAsis(setAsistencias)
+  // const {
+  //   isEditPopUpOpen,
+  //   setIsEditPopUpOpen,
+  //   handleClickUpdate,
+  //   handleUpdate,
+  // } = useEditAsis(setAsistencias)
   
   const {
     isSalidaPopUpOpen,
@@ -91,7 +91,13 @@ function Asistencias() {
         setAsistencias(asistencias.filter((e) => e.id_asistencia !== id));
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar alumno");
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al eliminar alumno", errorMessage);
+      console.error("Error al eliminar alumno:", error.response || error);
       console.error("Error al eliminar asistencia:", error);
     }
   };
@@ -145,14 +151,32 @@ function Asistencias() {
       return (
         <div className="container d-flex align-items-center flex-column mt-5 mb-5">
           <h1 className="p-2">No se encontraron asistencias registradas</h1>
-          <button
-            type="button"
-            className="btn btn-primary p-2"
-            // onClick={() => navigate(`/attendance/register`)}
-            onClick={handleClickCreate}
-          >
-            Registrar Asistencias
-          </button>
+          <div className="d-flex gap-4">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => navigate(`/attendance/register`)}
+              // onClick={handleClickCreate}
+            >
+              Registar Asistencia
+            </button>
+            
+            <button
+              type="button"
+              className="btn btn-secondary"
+              // onClick={() => navigate(`/attendance/register`)}
+              onClick={handleClickCreate}
+            >
+              Registar Entrada
+            </button>
+          </div>
+
+          <PopUpCreateAsistencias 
+            show={isCreatePopUpOpen}
+            setShow={setIsCreatePopUpOpen}
+            action={handleCreate}
+          />
+          
         </div>
       );
     }
@@ -160,14 +184,25 @@ function Asistencias() {
     return (
       <div className="container text-center mt-5 mb-5">
         <div className="d-flex justify-content-between">
-          <button
-            type="button"
-            className="btn btn-primary"
-            // onClick={() => navigate(`/attendance/register`)}
-            onClick={handleClickCreate}
-          >
-            Registar en Asistencia
-          </button>
+          <div className="d-flex gap-2">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => navigate(`/attendance/register`)}
+              // onClick={handleClickCreate}
+            >
+              Registar Asistencia
+            </button>
+            
+            <button
+              type="button"
+              className="btn btn-secondary"
+              // onClick={() => navigate(`/attendance/register`)}
+              onClick={handleClickCreate}
+            >
+              Registar Entrada
+            </button>
+          </div>
 
           <div className="input-group" style={{ maxWidth: "300px" }}>
             <input

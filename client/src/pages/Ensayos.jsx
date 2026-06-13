@@ -60,7 +60,13 @@ function Ensayos() {
         setEnsayos(ensayos.filter((e) => e.id_ensayo !== id));
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar ensayo");
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al eliminar ensayo", errorMessage);
+      console.error("Error al eliminar ensayo:", error.response || error);
       console.error("Error al eliminar ensayo:", error);
     }
   };
@@ -103,7 +109,7 @@ function Ensayos() {
             className="btn btn-primary p-2"
             onClick={() => navigate(`/essay/register`)}
           >
-            Registrar Ensayos
+            Registrar Nuevo Ensayo
           </button>
         </div>
       );
@@ -118,7 +124,7 @@ function Ensayos() {
             className="btn btn-primary"
             onClick={() => navigate(`/essay/register`)}
           >
-            Registrar Ensayo
+            Registrar Nuevo Ensayo
           </button>
 
           <div className="input-group" style={{ maxWidth: "300px" }}>

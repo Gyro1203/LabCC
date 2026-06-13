@@ -58,7 +58,13 @@ function Ingresos() {
         }
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar ingreso");
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al eliminar ingreso", errorMessage);
+      console.error("Error al eliminar ingreso:", error.response || error);
       console.error("Error al eliminar ingreso:", error);
     }
   };
@@ -191,21 +197,13 @@ function Ingresos() {
                 }
                 registrar={
                   <button
-                    className="btn btn-warning"
-                    title="Registrar Actividad"
+                    className="btn btn-warning text-white "
+                    title="Más Información"
                     onClick={() => {
-                      if (!ingreso.vigente)
-                        alert("Este ingreso no se encuentra vigente");
-                      else
-                        navigate(`/activity/register`, {
-                          state: {
-                            id_ingreso: ingreso.id_ingreso,
-                            from: "/entry",
-                          },
-                        });
+                      navigate(`/entry/details/${ingreso.id_ingreso}`);
                     }}
                   >
-                    <i className="fa-regular fa-calendar-plus"></i>
+                    <i className="fa-solid fa-info p-1"></i>
                   </button>
                 }
               ></IngresosRows>

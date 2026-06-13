@@ -121,9 +121,10 @@ export const createAsistenciaService = async (body) => {
       return [null, "El alumno no cuenta con un ingreso vigente"];
 
     const now = DateTime.now().setZone(TIMEZONE);
-    const fecha = now.toFormat('yyyy-MM-dd');
-    const entrada = now.toFormat('HH:mm:ss');
-    const jornada = now.hour < 12 ? "Mañana" : "Tarde";
+    const fecha = body.fecha || now.toFormat('yyyy-MM-dd');
+    const entrada = body.entrada || now.toFormat('HH:mm:ss');
+    const jornada = (now.hour < 12 ? "Mañana" : "Tarde");
+    const salida = body.salida || null;
 
     const [result] = await db.query(
       `INSERT INTO asistencias(
@@ -131,9 +132,10 @@ export const createAsistenciaService = async (body) => {
         entrada,
         jornada,
         actividad,
+        salida,
         asistencia_ingreso
-      ) VALUES (?, ?, ?, ?, ?)`,
-      [fecha, entrada, jornada, actividad, ingreso_vigente.id_ingreso]
+      ) VALUES (?, ?, ?, ?, ?, ?)`,
+      [fecha, entrada, jornada, actividad, salida, ingreso_vigente.id_ingreso]
     );
     if (result.affectedRows === 0)
       return [null, "Error al registrar la asistencia"];

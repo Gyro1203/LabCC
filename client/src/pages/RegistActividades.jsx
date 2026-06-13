@@ -3,62 +3,97 @@ import {
   createActividadesRequest,
   getActividadByIdRequest,
   updateActividadesRequest,
+  getActividadesByIngresoRequest,
 } from "../services/actividades.api";
+import { getIngresoByIdRequest } from "../services/ingresos.api.js";
 import { getEnsayosRequest } from "../services/ensayos.api";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { showSuccessAlert } from "../helpers/sweetAlert";
+import { showSuccessAlert, showErrorAlert } from "../helpers/sweetAlert";
+import ActividadesRows from "../components/ActividadesRows.jsx";
 
 export default function RegistActividades() {
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const { state = {} } = useLocation();
 
-  const [actividad, setActividad] = useState({
+  const defaultActividad = {
     actividad_ensayo: "",
     cantidad: 1,
     observaciones: "",
-    actividad_ingreso: state.id_ingreso || 1,
-  }); // Estado para almacenar la actividad si es necesario, aunque no se usa en este ejemplo
+    actividad_ingreso: state.id_ingreso || "",
+  };
 
+  const [actividad, setActividad] = useState(defaultActividad);
   const [ensayos, setEnsayos] = useState([]);
   const [addMore, setAddMore] = useState(false);
+  const [actividades, setActividades] = useState([]);
+  const [alumno, setAlumno] = useState(state.alumno || "");
 
   const params = useParams();
 
+  const loadActividades = async (ingresoId) => {
+    try {
+      const response = await getActividadesByIngresoRequest(ingresoId);
+      setActividades(response.data);
+    } catch (error) {
+      console.error("Error al cargar actividades del ingreso:", error);
+      setActividades([]);
+    }
+  };
+
   useEffect(() => {
     const fetchActividad = async () => {
-      const dataEnsayos = await getEnsayosRequest();
-      setEnsayos(dataEnsayos.data);
-      if (params.id) {
-        try {
+      try {
+        const dataEnsayos = await getEnsayosRequest();
+        setEnsayos(dataEnsayos.data);
+
+        let ingresoId = state.id_ingreso;
+        let alumnoNombre = state.alumno;
+
+        if (params.id) {
           const dataActividad = await getActividadByIdRequest(params.id);
-          console.log("Actividad encontrada:", dataActividad);
           const {
             actividad: _actividad,
-            alumno: _alumno,
             precio_peso: _precio_peso,
             precio_uf: _precio_uf,
             total_peso: _total_peso,
             total_uf: _total_uf,
             unidad: _unidad,
             ...filtered
-          } = dataActividad.data; // actividad_ensayo y rut is assigned but not used. Solucion
-          console.log("Actividad filtrada:", filtered);
+          } = dataActividad.data;
           setActividad(filtered);
-        } catch (error) {
-          console.error("Error al obtener la actividad:", error);
+          ingresoId = ingresoId || filtered.actividad_ingreso;
         }
+
+        if (ingresoId) {
+          if (!alumnoNombre) {
+            try {
+              const ingresoResponse = await getIngresoByIdRequest(ingresoId);
+              alumnoNombre = ingresoResponse.data.nombre || ingresoResponse.data.alumno || alumnoNombre;
+            } catch (error) {
+              console.error("Error al obtener ingreso para alumno:", error);
+            }
+          }
+          setAlumno(alumnoNombre || "");
+          await loadActividades(ingresoId);
+          setActividad((prevState) => ({
+            ...prevState,
+            actividad_ingreso: ingresoId,
+          }));
+        }
+      } catch (error) {
+        console.error("Error en la carga inicial de la actividad:", error);
       }
     };
     fetchActividad();
-  }, [params.id]);
+  }, [params.id, state.id_ingreso, state.alumno]);
 
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-start">
         <button
           className="btn btn-secondary mb-4"
-          onClick={() => navigate(state.from)}
+          onClick={() => navigate(state.from || "/")}
         >
           Volver
         </button>
@@ -70,33 +105,46 @@ export default function RegistActividades() {
               ? "Editar datos de la actividad"
               : "Registrar nueva actividad"}
           </h1>
-
+            {alumno && (
+              <p className="text-center mb-4 fs-5">
+                <strong>Alumno:</strong> {alumno}
+              </p>
+            )}
           <Formik
             initialValues={actividad}
-            enableReinitialize={true} // Permite que los valores iniciales se actualicen cuando cambie el estado
+            enableReinitialize={true}
             onSubmit={async (values, { resetForm }) => {
               try {
                 if (params.id) {
-                  console.log("values", values);
                   await updateActividadesRequest(params.id, values);
-                  console.log("Actividad actualizada:", values);
-                } else {
-                  const response = await createActividadesRequest(values);
-                  console.log("Actividad creada:", response.data);
+                  showSuccessAlert("Actividad actualizada", "Los datos se guardaron correctamente");
+                  navigate(state.from || "/");
+                  return;
                 }
-                setActividad({
-                  actividad_ensayo: "",
-                  cantidad: 1,
-                  observaciones: "",
-                  actividad_ingreso: state.id_ingreso || 1,
-                });
-                if (!addMore) navigate(state.from);
-                else {
-                  showSuccessAlert("Actividad añadida");
-                  resetForm();
+
+                const response = await createActividadesRequest(values);
+                const nuevaActividad = response.data;
+                setActividades((prev) => [...prev, nuevaActividad]);
+                showSuccessAlert("Actividad añadida", "La actividad se registró correctamente");
+
+                if (!addMore) {
+                  navigate(state.from || "/");
+                } else {
+                  const nextValues = {
+                    ...defaultActividad,
+                    actividad_ingreso: values.actividad_ingreso,
+                  };
+                  setActividad(nextValues);
+                  resetForm({ values: nextValues });
                 }
               } catch (error) {
-                console.error("Error al crear actividad:", error);
+                const errorMessage =
+                  error.response?.data?.details ||
+                  error.response?.data?.message ||
+                  error.message ||
+                  "Error desconocido";
+                showErrorAlert("Error al guardar actividad", errorMessage);
+                console.error("Error al guardar actividad:", error.response || error);
               }
             }}
           >
@@ -188,6 +236,38 @@ export default function RegistActividades() {
               </Form>
             )}
           </Formik>
+        </div>
+
+        <div className="col-md-8">
+          <h2 className="mb-3">Actividades registradas</h2>
+          {actividades.length > 0 ? (
+            <table className="table table-striped table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th>Actividad</th>
+                  <th>Unidad</th>
+                  <th>Cantidad</th>
+                  <th>Precio UF</th>
+                  <th>Precio $</th>
+                  <th>Total UF</th>
+                  <th>Total $</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {actividades.map((act) => (
+                  <ActividadesRows 
+                    key={act.id_actividad} 
+                    actividad={act} 
+                  />
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="alert alert-light border rounded p-3">
+              No hay actividades registradas para este ingreso.
+            </div>
+          )}
         </div>
       </div>
     </div>

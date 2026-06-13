@@ -7,6 +7,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAlumnosRequest } from "../services/alumnos.api";
+import { showErrorAlert } from "../helpers/sweetAlert";
 
 export default function RegistIngresos() {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ export default function RegistIngresos() {
             semestre: _semestre,
             ...filtered
           } = dataIngreso.data; // nombre y rut is assigned but not used. Solucion
-          console.log("Ingreso filtrado:", filtered);
+          // console.log("Ingreso filtrado:", filtered);
           setIngreso(
             { año: _semestre.split("-")[0], 
               semestre: _semestre.split("-")[1], 
@@ -63,7 +64,7 @@ export default function RegistIngresos() {
   
     useEffect(() => {
       if (values.rut) {
-        console.log(values.rut);
+        // console.log(values.rut);
         const dataAlumno = nombres.find(
           ({ rut , estado}) => rut == values.rut && estado === "Activo"
         ); //o vigente == true;
@@ -135,7 +136,13 @@ export default function RegistIngresos() {
                 });
                 navigate("/entry"); // Redirigir a la lista de ingresos después de crear o actualizar
               } catch (error) {
-                console.error("Error al crear ingreso:", error);
+                const errorMessage =
+                error.response?.data?.details ||
+                error.response?.data?.message ||
+                  error.message ||
+                  "Error desconocido";
+                showErrorAlert("Error al guardar ingreso", errorMessage);
+                console.error("Error al crear ingreso:", error.response || error);
               }
             }}
           >
@@ -175,7 +182,7 @@ export default function RegistIngresos() {
                     onChange={handleChange}
                     value={values.rut}
                   />
-                  <small class="text-muted">Sin puntos y con guión</small>
+                  <small className="text-muted">Sin puntos y con guión</small>
                 </div>
 
                 <BuscarAlumno setAlumno={setAlumno} />

@@ -102,7 +102,7 @@ function Login() {
                         <form onSubmit={handleLogin}>
                           <div className="col-md-8 mx-auto mb-4">
                             <a className="logo" href="#">
-                              <img src="images/LogoLabcon.png" alt="#"/>
+                              <img src="/images/LogoLabcon.png" alt="#"/>
                             </a>
                           </div>
                   

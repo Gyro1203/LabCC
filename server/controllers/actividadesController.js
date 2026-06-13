@@ -53,8 +53,8 @@ export const createActividad = async (req, res) => {
     const { body } = req;
     const { error } = actividadBodyValdation.validate(body);
     if(error){
-            return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
-        }
+      return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+    }
 
     const { cantidad, observaciones, actividad_ensayo, actividad_ingreso } = req.body;
     const [actividad, errorActividad] = await createActividadService({
@@ -63,7 +63,10 @@ export const createActividad = async (req, res) => {
       actividad_ensayo,
       actividad_ingreso,
     });
-    if (errorActividad) return handleErrorClient(res, 400, errorActividad);
+    if (errorActividad){
+      return handleErrorClient(res, 400, "Error al crear la actividad", errorActividad);
+    } 
+      
     handleSuccess(res, 201, "Actividad creada exitosamente", actividad);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
@@ -72,18 +75,17 @@ export const createActividad = async (req, res) => {
 
 export const updateActividad = async (req, res) => {
   try {
-
     const { body } = req;
     const { error } = actividadBodyValdation.validate(body);
     if(error){
-            return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
-        }
+      return handleErrorClient(res, 400, "Error de validación", error.details[0].message);
+    }
         
     const [actividad, errorActividad] = await updateActividadService(
       req.body,
       req.params.id
     );
-    if (errorActividad) return handleErrorClient(res, 400, errorActividad);
+    if (errorActividad) return handleErrorClient(res, 400, "Error al actualizar la actividad", errorActividad);
     handleSuccess(res, 200, "Actividad actualizada exitosamente", actividad);
   } catch (error) {
     handleErrorServer(res, 500, error.message);
@@ -95,7 +97,7 @@ export const deleteActividad = async (req, res) => {
     const [actividad, errorActividad] = await deleteActividadService(
       req.params.id
     );
-    if (errorActividad) return handleErrorClient(res, 404, errorActividad);
+    if (errorActividad) return handleErrorClient(res, 404, "Error al eliminar la actividad", errorActividad);
     handleSuccess(res, 200, "Actividad eliminada exitosamente", actividad);
   } catch (error) {
     return handleErrorServer(res, 500, error.message);

@@ -53,7 +53,7 @@ function Actividades() {
   useEffect(() => {
     async function fetchData() {
       const dataActividades = await getActividadesRequest();
-      console.log(dataActividades.data);
+      // console.log(dataActividades.data);
       setActividades(dataActividades.data);
     }
     fetchData();
@@ -69,7 +69,13 @@ function Actividades() {
         setActividades(actividades.filter((e) => e.id_actividad !== id));
       }
     } catch (error) {
-      showErrorAlert("Error al eliminar actividad");
+      const errorMessage =
+      error.response?.data?.details ||
+      error.response?.data?.message ||
+        error.message ||
+        "Error desconocido";
+      showErrorAlert("Error al eliminar actividad", errorMessage);
+      console.error("Error al eliminar actividad:", error.response || error);
       console.error("Error al eliminar actividad:", error);
     }
   };

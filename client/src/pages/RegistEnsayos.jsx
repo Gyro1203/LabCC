@@ -6,7 +6,7 @@ import {
 } from "../services/ensayos.api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { showSuccessAlert } from "../helpers/sweetAlert";
+import { showSuccessAlert, showErrorAlert } from "../helpers/sweetAlert";
 
 export default function RegistEnsayos() {
   const navigate = useNavigate();
@@ -55,10 +55,11 @@ export default function RegistEnsayos() {
               try {
                 if (params.id) {
                   await updateEnsayosRequest(params.id, values);
-                  navigate("/essay"); // Redirigir a la lista de ensayos después de crear o actualizar
+                  showSuccessAlert("Ensayo actualizado", "Los datos se guardaron correctamente");
+                  navigate("/essay");
                 } else {
                   await createEnsayosRequest(values);
-                  showSuccessAlert("Ensayo creado exitosamente");
+                  showSuccessAlert("Ensayo creado", "El ensayo se registró correctamente");
                 }
                 resetForm({
                   values: {
@@ -69,7 +70,13 @@ export default function RegistEnsayos() {
                   },
                 });
               } catch (error) {
-                console.error("Error al crear ensayo:", error);
+                const errorMessage =
+                error.response?.data?.details ||
+                  error.response?.data?.message ||
+                  error.message ||
+                  "Error desconocido";
+                showErrorAlert("Error al guardar ensayo", errorMessage);
+                console.error("Error al guardar ensayo:", error.response || error);
               }
             }}
           >

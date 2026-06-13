@@ -13,19 +13,26 @@ export const getActividadByIdRequest = async (id) => {
 }
 
 export const getActividadesByIngresoRequest = async (id) => {
+  try {
     const response = await axios.get(BASE_URL + `/activity/entry/${id}`);
     return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return { data: [] };
+    }
+    throw error;
+  }
 }
 
 export const createActividadesRequest = async (actividad) => {
-    const response = await axios.post(BASE_URL + '/activity', actividad);
-    return response.data;
+  const response = await axios.post(BASE_URL + '/activity', actividad);
+  return response.data;
 };
 
 export const updateActividadesRequest = async (id, actividad) => {
-    return await axios.put(`${BASE_URL}/activity/${id}`, actividad);
+  return await axios.put(`${BASE_URL}/activity/${id}`, actividad);
 }
 
 export const deleteActividadesRequest = async (id) => {
-    return await axios.delete(`${BASE_URL}/activity/${id}`);
+  return await axios.delete(`${BASE_URL}/activity/${id}`);
 };

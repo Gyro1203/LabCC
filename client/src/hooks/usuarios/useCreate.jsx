@@ -21,8 +21,14 @@ const useCreate = (setUsers) => {
             setUsers((prevUsers) => [...prevUsers, newUser.data]);
             setCreateDataUser({});
         } catch (error) {
-            showErrorAlert("Error al crear el usuario");
-            console.error("Error al crear usuario:", error);
+          const errorMessage =
+            error.response?.data?.details ||
+            error.response?.data?.message ||
+            error.message ||
+            "Error desconocido";
+          showErrorAlert("Error al crear el usuario", errorMessage);
+          console.error("Error al crear el usuario:", error.response || error);
+          console.error("Error al crear usuario:", error);
         }
         }
     };
